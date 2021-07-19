@@ -1,21 +1,29 @@
-from view import accueil
-from model import add_player
+from view import accueil, add_player, modif_player
+from model import save_player, add_players, modification_of_player
 
 
 def menu():
     resultat = int(accueil())
     if resultat == 1:
-        add_player()
+        player = add_player()
+        serialized = add_players(player)
+        save_player(serialized)
     if resultat == 2:
-        Player()
+        modif_menu()
     if resultat == 3:
-        Tournament()
+        pass
     if resultat == 4:
-        Player()
+        pass
     if resultat == 5:
-        Player()
+        pass
     if resultat == 6:
-        Match()
+        pass
     else:
         print("erreur , vous devez choisir un menu existant .")
-        menu()
+        pass
+
+def modif_menu():
+    resultat = modif_player()
+    print(resultat)
+    modification_of_player(resultat)
+

@@ -1,4 +1,5 @@
 from controller import menu
 
-menu()
+if __name__ == "__main__":
+    menu()
 

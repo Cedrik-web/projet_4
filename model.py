@@ -1,9 +1,10 @@
 from tinydb import TinyDB
 
 
-#
+# player model creation
 class Player:
-    def __init__(self , name, first_name, birth_date, sex, ranking=0):
+    def __init__(self, name, first_name, birth_date, sex=None, ranking=0):
+        self.pk = name + "_" + first_name + "_" + birth_date[-4:]
         self.name = name
         self.first_name = first_name
         self.birth_date = birth_date
@@ -11,41 +12,40 @@ class Player:
         self.ranking = ranking
 
 
-def new_player():
-    print("entrer le nom du joueur")
-    name = input()
-    print("entrer le prénom du joueur")
-    first_name = input()
-    print("entrer la date de naissance du joueur comme ceci ../../....")
-    birth_date = input()
-    print("entrer le sex du joueur")
-    sex = input()
-    print("entrer les points du joueur")
-    ranking = input()
-    player = Player(name=name, first_name=first_name, birth_date=birth_date, sex=sex, ranking=ranking)
-    serialized_player = {
-        "name" : player.name,
-        "first_name" : player.first_name,
-        "birth_date" : player.birth_date,
-        "sex" : player.sex,
-        "ranking" : player.ranking,
-        }
+def add_players(players):
+    serialized_player = []
+    for i in players:
+        print(i)
+        new_player = i
+        player = Player(
+            name=new_player.get('name'),
+            first_name=new_player.get('first_name'),
+            birth_date=new_player.get('birth_date'),
+            sex=new_player.get('sex'),
+            ranking=new_player.get('ranking'),
+            )
+        serialized = {
+            "pk": player.pk,
+            "name": player.name,
+            "first_name": player.first_name,
+            "birth_date": player.birth_date,
+            "sex": player.sex,
+            "ranking": player.ranking,
+            }
+        serialized_player.append(serialized)
     return serialized_player
 
-def add_player():
-    serialized_player = []
-    serialized_player.append(new_player())
-    print("voulez vous rajouter un autre joueur ?")
-    reponse = input()
-    while reponse == "oui":
-        serialized_player.append(new_player())
-        print("voulez vous rajouter un autre joueur ?")
-        reponse = input()
-
+def save_player(serialized_player):
     db = TinyDB("db.json")
     players_table = db.table("players")
+    players_table.truncate()
     players_table.insert_multiple(serialized_player)
 
+
+def modification_of_player(resultat):
+    db = TinyDB("db.json")
+    players_table = db.table('players').all()
+    print(players_table)
 
 #
 class Tournament:
