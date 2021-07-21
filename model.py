@@ -1,5 +1,5 @@
-from tinydb import TinyDB
-
+from tinydb import TinyDB, Query
+from tinydb.table import Document
 
 # player model creation
 class Player:
@@ -38,16 +38,40 @@ def add_players(players):
 def save_player(serialized_player):
     db = TinyDB("db.json")
     players_table = db.table("players")
-    players_table.truncate()
     players_table.insert_multiple(serialized_player)
 
 
-def modification_of_player(resultat):
+def table_of_player():
     db = TinyDB("db.json")
     players_table = db.table('players').all()
-    print(players_table)
+    return players_table
 
-#
+def modification_of_player(modif):
+    players = table_of_player()
+    db = TinyDB("db.json").table('players')
+    for player in players:
+        if player.get('pk') == modif.get('pk'):
+            player_doc_id = player.doc_id
+            db.upsert(Document(modif, doc_id=player_doc_id))
+            print("modification effectué")
+
+def clean_input(data):
+    tiny = data.lower()
+    without_space = tiny.replace(' ', '-')
+    char = "!#$%&*()"
+    for i in char:
+        without_space = without_space.replace(i, '')
+    accent = "éèêë"
+    for a in accent:
+        without_space = without_space.replace(a, "e")
+    accent_a = without_space.replace("à", "a")
+    accent_u = accent_a.replace("ù", "u")
+    new_data = accent_u
+    return new_data
+
+
+
+    #
 class Tournament:
     def __init__(self):
         pass
