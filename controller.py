@@ -1,27 +1,44 @@
-from view import accueil, add_player, find_player, modif_player
+from view import accueil, add_player, find_player, modif_player, error_enter_int
+from view import display_player_list, display_player_nb, modif_ok
+from view import elements_tournament
 from model import save_player, add_players, table_of_player, modification_of_player
 
 
 def menu():
-    resultat = int(accueil())
+    ''' menu distribution function '''
+
+    resultat = accueil()
+    try:
+        resultat = int(resultat)
+    except:
+        error_enter_int()
+        menu()
     if resultat == 1:
         player = add_player()
         serialized = add_players(player)
         save_player(serialized)
+        menu()
     if resultat == 2:
         modif_menu()
     if resultat == 3:
-        pass
+        elements_tournament()
     if resultat == 4:
         pass
     if resultat == 5:
         pass
     if resultat == 6:
         pass
+    if resultat == 7:
+        pass
     else:
-        print("erreur , vous devez choisir un menu existant .")
+        error_enter_int()
+        menu()
 
 def modif_menu():
+    ''' allows you to search for the player to modify by name
+        which returns a list of all the players with this name
+        or by ID to directly select the player to modify '''
+
     resultat = find_player()
     players = table_of_player()
     nb = len(resultat)
@@ -37,12 +54,11 @@ def modif_menu():
                     if len(nb_players) == 1:
                         modif = modif_player(player)
                         modification_of_player(modif)
+                        modif_ok()
                         menu()
                     else:
-                        print(player.get('name'), player.get('first_name'))
-                        print('son ID est :', player.get('pk'), "\n")
-        print("\n il y a ", len(nb_players), " resultat pour la recherche : ", resultat)
-        print("veuillez utiliser ID du joueur")
+                        display_player_list(player)
+        display_player_nb(len(nb_players), resultat)
         modif_menu()
     else:
         for player in players:
@@ -50,6 +66,7 @@ def modif_menu():
                 if v == resultat:
                     modif = modif_player(player)
                     modification_of_player(modif)
+                    modif_ok()
                     menu()
 
 
