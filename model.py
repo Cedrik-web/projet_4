@@ -2,6 +2,7 @@ from tinydb import TinyDB
 from tinydb.table import Document
 
 
+
 # player model creation
 class Player:
     def __init__(self, name, first_name, birth_date, sex=None, ranking=0):
@@ -45,6 +46,10 @@ def save_player(serialized_player):
     players_table = db.table("players")
     players_table.insert_multiple(serialized_player)
 
+def save_tournament(serialized_tournament):
+    db = TinyDB("db.json")
+    tournament_table = db.table("tournament")
+    tournament_table.insert(serialized_tournament)
 
 def table_of_player():
     ''' allows you to retrieve the players table from the db.json file '''
@@ -52,6 +57,11 @@ def table_of_player():
     db = TinyDB("db.json")
     players_table = db.table("players").all()
     return players_table
+
+def table_of_tournament():
+    db = TinyDB("db.json")
+    tournament_table = db.table("tournament").all()
+    return tournament_table
 
 def modification_of_player(modif):
     ''' allows you to save changes to a player on db.json file '''
@@ -89,10 +99,38 @@ class Tournament:
         self.location = location
         self.date = date
         self.turns = 4
-        self.players = 8
+        self.nb_players = 2
 
-    def add_player_to_tournament(self):
-        pass
+
+def gathers_tournament_dictionary(tournoi, players):
+    for i in tournoi:
+        tournament = i
+    list_players = []
+    nb = []
+    for p in players:
+        nb.append(p)
+        player = {len(nb): p}
+        list_players.append(player)
+    tournament["players"] = list(list_players)
+    return tournament
+
+
+def add_tournament(tour):
+    serialized_tournament = []
+    tournament = Tournament(
+        name=tour.get("name"),
+        location=tour.get("location"),
+        date=tour.get("date"),
+    )
+    serialized = {
+        "name": tournament.name,
+        "location": tournament.location,
+        "date": tournament.date,
+        "turns": tournament.turns,
+        "nb_players": tournament.nb_players,
+    }
+    serialized_tournament.append(serialized)
+    return serialized_tournament
 
 
 #

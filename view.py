@@ -132,3 +132,8 @@ def elements_tournament():
         "date": date,
         }
     return elements
+
+def add_players_for_tournament():
+    print("rentrer l'ID ou le nom du joueur participant")
+    participant = clean_input(input())
+    return participant
