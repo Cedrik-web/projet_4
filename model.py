@@ -15,7 +15,7 @@ class Player:
 
 
 def add_players(players):
-    ''' naming of parameters and serialization of players '''
+    ''' named parameters and serialization of players items '''
 
     serialized_player = []
     for i in players:
@@ -102,7 +102,9 @@ class Tournament:
         self.nb_players = 2
 
 
-def gathers_tournament_dictionary(tournoi, players):
+def gathers_tournament_dictionary(tournoi, players, remarks, timer_control):
+    ''' add players to tournament elements '''
+
     for i in tournoi:
         tournament = i
     list_players = []
@@ -112,10 +114,14 @@ def gathers_tournament_dictionary(tournoi, players):
         player = {len(nb): p}
         list_players.append(player)
     tournament["players"] = list(list_players)
+    tournament["remarks"] = list(remarks)
+    tournament["timer_control"] = list(timer_control)
     return tournament
 
 
 def add_tournament(tour):
+    ''' named parameter and serialization of tournament items '''
+
     serialized_tournament = []
     tournament = Tournament(
         name=tour.get("name"),
@@ -127,7 +133,7 @@ def add_tournament(tour):
         "location": tournament.location,
         "date": tournament.date,
         "turns": tournament.turns,
-        "nb_players": tournament.nb_players,
+        "nb_players": tournament.nb_players
     }
     serialized_tournament.append(serialized)
     return serialized_tournament

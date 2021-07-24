@@ -1,7 +1,7 @@
 from model import clean_input
 
 
-def accueil():
+def print_accueil():
     ''' menu printing and retrieval of menu choice '''
 
     print()
@@ -18,7 +18,7 @@ def accueil():
     resultat = input()
     return resultat
 
-def elements_player():
+def print_elements_player():
     ''' retrieving player items and putting all items in dictionary '''
 
     print("entrer le nom du joueur")
@@ -40,22 +40,22 @@ def elements_player():
         }
     return elements
 
-def add_player():
+def print_add_player():
     ''' function requesting the creation of a new player
         following a player creation and this as long as the users
         wants by answering yes '''
 
     serialized_player = []
-    serialized_player.append(elements_player())
+    serialized_player.append(print_elements_player())
     print("voulez vous rajouter un autre joueur ?")
     reponse = clean_input(input())
     while reponse == "oui":
-        serialized_player.append(elements_player())
+        serialized_player.append(print_elements_player())
         print("voulez vous rajouter un autre joueur ?")
         reponse = clean_input(input())
     return serialized_player
 
-def find_player():
+def print_find_player():
     ''' printing the search request for a player then retrieving the
         choice '''
 
@@ -66,7 +66,7 @@ def find_player():
     print()
     return resultat
 
-def modif_player(player):
+def print_modif_player(player):
     ''' function displaying all the elements of a player and
         allowing to retrieve the possible change and return a dictionary
         with these elements '''
@@ -96,30 +96,32 @@ def modif_player(player):
     print()
     return player
 
-def error_enter_int():
+def print_error_enter_int():
     ''' indicates to the user that he must enter a number '''
 
     print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
 
-def display_player_list(player):
+def print_display_player_list(player):
     ''' printing a list of players with the same name '''
 
     print(player.get("name"), player.get("first_name"))
     print("son ID est : ", player.get("pk"), "\n")
 
-def display_player_nb(nb_player, player):
+def print_display_player_nb(nb_player, player):
     ''' print the number of existing players for the search then return
         to the menu to make a new request with ID '''
 
     print("il y a ", nb_player, " resultat pour la recherche : ", player)
     print("veuillez utiliser ID du joueur ")
 
-def modif_ok():
+def print_modif_ok():
     ''' printing modification to carry out '''
 
     print("modification effectuer avec succès !")
 
-def elements_tournament():
+def print_elements_tournament():
+    ''' get tournament items and return a dictionary '''
+
     print("entrer le nom du tournoi")
     name = clean_input(input())
     print("entrer le lieu du tournoi")
@@ -133,7 +135,28 @@ def elements_tournament():
         }
     return elements
 
-def add_players_for_tournament():
+
+# -START-------------printing functions of various small information or exception-------
+def print_add_players_for_tournament():
     print("rentrer l'ID ou le nom du joueur participant")
     participant = clean_input(input())
     return participant
+
+def print_add_newplayer_for_tournament():
+    print("rentrer l'ID du joueur participant ou + pour creer un joueur")
+    resultat = clean_input(input())
+    return resultat
+
+def print_save_players_for_tournament():
+    print("participant enregistrer ! \n")
+
+def print_player_find(player):
+    print("il y a ", len(player), "joueurs enregister")
+
+def print_list_player_find(player, resultat):
+    print(resultat, player.get("first_name"), " = ", player.get("pk"))
+
+def print_error_id():
+    print("ERREUR, il y a une erreur dans ID recommencer")
+
+# -END-------------------------------------------------------------------------------
