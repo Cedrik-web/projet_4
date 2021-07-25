@@ -19,7 +19,6 @@ def add_players(players):
 
     serialized_player = []
     for i in players:
-        print(i)
         new_player = i
         player = Player(
             name=new_player.get("name"),
@@ -137,6 +136,57 @@ def add_tournament(tour):
     }
     serialized_tournament.append(serialized)
     return serialized_tournament
+
+def duplicate_search(player):
+    '''check ij the ID is not already referenced in the database '''
+
+    players = table_of_player()
+    nb_players = []
+    valided = []
+    no_valided = []
+    dict = {"valided": valided,
+            "no_valided": no_valided,
+            }
+    if len(player) > 1:
+        for p in player:
+            for k, v in p.items():
+                if k == "pk":
+                    nb_players.append(v)
+            nb_str = len(nb_players)
+            nb_int = nb_str
+            if nb_int == 1:
+                for i in players:
+                    if p.get("pk") == i.get("pk"):
+                        no_valided.append(p)
+                        break
+                else:
+                    valided.append(i)
+            else:
+                for i in players:
+                    for j in player:
+                        if j == i.get("pk"):
+                            no_valided.append(j)
+                            break
+                else:
+                    valided.append(j)
+    else:
+        try:
+            for p in player:
+                for i in players:
+                    if p.get("pk") == i.get("pk"):
+                        no_valided.append(p)
+                        break
+                else:
+                    valided.append(p)
+        except:
+            for i in players:
+                for j in player:
+                    if j == i.get("pk"):
+                        no_valided.append(j)
+                        break
+            else:
+                valided.append(j)
+    return dict
 
 
 #

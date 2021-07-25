@@ -3,9 +3,12 @@ from view import print_display_player_list, print_display_player_nb, print_modif
 from view import print_elements_tournament, print_elements_player, print_add_players_for_tournament
 from view import print_save_players_for_tournament, print_add_newplayer_for_tournament
 from view import print_list_player_find, print_player_find, print_error_id
+from view import print_exicting_player, print_new_player_register
+from view import print_add_genaral_remarks,print_add_timer_control
 
 from model import save_player, add_players, table_of_player, modification_of_player
 from model import add_tournament, gathers_tournament_dictionary, save_tournament
+from model import duplicate_search
 
 def menu():
     ''' menu distribution function '''
@@ -18,8 +21,15 @@ def menu():
         menu()
     if resultat == 1:
         player = print_add_player()
-        serialized = add_players(player)
-        save_player(serialized)
+        add_player = add_players(player)
+        resultat = duplicate_search(add_player)
+        serialized_player = resultat.get("valided")
+        existing = resultat.get("no_valided")
+        if not serialized_player == []:
+            save_player(serialized_player)
+            print_new_player_register(serialized_player)
+        if not existing == []:
+            print_exicting_player(existing)
         menu()
     if resultat == 2:
         modif_menu()
@@ -27,16 +37,15 @@ def menu():
         elements = print_elements_tournament()
         tournament = add_tournament(elements)
         players = add_players_of_tournament(tournament)
-        remarks = add_genaral_remarks()
-        timer_control = add_timer_control()
-        print(remarks, timer_control)
+        remarks = print_add_genaral_remarks()
+        timer_control = print_add_timer_control()
         serialized_tournament = gathers_tournament_dictionary(
             tournament,
             players,
             remarks,
             timer_control
         )
-        save_tournament(serialized_tournament)
+        save_tournament(serialized_tournament) 
     if resultat == 4:
         pass
     if resultat == 5:
@@ -100,6 +109,7 @@ def add_players_of_tournament(tournament):
         for i in table_players:
             if resultat == i.get("pk"):
                 player.append(i)
+                break
             elif resultat == i.get("name"):
                 player.append(i)
         if len(player) == 1:
@@ -114,8 +124,6 @@ def add_players_of_tournament(tournament):
             resultat = print_add_newplayer_for_tournament()
             if len(resultat) > 10:
                 for i in participant:
-                    print("resultat : ", resultat)
-                    print(i.get("pk"))
                     if resultat == i.get("pk"):
                         participants.append(i)
                         break
@@ -124,36 +132,21 @@ def add_players_of_tournament(tournament):
                     resultat = input()
                 print_save_players_for_tournament()
             else:
-                elements = print_elements_player()
-                new_participant = add_players(elements)
-                save_player(new_participant)
-                participants.append(new_participant)
-                print_save_players_for_tournament()
+                elements = []
+                element = print_elements_player()
+                elements.append(element)
+                add_player = add_players(elements)
+                resultat = duplicate_search(add_player)
+                serialized_player = resultat.get("valided")
+                existing = resultat.get("no_valided")
+                if not serialized_player == []:
+                    save_player(serialized_player)
+                    print_new_player_register(serialized_player)
+                if not existing == []:
+                    print_exicting_player(existing)
+                participants.append(serialized_player)
+                print_save_players_for_tournament() 
     return participants
-
-def add_genaral_remarks():
-    print("ajoutez , si vous le voulez, une description ou un commentaire au tournoi :")
-    remarks = []
-    resultat = input()
-    remarks.append(resultat)
-    return remarks
-
-def add_timer_control():
-    print("quelle mode de jeu souhaitez vous ?")
-    print("1 : un bullet")
-    print("2 : un blitz")
-    print("3 : un coup rapide")
-    resultat = input()
-    timer_control = []
-    if int(resultat) == 1:
-        timer_control.append("bullet")
-    elif int(resultat) == 2:
-        timer_control.append("blitz")
-    elif int(resultat) == 3:
-        timer_control.append("coup rapide")
-    else:
-        print_error_enter_int()
-    return timer_control
 
 
 

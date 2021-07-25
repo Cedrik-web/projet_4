@@ -25,12 +25,21 @@ def print_elements_player():
     name = clean_input(input())
     print("entrer le prénom du joueur")
     first_name = clean_input(input())
-    print("entrer la date de naissance du joueur comme ceci ../../....")
-    birth_date = clean_input(input())
-    print("entrer le sex du joueur")
-    sex = clean_input(input())
+    print("entrer la date de naissance")
+    birth_date = print_date_controller()
+    print(name, first_name, "et né le", birth_date)
+    sex = print_sex_control()
     print("entrer les points du joueur")
-    ranking = input()
+    ranking = 0
+    while ranking != int:
+        try:
+            nb = int(input())
+            ranking += nb
+            break
+        except:
+            print("\nERREUR , veuillez rentrer un nombre entier")
+            print("recomencer")
+    print("nombre de point et de : ",ranking)
     elements = {
         "name": name,
         "first_name": first_name,
@@ -39,6 +48,94 @@ def print_elements_player():
         "ranking": ranking,
         }
     return elements
+
+def print_add_genaral_remarks():
+    ''' adding the description of a tournament to the tournament object '''
+
+    print("ajoutez , si vous le voulez, une description ou un commentaire au tournoi :")
+    remarks = []
+    resultat = input()
+    remarks.append(resultat)
+    return remarks
+
+def print_add_timer_control():
+    """ adding the timer mode of a tournament """
+
+    print("quelle mode de jeu souhaitez vous ?")
+    print("1 : un bullet")
+    print("2 : un blitz")
+    print("3 : un coup rapide")
+    resultat = input()
+    timer_control = []
+    if int(resultat) == 1:
+        timer_control.append("bullet")
+    elif int(resultat) == 2:
+        timer_control.append("blitz")
+    elif int(resultat) == 3:
+        timer_control.append("coup rapide")
+    else:
+        print_error_enter_int()
+        add_timer_control()
+    return timer_control
+
+
+def print_sex_control():
+    ''' control the input console for the sex of the player '''
+
+    print("\nentrer 1 pour un joueur de sex masculin")
+    print("entrer 2 pour un joueur de sex féminin\n")
+    sex = clean_input(input())
+    if sex == "1":
+        sex = "homme"
+        return sex
+    elif sex == "2":
+        sex = "femme"
+        return sex
+    else:
+        print("ERREUR , veuillez choisir le numéro correspndant au sex.")
+        print_sex_control()
+
+def print_date_controller():
+    ''' control the input console for the birth date of the player '''
+
+    day = input("                 jour :")
+    month = input("                 mois :")
+    years = input("l'année en 4 chiffres :")
+    try:
+        nb = int(day) + int(month) + int(years)
+        if 1950 < nb < 2100:
+            print()
+        else:
+            print("\nERREUR , veullez rentrer votre année de naissance complete")
+            print("Veuillez recommencer\n")
+            print_date_controller()
+        nb_years = len(years)
+        if nb_years == 4:
+            years = years
+        else:
+            print("\nERREUR , veuillez rentrer l'année avec 4 chiffres")
+            print("Veuillez recommencer\n")
+            print_date_controller()
+        nb_day = len(day)
+        if nb_day == 2 and 0 < int(day) < 32:
+            day = day
+        else:
+            print("\nERREUR , veuillez rentrer votre jour de naissance avec 2 chiffres, exemple 02 :")
+            print("Veuillez recommencer\n")
+            print_date_controller()
+        nb_month = len(month)
+        if nb_month == 2 and 0 < int(month) < 13:
+            month = month
+        else:
+            print("\nERREUR , veuillez rentrer votre mois de naissance avec 2 chiffres, exemple 05 :")
+            print("Veuillez recommencer\n")
+            print_date_controller()
+        birth_date = day + "/" + month + "/" + years
+        return birth_date
+    except:
+        print("\nERREUR , veuillez rentrer des chiffres")
+        print("Veuillez recommencer\n")
+        print_date_controller()
 
 def print_add_player():
     ''' function requesting the creation of a new player
@@ -60,8 +157,7 @@ def print_find_player():
         choice '''
 
     print()
-    print("recherche par ID ('non'_'premon'_'année de naissance'):")
-    print("recherche par nom:")
+    print("recherche par ID ('non'_'premon'_'année de naissance') ou par nom:")
     resultat = clean_input(input())
     print()
     return resultat
@@ -81,18 +177,40 @@ def print_modif_player(player):
     if not b == "":
         player.update({"first_name": b})
         print("nouveau prénom : " + player.get("first_name") + "\n")
-    c = clean_input(input("né le : " + player.get("birth_date") + " -> "))
-    if not c == "":
+    print("né le " + player.get("birth_date") + " , tapez oui pour modifer ->")
+    reponse = clean_input(input())
+    if reponse == "oui":
+        c = print_date_controller()
+    else:
+        c = ""
+    if c == player.get("birth_date"):
         player.update({"birth_date": c})
         print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
-    d = clean_input(input("sex : " + player.get("sex") + " -> "))
-    if not d == "":
+    print("sex : " + player.get("sex") + " , tapez oui pour modifier ->")
+    reponse == clean_input(input())
+    if reponse == "oui":
+        d = print_sex_control()
+    else:
+        d = ""
+    if d == player.get("sex"):
         player.update({"sex": d})
         print("sex redéfini : " + player.get("sex") + "\n")
-    e = clean_input(input("total de points : " + player.get("ranking") + " -> "))
-    if not e == "":
-        player.update({"ranking": e})
-        print("nouveau total de points : " + player.get("ranking") + "\n")
+    print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
+    reponse = clean_input(input())
+    ranking = player.get("ranking")
+    if reponse == "oui":
+        while ranking != int:
+            try:
+                nb = int(input(": "))
+                ranking = nb
+                break
+            except:
+                print("\nERREUR , veuillez rentrer un nombre entier")
+                print("recomencer")
+    print(ranking)
+    if not ranking == int(player.get("ranking")):
+        player.update({"ranking": ranking})
+        print("nouveau total de points : " + str(player.get("ranking")) + "\n")
     print()
     return player
 
@@ -127,7 +245,7 @@ def print_elements_tournament():
     print("entrer le lieu du tournoi")
     location = clean_input(input())
     print("entrer la date du tournoi")
-    date = clean_input(input())
+    date = print_date_tournament_controller()
     elements = {
         "name": name,
         "location": location,
@@ -135,6 +253,47 @@ def print_elements_tournament():
         }
     return elements
 
+def print_date_tournament_controller():
+    ''' control the input console for the date of the tournament '''
+
+    day = input("                 jour :")
+    month = input("                 mois :")
+    years = input("l'année en 4 chiffres :")
+    try:
+        nb = int(day) + int(month) + int(years)
+        if 1950 < nb < 2100:
+            print()
+        else:
+            print("\nERREUR , veullez l'année complete")
+            print("Veuillez recommencer\n")
+            print_date_tournament_controller()
+        nb_years = len(years)
+        if nb_years == 4:
+            years = years
+        else:
+            print("\nERREUR , veuillez rentrer l'année avec 4 chiffres")
+            print("Veuillez recommencer\n")
+            print_date_tournament_controller()
+        nb_day = len(day)
+        if nb_day == 2 and 0 < int(day) < 32:
+            day = day
+        else:
+            print("\nERREUR , veuillez rentrer le jour avec 2 chiffres, exemple 02 :")
+            print("Veuillez recommencer\n")
+            print_date_tournament_controller()
+        nb_month = len(month)
+        if nb_month == 2 and 0 < int(month) < 13:
+            month = month
+        else:
+            print("\nERREUR , veuillez rentrer le mois  avec 2 chiffres, exemple 05 :")
+            print("Veuillez recommencer\n")
+            print_date_tournament_controller()
+        tournament_date = day + "/" + month + "/" + years
+        return tournament_date
+    except:
+        print("\nERREUR , veuillez rentrer des chiffres")
+        print("Veuillez recommencer\n")
+        print_date_tournament_controller()
 
 # -START-------------printing functions of various small information or exception-------
 def print_add_players_for_tournament():
@@ -158,5 +317,13 @@ def print_list_player_find(player, resultat):
 
 def print_error_id():
     print("ERREUR, il y a une erreur dans ID recommencer")
+
+def print_exicting_player(p):
+    for i in p:
+        print("le joueur ", i.get("pk"), " est déja enregistrer !")
+
+def print_new_player_register(p):
+    for i in p:
+        print("le joueur ", i.get("name"), " a etait enregister sous ID :", i.get("pk"))
 
 # -END-------------------------------------------------------------------------------
