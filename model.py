@@ -1,6 +1,7 @@
+from collections import OrderedDict
+
 from tinydb import TinyDB
 from tinydb.table import Document
-
 
 
 # player model creation
@@ -192,5 +193,197 @@ def duplicate_search(player):
 #
 class Match:
     def __init__(self):
-        pass
+        self.nb_players = 2
+        self.winner = 1.0
+        self.loser = 0.0
+        self.draw = 0.5
+        self.point = self.winner + self.loser + self.draw
 
+    def match_generation(self, players, turns):
+        nb_players = len(players)
+        nb_match = int(nb_players / 2)
+        player_of_tournament = []
+        tour = 0
+        for i in players:
+            tour += 1
+            i = i[0]
+            point_tournament = 0
+            match_win = 0
+            match_lose = 0
+            match_pat = 0
+            pk = (i.get("name") + "_" + i.get("first_name"))
+            serialized_players = {
+                "pk": pk,
+                "ranking": i.get("ranking"),
+                "point_tournament": point_tournament,
+                "match_win": match_win,
+                "match_lose": match_lose,
+                "match_pat": match_pat,
+            }
+            player_of_tournament.append(serialized_players)
+        tri = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
+        list_match = []
+        position1 = -1
+        position2 = 2
+        for i in range(nb_match):
+            position1 += 1
+            position2 += 1
+            p1 = tri[position1]
+            p2 = tri[position2]
+            match = [p1 , p2]
+            list_match.append(match)
+        resultat_total = []
+        resultat_tour1 = {}
+        for i in list_match:
+            joueur1 = i[0]
+            joueur2 = i[1]
+            match = joueur1.get("pk") + " / " + joueur2.get("pk")
+            print("\n resultat pour le match :", match, "\n")
+            print(" - tape 1 si", joueur1.get('pk'), "a gagner.")
+            print(" - tape 2 si", joueur2.get('pk'), "a gagner.")
+            print(" - si pat tapez 3")
+            resultat = int(input("                                    : "))
+            if resultat == 1:
+                print("                                                         ", joueur1.get('pk'), " GAGNE !!\n")
+                joueur1["point_tournament"] = self.winner
+                joueur1["match_win"] += 1
+                joueur2["point_tournamant"] = self.loser
+                joueur2["match_lose"] += 1
+                winner = joueur1.get("pk")
+                resultat_tour1.update({match: winner})
+            elif resultat == 2:
+                print("                         ", joueur2, " GAGNE !!\n")
+                joueur1["point_tournament"] = self.loser
+                joueur1["match_lose"] += 1
+                joueur2["point_tournament"] = self.winner
+                joueur2["match_win"] += 1
+                winner = joueur2.get("pk")
+                resultat_tour1.update({match: winner})
+            elif resultat == 3:
+                print("                                     match nul \n")
+                joueur1["point_tournament"] = self.draw
+                joueur1["match_pat"] += 1
+                joueur2["point_tournament"] = self.draw
+                joueur2["match_pat"] += 1
+                winner = "pat match nul"
+                resultat_tour1.update({match: winner})
+            else:
+                print("ERREUR")
+        print("---------------------------tour : 1 terminé----------------------------\n")
+        resultat_total.append({"tour 1": resultat_tour1})
+        t = 1
+        for i in range(turns - 1):
+            t += 1
+            tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
+            tri_tour = sorted(tri_rank, key=lambda k: k["point_tournament"], reverse=True)
+            print("tri : ", tri_tour)
+            resultat_tour = {}
+            list_match2 = []
+            position1 = -2
+            position2 = -1
+            for i in range(nb_match):
+                position1 += 2
+                position2 += 2
+                joueur1 = tri_tour[position1]
+                joueur2 = tri_tour[position2]
+                new_match = [joueur1, joueur2]
+                list_match2.append(new_match)
+            for i in list_match2:
+                joueur1 = i[0]
+                print("tri", str(t), ":", joueur1.get("pk"), joueur1.get("ranking")), joueur1.get("point_tournament")
+                joueur2 = i[1]
+                print("tri", str(t), ":", joueur2.get("pk"), joueur2.get("ranking")), joueur2.get("point_tournament")
+                match = i
+                match = joueur1.get("pk") + " / " + joueur2.get("pk")
+                print("\n resultat pour le match :", match, "\n")
+                print(" - tape 1 si", joueur1.get('pk'), " a gagner.")
+                print(" - tape 2 si", joueur2.get('pk'), " a gagner.")
+                print(" - si pat tapez 3")
+                resultat = int(input("                               : "))
+                if resultat == 1:
+                    print("                                                         ", joueur1.get('pk'), " GAGNE !!\n")
+                    joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
+                    joueur1["match_win"] += 1
+                    joueur2["point_tournament"] = joueur2.get("point_tournament") + self.loser
+                    joueur2["match_lose"] += 1
+                    winner = joueur1.get("pk")
+                    resultat_tour.update({match: winner})
+                elif resultat == 2:
+                    print("                         ", joueur2, " GAGNE !!\n")
+                    joueur1["point_tournament"] = joueur1.get("point_tournament") + self.loser
+                    joueur1["match_lose"] += 1
+                    joueur2["point_tournament"] = joueur2.get("point_tournament") + self.winner
+                    joueur2["match_win"] += 1
+                    winner = joueur2.get("pk")
+                    resultat_tour.update({match: winner})
+                elif resultat == 3:
+                    print("                                     match nul \n")
+                    joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
+                    joueur1["match_pat"] += 1
+                    joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
+                    joueur2["match_pat"] += 1
+                    winner = "pat match nul"
+                    resultat_tour.update({match: winner})
+                else:
+                    print("ERREUR")
+            print("---------------------tour : " + str(t) + " terminé--------------------\n")
+            resultat_total.append({"tour " + str(t): resultat_tour})
+
+players = [[{
+    "name": "rougier",
+    "first_name": "cedrik",
+    "birth_date": "26/05/1978",
+    "sex": "homme",
+    "ranking": 523.0,
+    }],
+    [{
+    "name": "dour",
+    "first_name": "sabrina",
+    "birth_date": "22/04/1994",
+    "sex": "femme",
+    "ranking": 253.0,
+    }],
+    [{
+    "name": "lantiat",
+    "first_name": "sebastien",
+    "birth_date": "16/06/1986",
+    "sex": "homme",
+    "ranking": 25.0,
+    }],
+    [{
+    "name": "rainbault",
+    "first_name": "lilou",
+    "birth_date": "10/07/2002",
+    "sex": "femme",
+    "ranking": 702.0,
+    }],
+    [{
+    "name": "rougier",
+    "first_name": "franck",
+    "birth_date": "26/05/1978",
+    "sex": "homme",
+    "ranking": 53.0,
+    }],
+    [{
+    "name": "dour",
+    "first_name": "emmy",
+    "birth_date": "22/04/1994",
+    "sex": "femme",
+    "ranking": 142.0,
+    }],
+    [{
+    "name": "lantiat",
+    "first_name": "steve",
+    "birth_date": "16/06/1986",
+    "sex": "homme",
+    "ranking": 251.0,
+    }],
+    [{
+    "name": "rainbault",
+    "first_name": "stephanie",
+    "birth_date": "10/07/2002",
+    "sex": "femme",
+    "ranking": 72.5,
+    }]]
+match = Match()
+match.match_generation(players, 4)
