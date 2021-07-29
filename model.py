@@ -274,26 +274,39 @@ class Match:
         t = 1
         for i in range(turns - 1):
             t += 1
+            get_tour = "tour " + str(t - 1)
+            print(get_tour)
             tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
             tri_tour = sorted(tri_rank, key=lambda k: k["point_tournament"], reverse=True)
-            print("tri : ", tri_tour)
             resultat_tour = {}
             list_match2 = []
             position1 = -2
             position2 = -1
+            out_list = resultat_total[0]
+            control_name = out_list.get(get_tour)
+            for k, v in control_name.items():
+                print(k)
             for i in range(nb_match):
                 position1 += 2
                 position2 += 2
                 joueur1 = tri_tour[position1]
                 joueur2 = tri_tour[position2]
-                new_match = [joueur1, joueur2]
-                list_match2.append(new_match)
+                control = joueur1.get("pk") + " / " + joueur2.get("pk")
+                control2 = joueur2.get("pk") + " / " + joueur1.get("pk")
+                tp = 1
+                while k == control or control2:
+                    tp += 1
+                    print("match " + k + " et deja jouer")
+                    other_player = tri_tour[tp]
+                    print(other_player)
+                    k = joueur1.get("pk") + " / " + other_player.get("pk")
+                    print(k)
+                else:
+                    new_match = [joueur1, joueur2]
+                    list_match2.append(new_match)
             for i in list_match2:
                 joueur1 = i[0]
-                print("tri", str(t), ":", joueur1.get("pk"), joueur1.get("ranking")), joueur1.get("point_tournament")
                 joueur2 = i[1]
-                print("tri", str(t), ":", joueur2.get("pk"), joueur2.get("ranking")), joueur2.get("point_tournament")
-                match = i
                 match = joueur1.get("pk") + " / " + joueur2.get("pk")
                 print("\n resultat pour le match :", match, "\n")
                 print(" - tape 1 si", joueur1.get('pk'), " a gagner.")
@@ -326,7 +339,7 @@ class Match:
                     resultat_tour.update({match: winner})
                 else:
                     print("ERREUR")
-            print("---------------------tour : " + str(t) + " terminé--------------------\n")
+            print("---------------------------tour : " + str(t) + " terminé----------------------------\n")
             resultat_total.append({"tour " + str(t): resultat_tour})
 
 players = [[{
