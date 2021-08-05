@@ -1,12 +1,12 @@
-from model import clean_input
+from model import clean_input, activate
 
 
 def print_accueil():
     ''' menu printing and retrieval of menu choice '''
 
     print()
-    print("Bienvenue sur le gestionnaire de jeu d'échec .")
-    print("Selectionner le menu souhaiter .")
+    print("Bienvenue sur le gestionnaire de jeu d'échec .\n")
+    print("Selectionner le menu souhaiter .\n")
     print(" 1 : ajouter un joueur .")
     print(" 2 : modification d'un joueur .")
     print(" 3 : création d'un tournoi .")
@@ -14,7 +14,7 @@ def print_accueil():
     print(" 5 : modification du classements .")
     print(" 6 : rapports .")
     print(" 7 : sortir du logiciel .")
-    print("Quelle est votre choix : ")
+    print("\nQuelle est votre choix : ")
     resultat = input()
     return resultat
 
@@ -75,7 +75,7 @@ def print_add_timer_control():
         timer_control.append("coup rapide")
     else:
         print_error_enter_int()
-        add_timer_control()
+        print_add_timer_control()
     return timer_control
 
 
@@ -161,6 +161,26 @@ def print_find_player():
     resultat = clean_input(input())
     print()
     return resultat
+
+def print_modif_classement(player):
+    print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
+    reponse = clean_input(input())
+    ranking = player.get("ranking")
+    if reponse == "oui":
+        while ranking != int:
+            try:
+                nb = int(input(": "))
+                ranking = nb
+                break
+            except:
+                print("\nERREUR , veuillez rentrer un nombre entier")
+                print("recomencer")
+    print(ranking)
+    if not ranking == int(player.get("ranking")):
+        player.update({"ranking": ranking})
+        print("nouveau total de points : " + str(player.get("ranking")) + "\n")
+    print()
+    return player
 
 def print_modif_player(player):
     ''' function displaying all the elements of a player and
@@ -295,22 +315,71 @@ def print_date_tournament_controller():
         print("Veuillez recommencer\n")
         print_date_tournament_controller()
 
+def print_pass_validation():
+    print("\ncontinuez......")
+    input("appuyer sur entrée pour revenir au menu")
+    print("\n" * 25)
+
+def print_classement(player_classement):
+    print("\nclassement à ce jour :\n")
+    rang = 0
+    for i in player_classement:
+        rang += 1
+        print("n°", rang, i.get("pk"), "avec", i.get("ranking"), "point(s).")
+
+def print_list_of_tournaments(tournament):
+    print("\nliste des tournois jouer.")
+    print(tournament.get("pk"))
+
+def print_classement_alphabet(player_classement):
+    print("\nclassement joueurs par ordre alphabetique :\n")
+    for i in player_classement:
+        print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
+
+def print_menu_stat():
+    print("\n" *50)
+    print("Bienvenue dans la catégorie rapport, veuillez selectionner la stat rechercher :\n")
+    print("1 : pour la liste de tous les joueurs par classement.")
+    print("2 : pour la liste de tous les joueurs par ordre alphabétique.")
+    print("\n3 : pour la liste des joueurs d'un tournoi, par classement.")
+    print("4 : pour la liste des joueurs d'un tournoi, par ordre alphabétique.")
+    print("\n5 : pour la liste de tous les tournoi.")
+    print("6 : pour la liste de tous les tours d'un tournoi.")
+    print("7 : pour la liste de tous les matchs d'un tournoi.")
+    print("\n8 : pour revenir au menu principal.")
+    resultat = input()
+    try:
+        while not 0 < int(resultat) <= 8:
+            print("ERREUR, vous devez rentrer le nombre en entete de votre selection.")
+            resultat = input()
+    except:
+        print("ERREUR, vous devez rentrer un nombre valide.")
+        print_menu_stat()
+    return resultat
+
 # -START-------------printing functions of various small information or exception-------
 def print_add_players_for_tournament():
+    activate()
     print("rentrer l'ID ou le nom du joueur participant")
     participant = clean_input(input())
     return participant
 
 def print_add_newplayer_for_tournament():
-    print("rentrer l'ID du joueur participant ou + pour creer un joueur")
+    print("\nrentrer l'ID du joueur participant ou + pour creer un joueur")
     resultat = clean_input(input())
     return resultat
 
-def print_save_players_for_tournament():
-    print("participant enregistrer ! \n")
+def print_add_players_for_tournament_new():
+    activate()
+    print("ce joueur est déja selectionner .")
+    participant = clean_input(input())
+    return participant
+
+def print_save_players_for_tournament(compteur, nb_player):
+    print("participant n°", compteur, "/", nb_player, "bien enregistrer ! \n")
 
 def print_player_find(player):
-    print("il y a ", len(player), "joueurs enregister")
+    print("\nil y a ", len(player), "joueurs enregister")
 
 def print_list_player_find(player, resultat):
     print(resultat, player.get("first_name"), " = ", player.get("pk"))
