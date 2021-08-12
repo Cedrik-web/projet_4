@@ -1,6 +1,9 @@
+import readline
+import sys
+from datetime import datetime
+
 from tinydb import TinyDB
 from tinydb.table import Document
-import readline
 
 from settings import PLAYERS_OF_TOURNAMENT
 
@@ -29,7 +32,7 @@ def add_players(players):
             birth_date=new_player.get("birth_date"),
             sex=new_player.get("sex"),
             ranking=new_player.get("ranking"),
-            )
+        )
         serialized = {
             "pk": player.pk,
             "name": player.name,
@@ -37,9 +40,10 @@ def add_players(players):
             "birth_date": player.birth_date,
             "sex": player.sex,
             "ranking": player.ranking,
-            }
+        }
         serialized_player.append(serialized)
     return serialized_player
+
 
 def save_player(serialized_player):
     ''' save players in the players table and save in the db.json file '''
@@ -48,21 +52,21 @@ def save_player(serialized_player):
     players_table = db.table("players")
     players_table.insert_multiple(serialized_player)
 
+
 def save_tournament(serialized_tournament):
     db = TinyDB("db.json")
     tournament_table = db.table("tournament")
     tournament_table.insert(serialized_tournament)
 
-def save_resultat_tournament(serialized_resultat, tournament):
 
+def save_resultat_tournament(serialized_resultat, tournament):
     tournaments = table_of_tournament()
     db = TinyDB("db.json").table("tournament")
-    for i in tournament:
-        i["resultat"] = [serialized_resultat]
+    serialized_resultat.update({"resultat": tournament})
     for t in tournaments:
-        if t.get("pk") == i.get("pk"):
+        if t.get("pk") == serialized_resultat.get("pk"):
             tournoi_doc_id = t.doc_id
-            db.upsert(Document(i, doc_id=tournoi_doc_id))
+            db.upsert(Document(serialized_resultat, doc_id=tournoi_doc_id))
 
 
 def table_of_player():
@@ -72,10 +76,14 @@ def table_of_player():
     players_table = db.table("players").all()
     return players_table
 
+
 def table_of_tournament():
+    ''' allows you to retrieve the tournament table from the db.json file '''
+
     db = TinyDB("db.json")
     tournament_table = db.table("tournament").all()
     return tournament_table
+
 
 def modification_of_player(modif):
     ''' allows you to save changes to a player on db.json file '''
@@ -157,6 +165,7 @@ def add_tournament(tour):
     serialized_tournament.append(serialized)
     return serialized_tournament
 
+
 def duplicate_search(player):
     '''check ij the ID is not already referenced in the database '''
 
@@ -180,15 +189,14 @@ def duplicate_search(player):
                         no_valided.append(p)
                         break
                 else:
-                    valided.append(i)
+                    valided.append(p)
             else:
                 for i in players:
-                    for j in player:
-                        if j == i.get("pk"):
-                            no_valided.append(j)
-                            break
+                    if p.get("pk") == i.get("pk"):
+                        no_valided.append(p)
+                        break
                 else:
-                    valided.append(j)
+                    valided.append(p)
     else:
         try:
             for p in player:
@@ -227,7 +235,7 @@ class Match:
         tour = 0
         for i in players:
             tour += 1
-            player = i[0]
+            player = i
             point_tournament = 0
             match_win = 0
             match_lose = 0
@@ -254,14 +262,34 @@ class Match:
         list_player_b = tri[nb_player:]
         list_match = []
         position = -1
-        resultat_total = []
-        resultat_tour1 = {}
         for i in range(turns):
             position += 1
             p1 = list_player_a[position]
             p2 = list_player_b[position]
-            match = [p1 , p2]
+            match = [p1, p2]
             list_match.append(match)
+        return list_match
+
+    def print_list_matchs(self, list_match):
+        ''' show match list request '''
+
+        m = 0
+        for list in list_match:
+            m += 1
+            print("\nmatch n°", m, ":")
+            for i in list:
+                print(i.get("pk"))
+        return list_match
+
+    def play_first_turn(self, list_match):
+        ''' play the first round of the tournament '''
+
+        resultat_total = []
+        resultat_tour1 = {}
+        date_start = datetime.now()
+        date = str(date_start)
+        resultat_tour1.update({"debut round": date})
+        print("\ndate et heure du début de round:", date)
         for i in list_match:
             joueur1 = i[0]
             joueur2 = i[1]
@@ -299,11 +327,17 @@ class Match:
                 resultat_tour1.update({match: winner})
             else:
                 print("ERREUR")
-        print("---------------------------tour : 1 terminé----------------------------\n")
-        resultat_total.append({"tour 1": resultat_tour1})
+        print("---------------------------round : 1 terminé----------------------------\n")
+        date_end = datetime.now()
+        date = str(date_end)
+        resultat_tour1.update({"fin round": date})
+        print("date et heure de fin de round", date)
+        resultat_total.append({"round 1": resultat_tour1})
         return resultat_total
 
-    def generation_next_round(self, player_of_tournament, turns):
+    def generation_next_round(self, player_of_tournament):
+        ''' generates match pairs from the 2nd round '''
+
         list_player = []
         list_match = []
         tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
@@ -311,7 +345,7 @@ class Match:
         position1 = -2
         position2 = -1
         t = 0
-        for i in range(turns):
+        for i in range(4):
             ''' genere les matchs '''
             t += 1
             position1 += 2
@@ -329,6 +363,8 @@ class Match:
         return player_of_tournament, list_match
 
     def find_player_already_play(self, joueur1, joueur2, tri_tour, position, list_player):
+        ''' check if the player has already been selected '''
+
         list_player.append(joueur1.get("pk"))
         t = -1
         new_joueur = joueur2
@@ -351,11 +387,15 @@ class Match:
         return new_player, list_player
 
     def gestion_match(self, list_match, resultat_total, player_of_tournament, tour):
+        ''' play rounds matches from the 2nd round '''
+
         resultat_tour = {}
         resultat_total = resultat_total
-        t = 1
+        date_start = datetime.now()
+        date = str(date_start)
+        resultat_tour.update({"début round": date})
+        print("\ndate et heure de debut de round:", date)
         for i in list_match:
-            t += 1
             joueur1 = i[0]
             joueur2 = i[1]
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
@@ -392,22 +432,45 @@ class Match:
                 resultat_tour.update({match: winner})
             else:
                 print("ERREUR")
-        print("---------------------------tour : " + str(tour) + " terminé----------------------------\n")
-        resultat_total.append({"\ntour " + str(t): resultat_tour})
+        print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
+        date_end = datetime.now()
+        date = str(date_end)
+        resultat_tour.update({"fin round": date})
+        print(" date et heure de fin de round :", date)
+        resultat_total.append({"round " + str(tour): resultat_tour})
         return resultat_total
 
 
-def nunber_turn(turns, players_of_tournament, resultat_total):
+def start_tournament():
+    ''' control the start of tournaments '''
+
+    print("\n")
+    print("Pour commencer le round et activé le chrono,")
+    reponse = input("appuyer sur ENTRER                            ou non pour sortir: ")
+    if reponse == "non":
+        sys.exit()
+    else:
+        pass
+
+
+def nunber_turn(turns, players_of_tournament, resultat_total, serialized_tournament, tour):
+    ''' function that controls the course of laps from the 2nd ( by a loop) '''
+
     turn = turns - 1
-    tour = 1
+    tour = tour
     for i in range(turn):
         tour += 1
-        retour2 = Match.generation_next_round(Match(), players_of_tournament, turns)
+        retour2 = Match.generation_next_round(Match(), players_of_tournament)
         players_of_tournament2 = retour2[0]
-        list_match = retour2[1]
+        list_matchs = retour2[1]
+        list_match = Match.print_list_matchs(Match(), list_matchs)
+        start_tournament()
         resultat_tournament = Match.gestion_match(Match(), list_match, resultat_total, players_of_tournament2, tour)
+        save_resultat_tournament(serialized_tournament, resultat_tournament)
     return resultat_tournament
 
+
+# class taht supports text autocomplementation
 class MyCompleter(object):  # Custom completer
 
     def __init__(self, options):
@@ -417,7 +480,7 @@ class MyCompleter(object):  # Custom completer
         if state == 0:  # on first trigger, build possible matches
             if text:  # cache matches (entries that start with entered text)
                 self.matches = [s for s in self.options
-                                    if s and s.startswith(text)]
+                                if s and s.startswith(text)]
             else:  # no text entered, all matches possible
                 self.matches = self.options[:]
 
@@ -429,6 +492,8 @@ class MyCompleter(object):  # Custom completer
 
 
 def activate():
+    ''' manage autocomplementation '''
+
     players = table_of_player()
     text = []
     for i in players:
@@ -437,33 +502,121 @@ def activate():
     readline.set_completer(completer.complete)
     readline.parse_and_bind('tab: complete')
 
+
 def stat_classement():
+    ''' returns a classification by rank or alphabetical '''
+
     players = table_of_player()
     tournaments = table_of_tournament()
     tri_rank = sorted(players, key=lambda k: k["ranking"], reverse=True)
     tri_alphabet = sorted(players, key=lambda k: k["pk"])
     player_tri_ranking = []
     player_tri_alphabet = []
-    tournoi = []
-    tour_tournoi = []
-    meet = []
-    resultat = []
     for i in tri_rank:
         player_tri_ranking.append(i)
     for j in tri_alphabet:
         player_tri_alphabet.append(j)
-    tournaments = tournaments[0]
-    tournoi.append(tournaments)
-    tours = tournaments.get("resultat")
-    tour = tours[0]
-    for list in tour:
-        tour_tournoi.append(list)
-        print("list de match du tour du tournoi :",list)
-        for k, v in list.items():
-            print(k, v)
-            for n, m in v.items():
-                meet.append(n)
-                print("match jouer :", n)
-                resultat.append(m)
-                print("gagnant du match ", m)
-    return player_tri_ranking, player_tri_alphabet, tournoi, tour_tournoi, meet, resultat
+    return player_tri_ranking, player_tri_alphabet, tournaments
+
+
+def selection_tournament():
+    ''' allows to select a tournament in the dictionary '''
+
+    tournaments = table_of_tournament()
+    liste_tournoi = []
+    for i in tournaments:
+        print("ID du tournoi :", i.get("pk"))
+        liste_tournoi.append(i.get("pk"))
+    print("\nchoisis ton tournoi par l'ID")
+    choix = input()
+    while not choix in liste_tournoi:
+        print("ERREUR vous avez mal saisie l'ID, reconnencer")
+        choix = input()
+    else:
+        for i in tournaments:
+            if i.get("pk") == choix:
+                tournament = i
+                return tournament
+
+
+def tournament_find(TURNS):
+    ''' alows you to search among the tournaments which have ended
+        which are in progress and those which have not started '''
+
+    tournaments = table_of_tournament()
+    match = []
+    tour = []
+    end = []
+    no_start = []
+    start = []
+    print("\nrecherche des tournois créer et non finaliser.\n")
+    for i in tournaments:
+        tour.append(i.get("resultat"))
+        if tour == [[]]:
+            match.append(i.get("pk"))
+            no_start.append(i)
+            tour.clear()
+        else:
+            for t in tour:
+                nb_turns = (len(t))
+                if nb_turns == TURNS:
+                    end.append(i)
+                    tour.clear()
+                else:
+                    match.append(i.get("pk"))
+                    start.append(i)
+                    tour.clear()
+    for i in end:
+        print("tournoi fini :", "le", i.get("name"), "de", i.get("location"), "du", i.get("date"))
+    print()
+    for i in no_start:
+        print("tournoi non commencer voici leurs ID :", i.get("pk"))
+        print(" - ", i.get("pk"))
+    for i in start:
+        print("tournoi non finaliser voici leurs ID :")
+        print(" - ", i.get("pk"))
+    print()
+    reponse = input("entre l'ID ou appuie entrer pour sortir de la selection: ")
+    return reponse
+
+
+def tournaments_recovery(answer):
+    ''' mamage the resumption of tournament and what turn it was '''
+
+    tournaments = table_of_tournament()
+    players = []
+    tournament = []
+    turn = 0
+    for i in tournaments:
+        if i.get("pk") == answer:
+            serialized_tournament = i
+            players_brut = i.get("players")
+            tournament.append(i.get("resultat"))
+            for p in players_brut:
+                for k, v in p.items():
+                    players.append(v)
+    if tournament == [[]]:
+        return players, serialized_tournament, turn
+    else:
+        for r in tournament:
+            nb = len(r)
+            if nb == 1:
+                turn = 1
+            elif nb == 2:
+                turn = 2
+            elif nb == 3:
+                turn = 3
+    return players, serialized_tournament, turn
+
+
+def control_already_selection(list_participant, player):
+    ''' checks if the player is in the list and answers true or false '''
+
+    for i in list_participant:
+        if player.get("pk") == i.get("pk"):
+            valided = False
+            return valided
+    else:
+        valided =True
+        return valided
+

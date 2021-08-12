@@ -5,18 +5,20 @@ def print_accueil():
     ''' menu printing and retrieval of menu choice '''
 
     print()
-    print("Bienvenue sur le gestionnaire de jeu d'échec .\n")
-    print("Selectionner le menu souhaiter .\n")
-    print(" 1 : ajouter un joueur .")
-    print(" 2 : modification d'un joueur .")
-    print(" 3 : création d'un tournoi .")
-    print(" 4 : classements .")
-    print(" 5 : modification du classements .")
-    print(" 6 : rapports .")
-    print(" 7 : sortir du logiciel .")
+    print("Bienvenue sur le gestionnaire de jeu d'échec.\n")
+    print("Selectionner le menu souhaiter.\n")
+    print(" 1 : ajouter un joueur.")
+    print(" 2 : modification d'un joueur.")
+    print(" 3 : création d'un tournoi.")
+    print(" 4 : jouer un tournoi créer.")
+    print(" 5 : classements.")
+    print(" 6 : modification du classements.")
+    print(" 7  : rapports.")
+    print(" 8 : sortir du logiciel.")
     print("\nQuelle est votre choix : ")
     resultat = input()
     return resultat
+
 
 def print_elements_player():
     ''' retrieving player items and putting all items in dictionary '''
@@ -49,6 +51,7 @@ def print_elements_player():
         }
     return elements
 
+
 def print_add_genaral_remarks():
     ''' adding the description of a tournament to the tournament object '''
 
@@ -57,6 +60,7 @@ def print_add_genaral_remarks():
     resultat = input()
     remarks.append(resultat)
     return remarks
+
 
 def print_add_timer_control():
     """ adding the timer mode of a tournament """
@@ -95,47 +99,46 @@ def print_sex_control():
         print("ERREUR , veuillez choisir le numéro correspndant au sex.")
         print_sex_control()
 
+
 def print_date_controller():
     ''' control the input console for the birth date of the player '''
 
-    day = input("                 jour :")
-    month = input("                 mois :")
-    years = input("l'année en 4 chiffres :")
-    try:
-        nb = int(day) + int(month) + int(years)
-        if 1950 < nb < 2100:
-            print()
-        else:
-            print("\nERREUR , veullez rentrer votre année de naissance complete")
+    while True:
+        try:
+            print("\nrentrer votre jour de naissance.")
+            day = int(input("                 jour :"))
+            if 0 < day < 32:
+                pass
+            else:
+                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31, correspondant à votre jour de naissance.")
+            print("rentrer votre mois de naissance.")
+            month = int(input("                 mois :"))
+            if 0 < month < 13:
+                pass
+            else:
+                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31, correspondant à votre mois de naissance.")
+            print("entrer votre année de naissance complete, avec 4 nombres.")
+            year = int(input("                 année :"))
+            if 1930 < year < 2100:
+                pass
+            else:
+                print("ERREUR, veuillez rentrer votre année de naissance complete.")
+            day_str = str(day)
+            month_str = str(month)
+            if len(month_str) == 1:
+                str_month = "0" + month_str
+            else:
+                str_month = str(month)
+            if len(day_str) == 1:
+                str_day = "0" + day_str
+            else:
+                str_day = str(day)
+            birth_date = str_day + "/" + str_month + "/" + str(year)
+            return birth_date
+        except ValueError:
+            print("\nERREUR , veuillez rentrer des chiffres")
             print("Veuillez recommencer\n")
-            print_date_controller()
-        nb_years = len(years)
-        if nb_years == 4:
-            years = years
-        else:
-            print("\nERREUR , veuillez rentrer l'année avec 4 chiffres")
-            print("Veuillez recommencer\n")
-            print_date_controller()
-        nb_day = len(day)
-        if nb_day == 2 and 0 < int(day) < 32:
-            day = day
-        else:
-            print("\nERREUR , veuillez rentrer votre jour de naissance avec 2 chiffres, exemple 02 :")
-            print("Veuillez recommencer\n")
-            print_date_controller()
-        nb_month = len(month)
-        if nb_month == 2 and 0 < int(month) < 13:
-            month = month
-        else:
-            print("\nERREUR , veuillez rentrer votre mois de naissance avec 2 chiffres, exemple 05 :")
-            print("Veuillez recommencer\n")
-            print_date_controller()
-        birth_date = day + "/" + month + "/" + years
-        return birth_date
-    except:
-        print("\nERREUR , veuillez rentrer des chiffres")
-        print("Veuillez recommencer\n")
-        print_date_controller()
+
 
 def print_add_player():
     ''' function requesting the creation of a new player
@@ -152,6 +155,7 @@ def print_add_player():
         reponse = clean_input(input())
     return serialized_player
 
+
 def print_find_player():
     ''' printing the search request for a player then retrieving the
         choice '''
@@ -161,6 +165,7 @@ def print_find_player():
     resultat = clean_input(input())
     print()
     return resultat
+
 
 def print_modif_classement(player):
     print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
@@ -181,6 +186,7 @@ def print_modif_classement(player):
         print("nouveau total de points : " + str(player.get("ranking")) + "\n")
     print()
     return player
+
 
 def print_modif_player(player):
     ''' function displaying all the elements of a player and
@@ -234,16 +240,19 @@ def print_modif_player(player):
     print()
     return player
 
+
 def print_error_enter_int():
     ''' indicates to the user that he must enter a number '''
 
     print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
+
 
 def print_display_player_list(player):
     ''' printing a list of players with the same name '''
 
     print(player.get("name"), player.get("first_name"))
     print("son ID est : ", player.get("pk"), "\n")
+
 
 def print_display_player_nb(nb_player, player):
     ''' print the number of existing players for the search then return
@@ -252,10 +261,12 @@ def print_display_player_nb(nb_player, player):
     print("il y a ", nb_player, " resultat pour la recherche : ", player)
     print("veuillez utiliser ID du joueur ")
 
+
 def print_modif_ok():
     ''' printing modification to carry out '''
 
     print("modification effectuer avec succès !")
+
 
 def print_elements_tournament():
     ''' get tournament items and return a dictionary '''
@@ -272,6 +283,7 @@ def print_elements_tournament():
         "date": date,
         }
     return elements
+
 
 def print_date_tournament_controller():
     ''' control the input console for the date of the tournament '''
@@ -315,28 +327,52 @@ def print_date_tournament_controller():
         print("Veuillez recommencer\n")
         print_date_tournament_controller()
 
+
 def print_pass_validation():
+    ''' display a message in console '''
+
     print("\ncontinuez......")
     input("appuyer sur entrée pour revenir au menu")
     print("\n" * 25)
 
+
 def print_classement(player_classement):
+    ''' display a message in console '''
+
     print("\nclassement à ce jour :\n")
     rang = 0
     for i in player_classement:
         rang += 1
         print("n°", rang, i.get("pk"), "avec", i.get("ranking"), "point(s).")
 
+
 def print_list_of_tournaments(tournament):
+    ''' display a message in console '''
+
     print("\nliste des tournois jouer.")
-    print(tournament.get("pk"))
+    for i in tournament:
+        print(i.get("pk"))
+
 
 def print_classement_alphabet(player_classement):
+    ''' display a message in console '''
+
     print("\nclassement joueurs par ordre alphabetique :\n")
     for i in player_classement:
         print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
 
+
+def print_list_players_alphabet(player_classement):
+    ''' display a message in console '''
+
+    print("\nlistes des joueurs par ordre alphabetique :\n")
+    for i in player_classement:
+        print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
+
+
 def print_menu_stat():
+    ''' displays in console the stats menu and returns the voice made '''
+
     print("\n" *50)
     print("Bienvenue dans la catégorie rapport, veuillez selectionner la stat rechercher :\n")
     print("1 : pour la liste de tous les joueurs par classement.")
@@ -357,10 +393,27 @@ def print_menu_stat():
         print_menu_stat()
     return resultat
 
+
+def print_menu_ajout_players_fot_tournament():
+    ''' displays in console a menu (addition of a player in the tournament creation)
+        and takes care of the cases errors '''
+
+    while True:
+        try:
+            print()
+            print(" 1: pour la liste des joueur existante :")
+            print((" 2: pour créer un nouveau joueurs :"))
+            choix = int(clean_input(input()))
+            if 0 < choix < 4:
+                return choix
+        except ValueError:
+            print("vous devez rentrer un chiffre correspondant a votre choix.")
+
+
 # -START-------------printing functions of various small information or exception-------
 def print_add_players_for_tournament():
     activate()
-    print("rentrer l'ID ou le nom du joueur participant")
+    print("\nrentrer l'ID du joueur selectionner ")
     participant = clean_input(input())
     return participant
 
@@ -369,11 +422,11 @@ def print_add_newplayer_for_tournament():
     resultat = clean_input(input())
     return resultat
 
+def print_add_player_impossible(existing):
+    print("creation impossible car ce joueur est deja existant et sont ID est", existing.get("pk"))
+
 def print_add_players_for_tournament_new():
-    activate()
     print("ce joueur est déja selectionner .")
-    participant = clean_input(input())
-    return participant
 
 def print_save_players_for_tournament(compteur, nb_player):
     print("participant n°", compteur, "/", nb_player, "bien enregistrer ! \n")
@@ -381,18 +434,18 @@ def print_save_players_for_tournament(compteur, nb_player):
 def print_player_find(player):
     print("\nil y a ", len(player), "joueurs enregister")
 
-def print_list_player_find(player, resultat):
-    print(resultat, player.get("first_name"), " = ", player.get("pk"))
+def print_list_player_find(list_player, resultat):
+    for i in list_player:
+        player = i
+        print(resultat, player.get("first_name"), " = ", player.get("pk"))
 
 def print_error_id():
     print("ERREUR, il y a une erreur dans ID recommencer")
 
 def print_exicting_player(p):
-    for i in p:
-        print("le joueur ", i.get("pk"), " est déja enregistrer !")
+    print("le joueur ", p.get("pk"), " est déja enregistrer !")
 
-def print_new_player_register(p):
-    for i in p:
-        print("le joueur ", i.get("name"), " a etait enregister sous ID :", i.get("pk"))
+def print_new_player_register():
+        print("le joueur a etait enregister et rajouter au tounoi.")
 
 # -END-------------------------------------------------------------------------------
