@@ -41,7 +41,7 @@ def print_elements_player():
         except:
             print("\nERREUR , veuillez rentrer un nombre entier")
             print("recomencer")
-    print("nombre de point et de : ",ranking)
+    print("nombre de point et de : ", ranking)
     elements = {
         "name": name,
         "first_name": first_name,
@@ -105,24 +105,24 @@ def print_date_controller():
 
     while True:
         try:
-            print("\nrentrer votre jour de naissance.")
+            print("\nrentrer le jour.")
             day = int(input("                 jour :"))
             if 0 < day < 32:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31, correspondant à votre jour de naissance.")
-            print("rentrer votre mois de naissance.")
+                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
+            print("rentrer le mois.")
             month = int(input("                 mois :"))
             if 0 < month < 13:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31, correspondant à votre mois de naissance.")
-            print("entrer votre année de naissance complete, avec 4 nombres.")
+                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
+            print("entrer l'année complete, avec 4 nombres.")
             year = int(input("                 année :"))
             if 1930 < year < 2100:
                 pass
             else:
-                print("ERREUR, veuillez rentrer votre année de naissance complete.")
+                print("ERREUR, veuillez rentrer l'année complete.")
             day_str = str(day)
             month_str = str(month)
             if len(month_str) == 1:
@@ -276,56 +276,13 @@ def print_elements_tournament():
     print("entrer le lieu du tournoi")
     location = clean_input(input())
     print("entrer la date du tournoi")
-    date = print_date_tournament_controller()
+    date = print_date_controller()
     elements = {
         "name": name,
         "location": location,
         "date": date,
         }
     return elements
-
-
-def print_date_tournament_controller():
-    ''' control the input console for the date of the tournament '''
-
-    day = input("                 jour :")
-    month = input("                 mois :")
-    years = input("l'année en 4 chiffres :")
-    try:
-        nb = int(day) + int(month) + int(years)
-        if 1950 < nb < 2100:
-            print()
-        else:
-            print("\nERREUR , veullez l'année complete")
-            print("Veuillez recommencer\n")
-            print_date_tournament_controller()
-        nb_years = len(years)
-        if nb_years == 4:
-            years = years
-        else:
-            print("\nERREUR , veuillez rentrer l'année avec 4 chiffres")
-            print("Veuillez recommencer\n")
-            print_date_tournament_controller()
-        nb_day = len(day)
-        if nb_day == 2 and 0 < int(day) < 32:
-            day = day
-        else:
-            print("\nERREUR , veuillez rentrer le jour avec 2 chiffres, exemple 02 :")
-            print("Veuillez recommencer\n")
-            print_date_tournament_controller()
-        nb_month = len(month)
-        if nb_month == 2 and 0 < int(month) < 13:
-            month = month
-        else:
-            print("\nERREUR , veuillez rentrer le mois  avec 2 chiffres, exemple 05 :")
-            print("Veuillez recommencer\n")
-            print_date_tournament_controller()
-        tournament_date = day + "/" + month + "/" + years
-        return tournament_date
-    except:
-        print("\nERREUR , veuillez rentrer des chiffres")
-        print("Veuillez recommencer\n")
-        print_date_tournament_controller()
 
 
 def print_pass_validation():
@@ -410,42 +367,45 @@ def print_menu_ajout_players_fot_tournament():
             print("vous devez rentrer un chiffre correspondant a votre choix.")
 
 
-# -START-------------printing functions of various small information or exception-------
 def print_add_players_for_tournament():
     activate()
     print("\nrentrer l'ID du joueur selectionner ")
     participant = clean_input(input())
     return participant
 
-def print_add_newplayer_for_tournament():
-    print("\nrentrer l'ID du joueur participant ou + pour creer un joueur")
-    resultat = clean_input(input())
-    return resultat
 
 def print_add_player_impossible(existing):
+    ''' display a message in console '''
+
     print("creation impossible car ce joueur est deja existant et sont ID est", existing.get("pk"))
 
+
 def print_add_players_for_tournament_new():
-    print("ce joueur est déja selectionner .")
+    ''' display a message in console '''
+
+    print("\nce joueur est déja selectionner .")
+
 
 def print_save_players_for_tournament(compteur, nb_player):
+    ''' display a message in console '''
+
     print("participant n°", compteur, "/", nb_player, "bien enregistrer ! \n")
 
-def print_player_find(player):
-    print("\nil y a ", len(player), "joueurs enregister")
-
-def print_list_player_find(list_player, resultat):
-    for i in list_player:
-        player = i
-        print(resultat, player.get("first_name"), " = ", player.get("pk"))
 
 def print_error_id():
+    ''' display a message in console '''
+
     print("ERREUR, il y a une erreur dans ID recommencer")
 
+
 def print_exicting_player(p):
+    ''' display a message in console '''
+
     print("le joueur ", p.get("pk"), " est déja enregistrer !")
 
-def print_new_player_register():
-        print("le joueur a etait enregister et rajouter au tounoi.")
 
-# -END-------------------------------------------------------------------------------
+def print_new_player_register():
+    ''' display a message in console '''
+
+    print("le joueur a etait enregister et rajouter au tounoi.")
+

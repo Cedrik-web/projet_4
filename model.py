@@ -54,12 +54,16 @@ def save_player(serialized_player):
 
 
 def save_tournament(serialized_tournament):
+    ''' save tournament in the tournament table and save in the db.json file '''
+
     db = TinyDB("db.json")
     tournament_table = db.table("tournament")
     tournament_table.insert(serialized_tournament)
 
 
 def save_resultat_tournament(serialized_resultat, tournament):
+    ''' saves the modification of a tournament, etc result ... '''
+
     tournaments = table_of_tournament()
     db = TinyDB("db.json").table("tournament")
     serialized_resultat.update({"resultat": tournament})
@@ -386,7 +390,7 @@ class Match:
         list_player.append(new_player.get("pk"))
         return new_player, list_player
 
-    def gestion_match(self, list_match, resultat_total, player_of_tournament, tour):
+    def gestion_match(self, list_match, resultat_total, tour):
         ''' play rounds matches from the 2nd round '''
 
         resultat_tour = {}
@@ -461,16 +465,15 @@ def nunber_turn(turns, players_of_tournament, resultat_total, serialized_tournam
     for i in range(turn):
         tour += 1
         retour2 = Match.generation_next_round(Match(), players_of_tournament)
-        players_of_tournament2 = retour2[0]
         list_matchs = retour2[1]
         list_match = Match.print_list_matchs(Match(), list_matchs)
         start_tournament()
-        resultat_tournament = Match.gestion_match(Match(), list_match, resultat_total, players_of_tournament2, tour)
+        resultat_tournament = Match.gestion_match(Match(), list_match, resultat_total, tour)
         save_resultat_tournament(serialized_tournament, resultat_tournament)
     return resultat_tournament
 
 
-# class taht supports text autocomplementation
+# class that supports text autocomplementation
 class MyCompleter(object):  # Custom completer
 
     def __init__(self, options):
@@ -483,7 +486,6 @@ class MyCompleter(object):  # Custom completer
                                 if s and s.startswith(text)]
             else:  # no text entered, all matches possible
                 self.matches = self.options[:]
-
         # return match indexed by state
         try:
             return self.matches[state]
