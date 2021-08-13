@@ -1,21 +1,21 @@
 import sys
 
-from view import print_accueil, print_add_player, print_find_player, print_modif_player, print_error_enter_int
-from view import print_display_player_list, print_display_player_nb, print_modif_ok
-from view import print_elements_tournament, print_elements_player, print_add_players_for_tournament
-from view import print_save_players_for_tournament, print_error_id
-from view import print_exicting_player, print_new_player_register, print_pass_validation
-from view import print_add_genaral_remarks,print_add_timer_control
-from view import print_add_players_for_tournament_new, print_classement
-from view import print_modif_classement, print_menu_stat, print_classement_alphabet
-from view import print_list_of_tournaments, print_menu_ajout_players_fot_tournament
-from view import print_list_players_alphabet, print_add_player_impossible
+from player.model import add_players, duplicate_search, save_player, add_players_of_tournament, table_of_player, \
+    modification_of_player, stat_classement
 
-from model import save_player, add_players, table_of_player, modification_of_player
-from model import add_tournament, gathers_tournament_dictionary, save_tournament
-from model import duplicate_search, Match, nunber_turn, save_resultat_tournament
-from model import stat_classement, selection_tournament, start_tournament
-from model import tournament_find, tournaments_recovery, control_already_selection
+from player.view import print_add_player, print_find_player, print_display_player_list, print_display_player_nb, \
+    print_modif_player
+
+from tournament.model import add_tournament, gathers_tournament_dictionary, save_tournament, start_tournament, \
+    save_resultat_tournament, Match, nunber_turn
+
+from tournament.view import print_elements_tournament, print_add_genaral_remarks, print_add_timer_control
+
+from view import print_accueil, print_error_enter_int, print_modif_ok, print_exicting_player, \
+    print_new_player_register, print_pass_validation, print_classement, print_list_of_tournaments, \
+    print_menu_stat, print_classement_alphabet, print_modif_classement
+
+from model import selection_tournament, tournament_find, tournaments_recovery
 
 from settings import TURNS
 
@@ -290,68 +290,3 @@ def modif_menu():
                     modification_of_player(modif)
                     print_modif_ok()
                     menu()
-
-
-def add_players_of_tournament(tournament):
-    """ function to add players to the tournament
-    access to the database or register a new player """
-
-    players = table_of_player()
-    retour_list = stat_classement()
-    player_tri_alphabet = retour_list[1]
-    nombre_de_tours = tournament[0].get("nb_players")
-    participants = []
-    compteur = 0
-    for i in range(int(nombre_de_tours)):  # add all tournament players
-        compteur += 1
-        choix = print_menu_ajout_players_fot_tournament()
-        if choix == 1:
-            no_selection = False
-            while no_selection == False:
-                print_list_players_alphabet(player_tri_alphabet)
-                resultat = print_add_players_for_tournament()  # display the list of all players
-                boucle = False
-                while boucle == False:
-                    for i in players:
-                        if resultat == i.get("pk"):  # control if the player is not already recording
-                            no_selection = control_already_selection(participants, i)
-                            if no_selection == True:
-                                participants.append(i)
-                                print_save_players_for_tournament(compteur, nombre_de_tours)
-                                boucle = True
-                                break
-                            else:
-                                print_add_players_for_tournament_new()
-                                boucle = True
-                                break
-                    else:
-                        print_error_id()
-                        resultat = print_add_players_for_tournament()
-                        boucle = False
-        elif choix == 2:  # create a new player and add player them to the tournament
-            player = [print_elements_player()]
-            add_player = add_players(player)
-            player_valided = duplicate_search(add_player)
-            seria = player_valided.get("valided")
-            for s in seria:
-                serialized_player = s
-                if not serialized_player.get("pk") == None:
-                    save_player([serialized_player])
-                    print_new_player_register(serialized_player)
-                    participants. append(serialized_player)
-                    print_save_players_for_tournament(compteur, nombre_de_tours)
-                    break
-            ex = player_valided.get("no_valided")
-            for i in ex:
-                existing = i
-                if not existing.get("pk") == None:
-                    print_add_player_impossible(existing)
-                    no_selection = control_already_selection(participants, i)
-                    if no_selection == True:
-                        participants.append(existing)
-                        print_save_players_for_tournament(compteur, nombre_de_tours)
-                        break
-                    else:
-                        print_add_players_for_tournament_new()
-                        break
-    return participants
