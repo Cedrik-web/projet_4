@@ -5,6 +5,10 @@ from tinydb import TinyDB
 from tinydb.table import Document
 
 from settings import PLAYERS_OF_TOURNAMENT
+from tournament.view import print_start_tournament, print_start_chrono, print_menu_match_tournament, \
+    print_player_winner, print_player_pat, print_error, print_ending_first_round, print_ending_chrono, \
+    print_ending_other_round
+
 
 
 def save_tournament(serialized_tournament):
@@ -90,9 +94,7 @@ def add_tournament(tour):
 def start_tournament():
     ''' control the start of tournaments '''
 
-    print("\n")
-    print("Pour commencer le round et activé le chrono,")
-    reponse = input("appuyer sur ENTRER                            ou non pour sortir: ")
+    reponse = print_start_tournament()
     if reponse == "non":
         sys.exit()
     else:
@@ -184,20 +186,16 @@ class Match:
         date_start = datetime.now()
         date = str(date_start)
         resultat_tour1.update({"debut round": date})
-        print("\ndate et heure du début de round:", date)
+        print_start_chrono(date)
         for i in list_match:
             joueur1 = i[0]
             joueur2 = i[1]
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
-            print("\n resultat pour le match :", match, "\n")
-            print(" - tape 1 si", joueur1.get('pk'), "a gagner.")
-            print(" - tape 2 si", joueur2.get('pk'), "a gagner.")
-            print(" - si pat tapez 3")
-            resultat = int(input("                                    : "))
+            resultat = print_menu_match_tournament(match, joueur1, joueur2)
             joueur1["meet"] = [joueur2.get("pk")]
             joueur2["meet"] = [joueur1.get("pk")]
             if resultat == 1:
-                print("                                                         ", joueur1.get('pk'), " GAGNE !!\n")
+                print_player_winner(joueur1)
                 joueur1["point_tournament"] = self.winner
                 joueur1["match_win"] += 1
                 joueur2["point_tournamant"] = self.loser
@@ -205,7 +203,7 @@ class Match:
                 winner = joueur1.get("pk")
                 resultat_tour1.update({match: winner})
             elif resultat == 2:
-                print("                         ", joueur2, " GAGNE !!\n")
+                print_player_winner(joueur2)
                 joueur1["point_tournament"] = self.loser
                 joueur1["match_lose"] += 1
                 joueur2["point_tournament"] = self.winner
@@ -213,7 +211,7 @@ class Match:
                 winner = joueur2.get("pk")
                 resultat_tour1.update({match: winner})
             elif resultat == 3:
-                print("                                     match nul \n")
+                print_player_pat()
                 joueur1["point_tournament"] = self.draw
                 joueur1["match_pat"] += 1
                 joueur2["point_tournament"] = self.draw
@@ -221,12 +219,12 @@ class Match:
                 winner = "pat match nul"
                 resultat_tour1.update({match: winner})
             else:
-                print("ERREUR")
-        print("---------------------------round : 1 terminé----------------------------\n")
+                print_error()
+        print_ending_first_round()
         date_end = datetime.now()
         date = str(date_end)
         resultat_tour1.update({"fin round": date})
-        print("date et heure de fin de round", date)
+        print_ending_chrono(date)
         resultat_total.append({"round 1": resultat_tour1})
         return resultat_total
 
@@ -289,20 +287,16 @@ class Match:
         date_start = datetime.now()
         date = str(date_start)
         resultat_tour.update({"début round": date})
-        print("\ndate et heure de debut de round:", date)
+        print_start_chrono(date)
         for i in list_match:
             joueur1 = i[0]
             joueur2 = i[1]
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
-            print("\n resultat pour le match :", match, "\n")
-            print(" - tape 1 si", joueur1.get('pk'), " a gagner.")
-            print(" - tape 2 si", joueur2.get('pk'), " a gagner.")
-            print(" - si pat tapez 3")
-            resultat = int(input("                               : "))
+            resultat = print_menu_match_tournament(match, joueur1, joueur2)
             joueur1["meet"] += [joueur2.get("pk")]
             joueur2["meet"] += [joueur1.get("pk")]
             if resultat == 1:
-                print("                                                         ", joueur1.get('pk'), " GAGNE !!\n")
+                print_player_winner(joueur1)
                 joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
                 joueur1["match_win"] += 1
                 joueur2["point_tournament"] = joueur2.get("point_tournament") + self.loser
@@ -310,7 +304,7 @@ class Match:
                 winner = joueur1.get("pk")
                 resultat_tour.update({match: winner})
             elif resultat == 2:
-                print("                         ", joueur2, " GAGNE !!\n")
+                print_player_winner(joueur2)
                 joueur1["point_tournament"] = joueur1.get("point_tournament") + self.loser
                 joueur1["match_lose"] += 1
                 joueur2["point_tournament"] = joueur2.get("point_tournament") + self.winner
@@ -318,7 +312,7 @@ class Match:
                 winner = joueur2.get("pk")
                 resultat_tour.update({match: winner})
             elif resultat == 3:
-                print("                                     match nul \n")
+                print_player_pat()
                 joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
                 joueur1["match_pat"] += 1
                 joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
@@ -326,12 +320,12 @@ class Match:
                 winner = "pat match nul"
                 resultat_tour.update({match: winner})
             else:
-                print("ERREUR")
-        print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
+                print_error()
+        print_ending_other_round(tour)
         date_end = datetime.now()
         date = str(date_end)
         resultat_tour.update({"fin round": date})
-        print(" date et heure de fin de round :", date)
+        print_ending_chrono(date)
         resultat_total.append({"round " + str(tour): resultat_tour})
         return resultat_total
 

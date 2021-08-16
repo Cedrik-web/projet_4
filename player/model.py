@@ -3,13 +3,42 @@ import readline
 from tinydb import TinyDB
 from tinydb.table import Document
 
-from model import MyCompleter
-from player.view import print_elements_player
+from view import print_error_id
+from player.view import print_elements_player, print_list_players_alphabet, print_new_player_register
 from tournament.model import control_already_selection, table_of_tournament
 from tournament.view import print_menu_ajout_players_fot_tournament, print_add_players_for_tournament, \
     print_save_players_for_tournament, print_add_players_for_tournament_new, print_add_player_impossible
-from view import print_list_players_alphabet, print_error_id, print_new_player_register
 
+
+# class that supports text autocomplementation
+class MyCompleter(object):  # Custom completer
+
+    def __init__(self, options):
+        self.options = sorted(options)
+
+    def complete(self, text, state):
+        if state == 0:  # on first trigger, build possible matches
+            if text:  # cache matches (entries that start with entered text)
+                self.matches = [s for s in self.options
+                                if s and s.startswith(text)]
+            else:  # no text entered, all matches possible
+                self.matches = self.options[:]
+        # return match indexed by state
+        try:
+            return self.matches[state]
+        except IndexError:
+            return None
+
+
+def activate(players):
+    ''' manage autocomplementation '''
+
+    text = []
+    for i in players:
+        text.append(i.get("pk"))
+    completer = MyCompleter(text)
+    readline.set_completer(completer.complete)
+    readline.parse_and_bind('tab: complete')
 
 
 # player model creation
@@ -144,6 +173,7 @@ def add_players_of_tournament(tournament):
             no_selection = False
             while no_selection == False:
                 print_list_players_alphabet(player_tri_alphabet)
+                activate(players)
                 resultat = print_add_players_for_tournament()  # display the list of all players
                 boucle = False
                 while boucle == False:
@@ -190,18 +220,6 @@ def add_players_of_tournament(tournament):
                         print_add_players_for_tournament_new()
                         break
     return participants
-
-
-def activate():
-    ''' manage autocomplementation '''
-
-    players = table_of_player()
-    text = []
-    for i in players:
-        text.append(i.get("pk"))
-    completer = MyCompleter(text)
-    readline.set_completer(completer.complete)
-    readline.parse_and_bind('tab: complete')
 
 
 def stat_classement():

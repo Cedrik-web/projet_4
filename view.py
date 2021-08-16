@@ -1,4 +1,22 @@
-from model import clean_input
+
+
+
+def clean_input(data):
+    ''' general function to protect the program from
+        incorrect user input '''
+
+    tiny = data.lower()
+    text = tiny.replace(" ", "-")
+    char = "!#$%&*()"
+    for i in char:
+        text = text.replace(i, "")
+    accent = "éèêë"
+    for a in accent:
+        text = text.replace(a, "e")
+    accent_a = text.replace("à", "a")
+    accent_u = accent_a.replace("ù", "u")
+    new_data = accent_u
+    return new_data
 
 
 def print_accueil():
@@ -21,6 +39,9 @@ def print_accueil():
 
 
 def print_modif_classement(player):
+    ''' displays the rank of a player requesting
+    and takes charge of the rank change then returns it '''
+
     print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
     reponse = clean_input(input())
     ranking = player.get("ranking")
@@ -52,6 +73,11 @@ def print_modif_ok():
 
     print("modification effectuer avec succès !")
 
+
+def print_error_id():
+    ''' display a message in console '''
+
+    print("ERREUR, il y a une erreur dans ID recommencer")
 
 
 def print_pass_validation():
@@ -88,14 +114,6 @@ def print_classement_alphabet(player_classement):
         print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
 
 
-def print_list_players_alphabet(player_classement):
-    ''' display a message in console '''
-
-    print("\nlistes des joueurs par ordre alphabetique :\n")
-    for i in player_classement:
-        print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
-
-
 def print_menu_stat():
     ''' displays in console the stats menu and returns the voice made '''
 
@@ -120,20 +138,137 @@ def print_menu_stat():
     return resultat
 
 
-def print_error_id():
-    ''' display a message in console '''
-
-    print("ERREUR, il y a une erreur dans ID recommencer")
-
-
 def print_exicting_player(p):
     ''' display a message in console '''
 
     print("le joueur ", p.get("pk"), " est déja enregistrer !")
 
 
-def print_new_player_register():
+def print_list_tournament(i):
     ''' display a message in console '''
 
-    print("le joueur a etait enregister et rajouter au tounoi.")
+    print("ID du tournoi :", i.get("pk"))
 
+
+def print_choice_tournament():
+    ''' display a information and retrun a variable '''
+
+    print("\nchoisis ton tournoi par l'ID")
+    choix = clean_input(input())
+    return choix
+
+
+def print_find_tournament():
+    ''' display a message in console '''
+
+    print("\nrecherche des tournois créer et non finaliser.\n")
+
+
+def print_space():
+    ''' display 1 space '''
+
+    print()
+
+
+def print_tournament_finished(i):
+    ''' display a message in console'''
+
+    print("tournoi fini :", "le", i.get("name"), "de", i.get("location"), "du", i.get("date"))
+
+
+def print_tournament_not_start(i):
+    ''' display a message in console'''
+
+    print("tournoi non commencer voici leurs ID :", i.get("pk"))
+    print(" - ", i.get("pk"))
+
+
+def print_tournament_start(i):
+    ''' display a message in console'''
+
+    print("tournoi non finaliser voici leurs ID :")
+    print(" - ", i.get("pk"))
+
+
+def print_input_selection_tournament():
+    ''' display a message in console and return a variable'''
+
+    reponse = clean_input(input("entre l'ID ou appuie entrer pour sortir de la selection: "))
+    return reponse
+
+
+def print_classement_of_tournament():
+    ''' display a message in console'''
+
+    print("\nclassement du tournoi :\n")
+
+
+def print_tri_player_of_tournament_rank(i, p):
+    ''' display a message in console'''
+
+    print("n°", p, i.get("pk"), "avec", i.get("ranking"), "point(s).")
+
+
+def print_tri_player_of_tournament_alphabet(i):
+    ''' display a message in console'''
+
+    print(i.get("pk"), "avec", i.get("ranking"), "point(s).")
+
+
+def print_classement_player_of_tournament():
+    ''' display a message in console'''
+
+    print("\njoueur du tournoi :\n")
+
+
+def print_list_tournaments(tournament):
+    ''' display a message in console'''
+
+    print("\nlistes des tours pour le tournoi ", tournament.get("pk"))
+    print()
+
+
+def print_tournament_time(t):
+    ''' display a message in console'''
+
+    print("temps de jeu du round " + str(t))
+
+
+def print_tournament_resultat(resultat):
+    ''' display a message in console'''
+
+    print("début : ", resultat[0])
+    print("fin : ", resultat[-1])
+
+
+def print_list_match_by_tournament(tournament):
+    ''' display a message in console'''
+
+    print("\nlistes des matchs pour le tournoi", tournament.get("pk"))
+    print()
+
+
+def print_resultat_match(t):
+    ''' display a message in console'''
+
+    print("resultat du round " + str(t))
+
+
+def print_list_resultat_match(i, j):
+    ''' display a message in console'''
+
+    print("match :", i)
+    print("        remporter par: ", j)
+
+
+def print_menu_existing():
+    ''' display a message in console'''
+
+    print("ERREUR vous devez choisir un menu existant")
+
+
+def print_choice_input_menu(resultat):
+    ''' display a message in console'''
+
+    resultat_int = int(resultat)
+    return resultat_int

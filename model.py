@@ -1,44 +1,10 @@
 
+from player.model import table_of_player, modification_of_player
+from player.view import print_find_player, print_display_player_list, print_display_player_nb
 from tournament.model import table_of_tournament
-
-
-
-def clean_input(data):
-    ''' general function to protect the program from
-        incorrect user input '''
-
-    tiny = data.lower()
-    text = tiny.replace(" ", "-")
-    char = "!#$%&*()"
-    for i in char:
-        text = text.replace(i, "")
-    accent = "éèêë"
-    for a in accent:
-        text = text.replace(a, "e")
-    accent_a = text.replace("à", "a")
-    accent_u = accent_a.replace("ù", "u")
-    new_data = accent_u
-    return new_data
-
-
-# class that supports text autocomplementation
-class MyCompleter(object):  # Custom completer
-
-    def __init__(self, options):
-        self.options = sorted(options)
-
-    def complete(self, text, state):
-        if state == 0:  # on first trigger, build possible matches
-            if text:  # cache matches (entries that start with entered text)
-                self.matches = [s for s in self.options
-                                if s and s.startswith(text)]
-            else:  # no text entered, all matches possible
-                self.matches = self.options[:]
-        # return match indexed by state
-        try:
-            return self.matches[state]
-        except IndexError:
-            return None
+from view import print_list_tournament, print_choice_tournament, print_find_tournament, \
+    print_tournament_finished, print_tournament_not_start, print_tournament_start, print_input_selection_tournament, \
+    print_space, print_modif_classement, print_modif_ok, print_error_id
 
 
 def selection_tournament():
@@ -47,13 +13,12 @@ def selection_tournament():
     tournaments = table_of_tournament()
     liste_tournoi = []
     for i in tournaments:
-        print("ID du tournoi :", i.get("pk"))
+        print_list_tournament(i)
         liste_tournoi.append(i.get("pk"))
-    print("\nchoisis ton tournoi par l'ID")
-    choix = input()
+    choix = print_choice_tournament()
     while not choix in liste_tournoi:
-        print("ERREUR vous avez mal saisie l'ID, reconnencer")
-        choix = input()
+        print_error_id()
+        choix = print_choice_tournament()
     else:
         for i in tournaments:
             if i.get("pk") == choix:
@@ -71,7 +36,7 @@ def tournament_find(TURNS):
     end = []
     no_start = []
     start = []
-    print("\nrecherche des tournois créer et non finaliser.\n")
+    print_find_tournament()
     for i in tournaments:
         tour.append(i.get("resultat"))
         if tour == [[]]:
@@ -89,21 +54,19 @@ def tournament_find(TURNS):
                     start.append(i)
                     tour.clear()
     for i in end:
-        print("tournoi fini :", "le", i.get("name"), "de", i.get("location"), "du", i.get("date"))
-    print()
+        print_tournament_finished(i)
+    print_space()
     for i in no_start:
-        print("tournoi non commencer voici leurs ID :", i.get("pk"))
-        print(" - ", i.get("pk"))
+        print_tournament_not_start(i)
     for i in start:
-        print("tournoi non finaliser voici leurs ID :")
-        print(" - ", i.get("pk"))
-    print()
-    reponse = input("entre l'ID ou appuie entrer pour sortir de la selection: ")
+        print_tournament_start(i)
+    print_space()
+    reponse = print_input_selection_tournament()
     return reponse
 
 
 def tournaments_recovery(answer):
-    ''' mamage the resumption of tournament and what turn it was '''
+    ''' manage the resumption of tournament and what turn it was '''
 
     tournaments = table_of_tournament()
     players = []
@@ -130,3 +93,35 @@ def tournaments_recovery(answer):
                 turn = 3
     return players, serialized_tournament, turn
 
+
+def modif_classement():
+    ''' allows you to search for the player to modify by name
+        which returns a list of all the players with this name
+        or by ID to directly select the player to modify '''
+
+    resultat = print_find_player()
+    players = table_of_player()
+    nb = len(resultat)
+    nb_players = []
+    if nb < 10:
+        for player in players:
+            for k, v in player.items():
+                if v == resultat:
+                    nb_players.append(player)
+        for player in players:
+            for k, v in player.items():
+                if v == resultat:
+                    if len(nb_players) == 1:
+                        modif = print_modif_classement(player)
+                        modification_of_player(modif)
+                        print_modif_ok()
+                    else:
+                        print_display_player_list(player)
+        print_display_player_nb(len(nb_players), resultat)
+    else:
+        for player in players:
+            for k, v in player.items():
+                if v == resultat:
+                    modif = print_modif_classement(player)
+                    modification_of_player(modif)
+                    print_modif_ok()

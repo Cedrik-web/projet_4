@@ -1,23 +1,15 @@
 import sys
 
-from player.model import add_players, duplicate_search, save_player, add_players_of_tournament, table_of_player, \
-    modification_of_player, stat_classement
+from model import modif_classement, selection_tournament
+from player.controller import menu_add_player, menu_modif_player
+from player.model import stat_classement
 
-from player.view import print_add_player, print_find_player, print_display_player_list, print_display_player_nb, \
-    print_modif_player
-
-from tournament.model import add_tournament, gathers_tournament_dictionary, save_tournament, start_tournament, \
-    save_resultat_tournament, Match, nunber_turn
-
-from tournament.view import print_elements_tournament, print_add_genaral_remarks, print_add_timer_control
-
-from view import print_accueil, print_error_enter_int, print_modif_ok, print_exicting_player, \
-    print_new_player_register, print_pass_validation, print_classement, print_list_of_tournaments, \
-    print_menu_stat, print_classement_alphabet, print_modif_classement
-
-from model import selection_tournament, tournament_find, tournaments_recovery
-
-from settings import TURNS
+from tournament.controller import play_tournament, menu_tournament
+from view import print_accueil, print_error_enter_int, print_classement, print_menu_stat, print_pass_validation, \
+    print_classement_alphabet, print_list_of_tournaments, print_space, print_choice_input_menu, \
+    print_classement_of_tournament, print_tri_player_of_tournament_rank, print_classement_player_of_tournament, \
+    print_tri_player_of_tournament_alphabet, print_list_tournaments, print_tournament_time, print_tournament_resultat, \
+    print_list_match_by_tournament, print_resultat_match, print_list_resultat_match, print_menu_existing
 
 
 def menu():
@@ -25,83 +17,24 @@ def menu():
 
     resultat = print_accueil()
     try:
-        resultat = int(resultat)
+        resultat = print_choice_input_menu(resultat)
     except:
         print_error_enter_int()
         menu()
     if resultat == 1:  # adding player
-        player = print_add_player()
-        add_player = add_players(player)
-        resultat = duplicate_search(add_player)
-        serialized_player = resultat.get("valided")
-        existing = resultat.get("no_valided")
-        if not serialized_player == []:
-            save_player(serialized_player)
-            print_new_player_register(serialized_player)
-        if not existing == []:
-            print_exicting_player(existing)
+        menu_add_player()
         menu()
     if resultat == 2:  # player modification
-        modif_menu()
+        menu_modif_player()
+        menu()
     if resultat == 3:  # creation of a tournament
         tour = 1
-        elements = print_elements_tournament()
-        tournament = add_tournament(elements)
-        players = add_players_of_tournament(tournament)
-        remarks = print_add_genaral_remarks()
-        timer_control = print_add_timer_control()
-        players_of_tournament = Match.match_generation(Match(), players)
-        serialized_tournament = gathers_tournament_dictionary(
-            tournament,
-            players_of_tournament,
-            remarks,
-            timer_control
-        )
-        save_tournament(serialized_tournament)
-        list_matchs = Match.generation_first_round(Match(), players_of_tournament, TURNS)
-        list_match = Match.print_list_matchs(Match(), list_matchs)
-        start_tournament()
-        resultat_total = Match.play_first_turn(Match(), list_match)
-        save_resultat_tournament(serialized_tournament, resultat_total)
-        nunber_turn(TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
-        save_resultat_tournament(serialized_tournament, resultat_total)
+        play_tournament(tour)
         menu()
     if resultat == 4:  # to see all tournaments create and play tournaments not finalized
         try:
-            reponse = tournament_find(TURNS)
-            if reponse != "":
-                retour = tournaments_recovery(reponse)
-                players_of_tournament = retour[0]
-                serialized_tournament = retour[1]
-                turn = retour[2]
-                if turn == 0:
-                    tour = 0
-                    list_matchs = Match.generation_first_round(Match(), players_of_tournament, TURNS)
-                    list_match = Match.print_list_matchs(Match(), list_matchs)
-                    start_tournament()
-                    resultat_total = Match.play_first_turn(Match(), list_match)
-                    save_resultat_tournament(serialized_tournament, resultat_total)
-                    nunber_turn(TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
-                    save_resultat_tournament(serialized_tournament, resultat_total)
-                    menu()
-                elif turn == 1:
-                    tour = 1
-                    resultat_total = serialized_tournament.get("resultat")
-                    start_tournament()
-                    nunber_turn(TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
-                    save_resultat_tournament(serialized_tournament, resultat_total)
-                    menu()
-                else:
-                    tour = turn
-                    resultat_total = serialized_tournament.get("resultat")
-                    turns = TURNS - turn + 1
-                    start_tournament()
-                    nunber_turn(turns, players_of_tournament, resultat_total, serialized_tournament, tour)
-                    save_resultat_tournament(serialized_tournament, resultat_total)
-                    menu()
-            else:
-                print("else")
-                menu()
+            menu_tournament()
+            menu()
         except:
             menu()
     if resultat == 5:  # see the ranking
@@ -113,104 +46,8 @@ def menu():
         modif_classement()
         menu()
     if resultat == 7: # access to the report management menu
-        retour_list = stat_classement()
-        player_tri_ranking = retour_list[0]
-        player_tri_alphabet = retour_list[1]
-        tournoi = retour_list[2]
-        print_classement(player_tri_ranking)
-        choice = int(print_menu_stat())
-        if choice == 1:
-            print_classement(player_tri_ranking)
-            print_pass_validation()
-            menu()
-        elif choice == 2:
-            print_classement_alphabet(player_tri_alphabet)
-            print_pass_validation()
-            menu()
-        elif choice == 3:
-            tournament = selection_tournament()
-            players = tournament.get("players")
-            player_list = []
-            for i in players:
-                for k, v in i.items():
-                    player_list.append(v)
-            tri_player_rank = sorted(player_list, key=lambda k: k["ranking"], reverse=True)
-            print("\nclassement du tournoi :\n")
-            p = 0
-            for i in tri_player_rank:
-                p += 1
-                print("n°", p, i.get("pk"), "avec", i.get("ranking"), "point(s).")
-            print_pass_validation()
-            menu()
-        elif choice == 4:
-            tournament = selection_tournament()
-            players = tournament.get("players")
-            player_list = []
-            for i in players:
-                for k, v in i.items():
-                    player_list.append(v)
-            tri_player_alphabet = sorted(player_list, key=lambda k: k["pk"])
-            print("\njoueur du tournoi :\n")
-            for i in tri_player_alphabet:
-                print(i.get("pk"), "avec", i.get("ranking"), "point(s).")
-            print_pass_validation()
-            menu()
-        elif choice == 5:
-            print_list_of_tournaments(tournoi)
-            print_pass_validation()
-            menu()
-        elif choice == 6:
-            tournament = selection_tournament()
-            resultat = tournament.get("resultat")
-            print("\nlistes des tours pour le tournoi ", tournament.get("pk"))
-            print()
-            t = 0
-            for round in resultat:
-                t += 1
-                print("temps de jeu du round " + str(t))
-                for k, v in round.items():
-                    list_tour = v
-                    match = []
-                    resultat = []
-                    for k, v in list_tour.items():
-                        match.append(k)
-                        resultat.append(v)
-                    print("début : ", resultat[0])
-                    print("fin : ", resultat[-1])
-                print()
-            print_pass_validation()
-            menu()
-        elif choice == 7:
-            tournament = selection_tournament()
-            resultat = tournament.get("resultat")
-            print("\nlistes des matchs pour le tournoi", tournament.get("pk"))
-            print()
-            t = 0
-            for round in resultat:
-                t += 1
-                print("resultat du round " + str(t))
-                for k, v in round.items():
-                    list_tour = v
-                    match = []
-                    resultat = []
-                    for k, v in list_tour.items():
-                        match.append(k)
-                        resultat.append(v)
-                    del match[0]
-                    del match[-1]
-                    del resultat[0]
-                    del resultat[-1]
-                    for i, j in zip(match, resultat):
-                        print("match :", i)
-                        print("        remporter par: ", j)
-                print()
-            print_pass_validation()
-            menu()
-        elif choice == 8:
-            print("\n" * 50)
-            menu()
-        else:
-            print("ERREUR vous devez choisir un menu existant")
+        menu_rapports()
+        menu()
     if resultat == 8:  # to exit the program
         sys.exit()
     else:
@@ -218,75 +55,98 @@ def menu():
         menu()
 
 
-def modif_classement():
-    ''' allows you to search for the player to modify by name
-        which returns a list of all the players with this name
-        or by ID to directly select the player to modify '''
+def menu_rapports():
+    ''' application report management menu '''
 
-    resultat = print_find_player()
-    players = table_of_player()
-    nb = len(resultat)
-    nb_players = []
-    if nb < 10:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    nb_players.append(player)
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    if len(nb_players) == 1:
-                        modif = print_modif_classement(player)
-                        modification_of_player(modif)
-                        print_modif_ok()
-                        menu()
-                    else:
-                        print_display_player_list(player)
-        print_display_player_nb(len(nb_players), resultat)
-        modif_menu()
+    retour_list = stat_classement()
+    player_tri_ranking = retour_list[0]
+    player_tri_alphabet = retour_list[1]
+    tournoi = retour_list[2]
+    print_classement(player_tri_ranking)
+    choice = int(print_menu_stat())
+    if choice == 1:  # tri players by ranking
+        print_classement(player_tri_ranking)
+        print_pass_validation()
+        menu()
+    elif choice == 2:  # tri players by aphabetical order
+        print_classement_alphabet(player_tri_alphabet)
+        print_pass_validation()
+        menu()
+    elif choice == 3:  # player list of a tournament by ranking
+        tournament = selection_tournament()
+        players = tournament.get("players")
+        player_list = []
+        for i in players:
+            for k, v in i.items():
+                player_list.append(v)
+        tri_player_rank = sorted(player_list, key=lambda k: k["ranking"], reverse=True)
+        print_classement_of_tournament()
+        p = 0
+        for i in tri_player_rank:
+            p += 1
+            print_tri_player_of_tournament_rank(i, p)
+        print_pass_validation()
+    elif choice == 4:  # player list of a tournament by alphabetical order
+        tournament = selection_tournament()
+        players = tournament.get("players")
+        player_list = []
+        for i in players:
+            for k, v in i.items():
+                player_list.append(v)
+        tri_player_alphabet = sorted(player_list, key=lambda k: k["pk"])
+        print_classement_player_of_tournament()
+        for i in tri_player_alphabet:
+            print_tri_player_of_tournament_alphabet(i)
+        print_pass_validation()
+    elif choice == 5: # tournament list
+        print_list_of_tournaments(tournoi)
+        print_pass_validation()
+    elif choice == 6:  # all the round of a tournament
+        tournament = selection_tournament()
+        resultat = tournament.get("resultat")
+        print_list_tournaments(tournament)
+        t = 0
+        for round in resultat:
+            t += 1
+            print_tournament_time(t)
+            for k, v in round.items():
+                list_tour = v
+                match = []
+                resultat = []
+                for k, v in list_tour.items():
+                    match.append(k)
+                    resultat.append(v)
+                print_tournament_resultat(resultat)
+            print_space()
+        print_pass_validation()
+    elif choice == 7:  # all the matches of a tournaments
+        tournament = selection_tournament()
+        resultat = tournament.get("resultat")
+        print_list_match_by_tournament(tournament)
+        t = 0
+        for round in resultat:
+            t += 1
+            print_resultat_match(t)
+            for k, v in round.items():
+                list_tour = v
+                match = []
+                resultat = []
+                for k, v in list_tour.items():
+                    match.append(k)
+                    resultat.append(v)
+                del match[0]
+                del match[-1]
+                del resultat[0]
+                del resultat[-1]
+                for i, j in zip(match, resultat):
+                    print_list_resultat_match(i, j)
+            print_space()
+        print_pass_validation()
+    elif choice == 8:  # for exit
+        print_space() * 50
     else:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    modif = print_modif_classement(player)
-                    modification_of_player(modif)
-                    print_modif_ok()
-                    menu()
+        print_menu_existing()
 
 
-def modif_menu():
-    ''' allows you to search for the player to modify by name
-        which returns a list of all the players with this name
-        or by ID to directly select the player to modify '''
 
-    resultat = print_find_player()
-    players = table_of_player()
-    nb = len(resultat)
-    nb_players = []
-    if nb < 10:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    nb_players.append(player)
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    if len(nb_players) == 1:
-                        modif = print_modif_player(player)
-                        print("dict players", modif)
-                        modification_of_player(modif)
-                        print_modif_ok()
-                        menu()
-                    else:
-                        print_display_player_list(player)
-        print_display_player_nb(len(nb_players), resultat)
-        modif_menu()
-    else:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    modif = print_modif_player(player)
-                    print("dict players", modif)
-                    modification_of_player(modif)
-                    print_modif_ok()
-                    menu()
+

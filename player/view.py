@@ -1,4 +1,18 @@
-from model import clean_input
+from view import clean_input
+
+
+def print_list_players_alphabet(player_classement):
+    ''' display a message in console '''
+
+    print("\nlistes des joueurs par ordre alphabetique :\n")
+    for i in player_classement:
+        print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
+
+
+def print_new_player_register():
+    ''' display a message in console '''
+
+    print("le joueur a etait enregister et rajouter au tounoi.")
 
 
 def print_elements_player():
@@ -31,7 +45,6 @@ def print_elements_player():
         "ranking": ranking,
         }
     return elements
-
 
 
 def print_sex_control():
@@ -185,3 +198,4 @@ def print_display_player_nb(nb_player, player):
 
     print("il y a ", nb_player, " resultat pour la recherche : ", player)
     print("veuillez utiliser ID du joueur ")
+
