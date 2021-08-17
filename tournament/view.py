@@ -53,11 +53,11 @@ def print_add_timer_control():
 def print_elements_tournament():
     ''' get tournament items and return a dictionary '''
 
-    print("entrer le nom du tournoi")
+    print("entrez le nom du tournoi")
     name = clean_input_tournament(input())
-    print("entrer le lieu du tournoi")
+    print("entrez le lieu du tournoi")
     location = clean_input_tournament(input())
-    print("entrer la date du tournoi")
+    print("entrez la date du tournoi")
     date = print_date_controller_tournament()
     elements = {
         "name": name,
@@ -72,24 +72,24 @@ def print_date_controller_tournament():
 
     while True:
         try:
-            print("\nrentrer le jour.")
+            print("\nentrez le jour.")
             day = int(input("                 jour :"))
             if 0 < day < 32:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
-            print("rentrer le mois.")
+                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            print("entrez le mois.")
             month = int(input("                 mois :"))
             if 0 < month < 13:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
-            print("entrer l'année complete, avec 4 nombres.")
+                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            print("entrez l'année complete, avec 4 nombres.")
             year = int(input("                 année :"))
             if 1930 < year < 2100:
                 pass
             else:
-                print("ERREUR, veuillez rentrer l'année complete.")
+                print("ERREUR, veuillez entrer l'année complete.")
             day_str = str(day)
             month_str = str(month)
             if len(month_str) == 1:
@@ -103,7 +103,7 @@ def print_date_controller_tournament():
             birth_date = str_day + "/" + str_month + "/" + str(year)
             return birth_date
         except ValueError:
-            print("\nERREUR , veuillez rentrer des chiffres")
+            print("\nERREUR , veuillez entrer des chiffres")
             print("Veuillez recommencer\n")
 
 
@@ -115,19 +115,19 @@ def print_menu_ajout_players_fot_tournament():
     while True:
         try:
             print()
-            print(" 1: pour la liste des joueur existante :")
-            print((" 2: pour créer un nouveau joueurs :"))
+            print(" 1: pour la liste des joueur existants :")
+            print((" 2: pour créer un nouveau joueur :"))
             choix = int(clean_input_tournament(input()))
             if 0 < choix < 4:
                 return choix
         except ValueError:
-            print("vous devez rentrer un chiffre correspondant a votre choix.")
+            print("vous devez entrer un chiffre correspondant à votre choix.")
 
 
 def print_add_players_for_tournament():
     ''' display information and return a variable '''
 
-    print("\nrentrer l'ID du joueur selectionner ")
+    print("\nentrez l'ID du joueur selectionné ")
     participant = clean_input_tournament(input())
     return participant
 
@@ -135,20 +135,20 @@ def print_add_players_for_tournament():
 def print_add_player_impossible(existing):
     ''' display a message in console '''
 
-    print("creation impossible car ce joueur est deja existant et sont ID est",
+    print("creation impossible car ce joueur est deja existant et son ID est",
           existing.get("pk"))
 
 
 def print_add_players_for_tournament_new():
     ''' display a message in console '''
 
-    print("\nce joueur est déja selectionner .")
+    print("\nce joueur est déja selectionné .")
 
 
 def print_save_players_for_tournament(compteur, nb_player):
     ''' display a message in console '''
 
-    print("participant n°", compteur, "/", nb_player, "bien enregistrer ! \n")
+    print("participant n°", compteur, "/", nb_player, "bien enregistré ! \n")
 
 
 def print_start_chrono(date):
@@ -167,9 +167,9 @@ def print_menu_match_tournament(match, joueur1, joueur2):
     ''' affiche le menu de score de match '''
 
     print("\n resultat pour le match :", match, "\n")
-    print(" - tape 1 si", joueur1.get('pk'), "a gagner.")
-    print(" - tape 2 si", joueur2.get('pk'), "a gagner.")
-    print(" - si pat tapez 3")
+    print(" - tapez 1 si", joueur1.get('pk'), "a gagné.")
+    print(" - tapez 2 si", joueur2.get('pk'), "a gagné.")
+    print(" - si PAT tapez 3")
     resultat = int(input("                                    : "))
     return resultat
 
@@ -230,6 +230,6 @@ def print_start_tournament():
 
     print("\n")
     print("Pour commencer le round et activé le chrono,")
-    reponse = input("appuyer sur ENTRER                           "
+    reponse = input("appuyez sur ENTREE                           "
                     " ou non pour sortir: ")
     return reponse

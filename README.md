@@ -31,9 +31,9 @@ Mise en place du programmme:
 	- Vous allez voir apparaitre "(env)" en entête de la ligne de commande. 
 
 
-	ETAPE 2 : Integration des bibliothèques nécesaires pour l'application. 
+	ETAPE 2 : Integration des bibliothèques nécessaires pour l'application. 
 	
-	- Dans votre environement virtuel que vous venez de créer, importez toutes les 			bibliothèques nécesaires en tapant: 
+	- Dans votre environement virtuel que vous venez de créer, importez toutes les 			bibliothèques nécessaires en tapant: 
 		pip install -r requirements.txt
 		
 		
@@ -47,20 +47,32 @@ Bienvenue dans votre gestionnaire de tournoi d'échec:
 	
 	
 	1/ Le programme vous permet:
-		- d'ajouter des nouveaux joueurs à votre base de données.
+		- d'ajouter de nouveaux joueurs à votre base de données.
 		- de modifier les carctéristiques des joueurs.
 		- de créer des tournois.
 		- de jouer des tournois.
-		- de voir le classements par rang.
-		- de genéré des rapports.
+		- de voir le classement par rang.
+		- de genérer des rapports.
 		
 	2/ Navigation dans le programme:
 		
 		La navigation s'effectue sur la console.
 		Il vous suffit de choisir entre les menus et sous menu la selection  		correspondante à votre besoin.
-		Pour sortir du programme sur le menu principal il vous suffit de tapez 8.
+		Pour sortir du programme sur le menu principal il vous suffit de taper 8.
 
 	3/ La sauvegarde de la base de donnée:
-		La sauvegarde de votre base de donnée ce fait en local sur un fichier            			json généré automatiquement lors de la première sauvegarde	 			effectuer.
-		Ce fichier ce nomme db.json et sera dans me dossier du programme.		
+		La sauvegarde de votre base de donnée se fait en local sur un fichier            			json généré automatiquement lors de la première sauvegarde	 			effectuée.
+		Ce fichier se nomme db.json et sera dans les dossiers du programme.	
+		
+	4/ Création d'un tournoi:
+		Vous pouvez créer un tournoi à l'avance.
+		Dans ce cas il vous faudra répondre "non" à la question "voulez vous 			commencer le tournoi?"	
+		Vous sortirez alors du programme.
+		Pour relancer le programme:
+			suivez de nouveau l'ETAPE 3	
+			
+	5/ Cas particulier:
+		Vous pouvez à tout moment sortir du programme avec l'action :
+			Ctrl + c
+		Dans le cas de cette fermeture forcée aucune sauvegarde ne			 			sera faite.				
 		 

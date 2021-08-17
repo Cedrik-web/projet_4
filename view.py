@@ -22,14 +22,14 @@ def print_accueil():
 
     print()
     print("Bienvenue sur le gestionnaire de jeu d'échec.\n")
-    print("Selectionner le menu souhaiter.\n")
+    print("Selectionnez le menu souhaité.\n")
     print(" 1 : ajouter un joueur.")
-    print(" 2 : modification d'un joueur.")
+    print(" 2 : modifier un joueur.")
     print(" 3 : création d'un tournoi.")
-    print(" 4 : jouer un tournoi créer.")
-    print(" 5 : classements.")
-    print(" 6 : modification du classements.")
-    print(" 7 : rapports.")
+    print(" 4 : jouer un tournoi créé.")
+    print(" 5 : classement.")
+    print(" 6 : modification du classement.")
+    print(" 7 : rapport.")
     print(" 8 : sortir du logiciel.")
     print("\nQuelle est votre choix : ")
     resultat = input()
@@ -51,8 +51,8 @@ def print_modif_classement(player):
                 ranking = nb
                 break
             except ValueError:
-                print("\nERREUR , veuillez rentrer un nombre entier")
-                print("recomencer")
+                print("\nERREUR , veuillez entrer un nombre entier")
+                print("recomencez")
     print(ranking)
     if not ranking == int(player.get("ranking")):
         player.update({"ranking": ranking})
@@ -71,20 +71,20 @@ def print_error_enter_int():
 def print_modif_ok():
     ''' printing modification to carry out '''
 
-    print("modification effectuer avec succès !")
+    print("modification effectuée avec succès !")
 
 
 def print_error_id():
     ''' display a message in console '''
 
-    print("ERREUR, il y a une erreur dans ID recommencer")
+    print("ERREUR, il y a une erreur dans l'ID, recommencez")
 
 
 def print_pass_validation():
     ''' display a message in console '''
 
     print("\ncontinuez......")
-    input("appuyer sur entrée pour revenir au menu")
+    input("appuyez sur entrée pour revenir au menu")
     print("\n" * 25)
 
 
@@ -101,7 +101,7 @@ def print_classement(player_classement):
 def print_list_of_tournaments(tournament):
     ''' display a message in console '''
 
-    print("\nliste des tournois jouer.")
+    print("\nliste des tournois joués.")
     for i in tournament:
         print(i.get("pk"))
 
@@ -120,24 +120,24 @@ def print_menu_stat():
 
     print("\n" * 50)
     print("Bienvenue dans la catégorie rapport,"
-          " veuillez selectionner la stat rechercher :\n")
+          " veuillez selectionner la stat recherchée :\n")
     print("1 : pour la liste de tous les joueurs par classement.")
     print("2 : pour la liste de tous les joueurs par ordre alphabétique.")
     print("\n3 : pour la liste des joueurs d'un tournoi, par classement.")
     print("4 : pour la liste des joueurs d'un tournoi,"
           " par ordre alphabétique.")
-    print("\n5 : pour la liste de tous les tournoi.")
+    print("\n5 : pour la liste de tous les tournois.")
     print("6 : pour la liste de tous les tours d'un tournoi.")
     print("7 : pour la liste de tous les matchs d'un tournoi.")
     print("\n8 : pour revenir au menu principal.")
     resultat = input()
     try:
         while not 0 < int(resultat) <= 8:
-            print("ERREUR, vous devez rentrer le nombre "
-                  "en entete de votre selection.")
+            print("ERREUR, vous devez entrer le nombre "
+                  "en entête de votre selection.")
             resultat = input()
     except ValueError:
-        print("ERREUR, vous devez rentrer un nombre valide.")
+        print("ERREUR, vous devez entrer un nombre valide.")
         print_menu_stat()
     return resultat
 
@@ -145,7 +145,7 @@ def print_menu_stat():
 def print_exicting_player(p):
     ''' display a message in console '''
 
-    print("le joueur ", p.get("pk"), " est déja enregistrer !")
+    print("le joueur ", p.get("pk"), " est déja enregistré !")
 
 
 def print_list_tournament(i):
@@ -157,7 +157,7 @@ def print_list_tournament(i):
 def print_choice_tournament():
     ''' display a information and retrun a variable '''
 
-    print("\nchoisis ton tournoi par l'ID")
+    print("\nchoisissez votre tournoi par l'ID")
     choix = clean_input(input())
     return choix
 
@@ -165,7 +165,7 @@ def print_choice_tournament():
 def print_find_tournament():
     ''' display a message in console '''
 
-    print("\nrecherche des tournois créer et non finaliser.\n")
+    print("\nrecherche de tournois créés et non finalisés.\n")
 
 
 def print_space():
@@ -184,21 +184,21 @@ def print_tournament_finished(i):
 def print_tournament_not_start(i):
     ''' display a message in console'''
 
-    print("tournoi non commencer voici leurs ID :", i.get("pk"))
+    print("tournois non commencés voici leurs ID :", i.get("pk"))
     print(" - ", i.get("pk"))
 
 
 def print_tournament_start(i):
     ''' display a message in console'''
 
-    print("tournoi non finaliser voici leurs ID :")
+    print("tournois non finalisés voici leurs ID :")
     print(" - ", i.get("pk"))
 
 
 def print_input_selection_tournament():
     ''' display a message in console and return a variable'''
 
-    reponse = clean_input(input("entre l'ID ou appuie entrer pour "
+    reponse = clean_input(input("entrez l'ID ou appuiez ENTREE pour "
                                 "sortir de la selection: "))
     return reponse
 
@@ -264,7 +264,7 @@ def print_list_resultat_match(i, j):
     ''' display a message in console'''
 
     print("match :", i)
-    print("        remporter par: ", j)
+    print("        remporté par: ", j)
 
 
 def print_menu_existing():

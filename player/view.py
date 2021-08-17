@@ -12,21 +12,21 @@ def print_list_players_alphabet(player_classement):
 def print_new_player_register():
     ''' display a message in console '''
 
-    print("le joueur a etait enregister et rajouter au tounoi.")
+    print("le joueur a été enregisté et rajouté au tounoi.")
 
 
 def print_elements_player():
     ''' retrieving player items and putting all items in dictionary '''
 
-    print("entrer le nom de famille du joueur")
+    print("entrez le nom de famille du joueur")
     name = clean_input(input())
-    print("entrer le prénom du joueur")
+    print("entrez le prénom du joueur")
     first_name = clean_input(input())
-    print("entrer la date de naissance")
+    print("entrez la date de naissance")
     birth_date = print_date_controller()
     print(name, first_name, "et né le", birth_date)
     sex = print_sex_control()
-    print("entrer les points du joueur")
+    print("entrez les points du joueur")
     ranking = 0
     while ranking != int:
         try:
@@ -50,8 +50,8 @@ def print_elements_player():
 def print_sex_control():
     ''' control the input console for the sex of the player '''
 
-    print("\nentrer 1 pour un joueur de sex masculin")
-    print("entrer 2 pour un joueur de sex féminin\n")
+    print("\nentrez 1 pour un joueur de sex masculin")
+    print("entrez 2 pour un joueur de sex féminin\n")
     sex = clean_input(input())
     if sex == "1":
         sex = "homme"
@@ -69,24 +69,24 @@ def print_date_controller():
 
     while True:
         try:
-            print("\nrentrer le jour.")
+            print("\nentrez le jour.")
             day = int(input("                 jour :"))
             if 0 < day < 32:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
-            print("rentrer le mois.")
+                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            print("entrez le mois.")
             month = int(input("                 mois :"))
             if 0 < month < 13:
                 pass
             else:
-                print("ERREUR, veuillez rentrer un chiffre entre 1 et 31.")
-            print("entrer l'année complete, avec 4 nombres.")
+                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            print("entrez l'année complete, avec 4 nombres.")
             year = int(input("                 année :"))
             if 1930 < year < 2100:
                 pass
             else:
-                print("ERREUR, veuillez rentrer l'année complete.")
+                print("ERREUR, veuillez entrer l'année complete.")
             day_str = str(day)
             month_str = str(month)
             if len(month_str) == 1:
@@ -100,7 +100,7 @@ def print_date_controller():
             birth_date = str_day + "/" + str_month + "/" + str(year)
             return birth_date
         except ValueError:
-            print("\nERREUR , veuillez rentrer des chiffres")
+            print("\nERREUR , veuillez entrer des chiffres")
             print("Veuillez recommencer\n")
 
 
@@ -111,11 +111,11 @@ def print_add_player():
 
     serialized_player = []
     serialized_player.append(print_elements_player())
-    print("voulez vous rajouter un autre joueur ?")
+    print("voulez vous ajouter un autre joueur ?")
     reponse = clean_input(input())
     while reponse == "oui":
         serialized_player.append(print_elements_player())
-        print("voulez vous rajouter un autre joueur ?")
+        print("voulez vous ajouter un autre joueur ?")
         reponse = clean_input(input())
     return serialized_player
 
@@ -136,9 +136,9 @@ def print_modif_player(player):
         allowing to retrieve the possible change and return a dictionary
         with these elements '''
 
-    print("modifier les valeurs que vous désirez à la "
-          "suite de la valeur renseigner .")
-    print("ou taper ENTRER pour passer . \n")
+    print("modifiez les valeurs que vous désirez à la "
+          "suite de la valeur renseignée .")
+    print("ou tapez ENTRER pour passer . \n")
     a = clean_input(input("nom :" + player.get("name") + " -> "))
     if not a == "":
         player.update({"name": a})
@@ -147,7 +147,7 @@ def print_modif_player(player):
     if not b == "":
         player.update({"first_name": b})
         print("nouveau prénom : " + player.get("first_name") + "\n")
-    print("né le " + player.get("birth_date") + " , tapez oui pour modifer ->")
+    print("né.e le " + player.get("birth_date") + " , tapez oui pour modifer ->")
     reponse = clean_input(input())
     if reponse == "oui":
         c = print_date_controller()
@@ -166,7 +166,7 @@ def print_modif_player(player):
     if d == player.get("sex"):
         player.update({"sex": d})
         print("sex redéfini : " + player.get("sex") + "\n")
-    print("total de points : " + str(player.get("ranking")) +
+    print("total des points : " + str(player.get("ranking")) +
           " , tapez oui pour modifier -> ")
     reponse = clean_input(input())
     ranking = player.get("ranking")
@@ -177,7 +177,7 @@ def print_modif_player(player):
                 ranking = nb
                 break
             except ValueError:
-                print("\nERREUR , veuillez rentrer un nombre entier")
+                print("\nERREUR , veuillez entrer un nombre entier")
                 print("recomencer")
     print(ranking)
     if not ranking == int(player.get("ranking")):
