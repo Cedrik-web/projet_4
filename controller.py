@@ -4,6 +4,7 @@ from model import modif_classement, selection_tournament
 from player.controller import menu_add_player, menu_modif_player
 from player.model import stat_classement
 from tournament.controller import play_tournament, menu_tournament
+from tournament.view import print_error_id_tournament
 from view import print_accueil, print_menu_stat, print_pass_validation, \
     print_classement_alphabet, print_space, print_choice_input_menu, \
     print_classement_of_tournament, print_list_tournaments, \
@@ -27,31 +28,32 @@ def menu():
     if resultat == 1:  # adding player
         menu_add_player()
         menu()
-    if resultat == 2:  # player modification
+    elif resultat == 2:  # player modification
         menu_modif_player()
         menu()
-    if resultat == 3:  # creation of a tournament
+    elif resultat == 3:  # creation of a tournament
         tour = 1
         play_tournament(tour)
         menu()
-    if resultat == 4:  # to see all tournaments
+    elif resultat == 4:  # to see all tournaments
         try:           # create and play tournaments not finalized
             menu_tournament()
             menu()
-        except ValueError:
+        except IndexError:
+            print_error_id_tournament()
             menu()
-    if resultat == 5:  # see the ranking
+    elif resultat == 5:  # see the ranking
         retour_list = stat_classement()
         player_tri_ranking = retour_list[0]
         print_classement(player_tri_ranking)
         menu()
-    if resultat == 6:  # allows the modification of rank points per players
+    elif resultat == 6:  # allows the modification of rank points per players
         modif_classement()
         menu()
-    if resultat == 7:  # access to the report management menu
+    elif resultat == 7:  # access to the report management menu
         menu_rapports()
         menu()
-    if resultat == 8:  # to exit the program
+    elif resultat == 8:  # to exit the program
         sys.exit()
     else:
         print_error_enter_int()
@@ -150,7 +152,3 @@ def menu_rapports():
         print_space() * 50
     else:
         print_menu_existing()
-
-
-
-

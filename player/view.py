@@ -18,7 +18,7 @@ def print_new_player_register():
 def print_elements_player():
     ''' retrieving player items and putting all items in dictionary '''
 
-    print("entrer le nom du joueur")
+    print("entrer le nom de famille du joueur")
     name = clean_input(input())
     print("entrer le prénom du joueur")
     first_name = clean_input(input())
@@ -138,7 +138,7 @@ def print_modif_player(player):
 
     print("modifier les valeurs que vous désirez à la "
           "suite de la valeur renseigner .")
-    print("ou taper entrer pour passer . \n")
+    print("ou taper ENTRER pour passer . \n")
     a = clean_input(input("nom :" + player.get("name") + " -> "))
     if not a == "":
         player.update({"name": a})

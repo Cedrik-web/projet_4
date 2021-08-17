@@ -1,16 +1,16 @@
 
-import datetime
+from datetime import datetime
 import sys
 
 from tinydb import TinyDB
 from tinydb.table import Document
 
 from settings import PLAYERS_OF_TOURNAMENT
-from tournament.view import print_start_tournament,\
+from tournament.view import print_start_tournament, \
     print_start_chrono, print_menu_match_tournament, \
-    print_player_winner, print_player_pat, print_error,\
+    print_player_winner, print_player_pat, print_error, \
     print_ending_first_round, print_ending_chrono, \
-    print_ending_other_round
+    print_ending_other_round, print_view_match_possition, print_view_match
 
 
 def save_tournament(serialized_tournament):
@@ -176,9 +176,9 @@ class Match:
         m = 0
         for list in list_match:
             m += 1
-            print("\nmatch n°", m, ":")
+            print_view_match_possition(m)
             for i in list:
-                print(i.get("pk"))
+                print_view_match(i)
         return list_match
 
     def play_first_turn(self, list_match):
@@ -277,14 +277,14 @@ class Match:
             try:
                 position += 2
                 new_joueur = tri_tour[position]
-            except ValueError:
+            except IndexError:
                 t += 2
                 new_joueur = tri_tour[t]
             while new_joueur.get("pk") in list_player:
                 try:
                     position += 2
                     new_joueur = tri_tour[position]
-                except ValueError:
+                except IndexError:
                     t += 2
                     new_joueur = tri_tour[t]
         new_player = new_joueur
@@ -298,7 +298,7 @@ class Match:
         resultat_total = resultat_total
         date_start = datetime.now()
         date = str(date_start)
-        resultat_tour.update({"début round": date})
+        resultat_tour.update({"debut round": date})
         print_start_chrono(date)
         for i in list_match:
             joueur1 = i[0]

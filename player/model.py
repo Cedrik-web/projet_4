@@ -148,7 +148,7 @@ def duplicate_search(player):
                         break
                 else:
                     valided.append(p)
-        except ValueError:
+        except TypeError:
             for i in players:
                 for j in player:
                     if j == i.get("pk"):
@@ -208,7 +208,7 @@ def add_players_of_tournament(tournament):
                 serialized_player = s
                 if serialized_player.get("pk") is not None:
                     save_player([serialized_player])
-                    print_new_player_register(serialized_player)
+                    print_new_player_register()
                     participants.append(serialized_player)
                     print_save_players_for_tournament(
                         compteur, nombre_de_tours)

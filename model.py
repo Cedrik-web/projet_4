@@ -1,5 +1,5 @@
 
-from player.model import table_of_player, modification_of_player
+from player.model import table_of_player, modification_of_player, activate
 from player.view import print_find_player, print_display_player_list, \
     print_display_player_nb
 from tournament.model import table_of_tournament
@@ -75,16 +75,17 @@ def tournaments_recovery(answer):
     players = []
     tournament = []
     turn = 0
+    serialized_tournament = []
     for i in tournaments:
         if i.get("pk") == answer:
-            serialized_tournament = i
+            serialized_tournament.append(i)
             players_brut = i.get("players")
             tournament.append(i.get("resultat"))
             for p in players_brut:
                 for k, v in p.items():
                     players.append(v)
     if tournament == [[]]:
-        return players, serialized_tournament, turn
+        return players, serialized_tournament[0], turn
     else:
         for r in tournament:
             nb = len(r)
@@ -94,7 +95,7 @@ def tournaments_recovery(answer):
                 turn = 2
             elif nb == 3:
                 turn = 3
-    return players, serialized_tournament, turn
+        return players, serialized_tournament[0], turn
 
 
 def modif_classement():
@@ -102,8 +103,9 @@ def modif_classement():
         which returns a list of all the players with this name
         or by ID to directly select the player to modify '''
 
-    resultat = print_find_player()
     players = table_of_player()
+    activate(players)  # manage autocomplementation
+    resultat = print_find_player()
     nb = len(resultat)
     nb_players = []
     if nb < 10:

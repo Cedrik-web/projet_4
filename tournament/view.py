@@ -154,7 +154,7 @@ def print_save_players_for_tournament(compteur, nb_player):
 def print_start_chrono(date):
     ''' display a message in console '''
 
-    print("\ndate et heure du début de round:", date)
+    print("\ndate et heure du debut de round:", date)
 
 
 def print_ending_chrono(date):
@@ -193,11 +193,29 @@ def print_error():
     print("ERREUR")
 
 
+def print_error_id_tournament():
+    ''' display a message in console '''
+
+    print("ERREUR, l'identifiant saisi n'existe pas!")
+
+
 def print_ending_first_round():
     ''' display a message in console '''
 
     print("---------------------------round : 1 terminé"
           "----------------------------\n")
+
+
+def print_view_match_possition(m):
+    ''' display a information in console '''
+
+    print("\nmatch n°", m, ":")
+
+
+def print_view_match(i):
+    ''' display a information in console '''
+
+    print(i.get("pk"))
 
 
 def print_ending_other_round(tour):
