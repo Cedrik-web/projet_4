@@ -1,6 +1,8 @@
 
-from player.model import add_players, duplicate_search, save_player, table_of_player, modification_of_player
-from player.view import print_add_player, print_find_player, print_modif_player, print_display_player_list, \
+from player.model import add_players, duplicate_search, save_player, \
+    table_of_player, modification_of_player
+from player.view import print_add_player, print_find_player, \
+    print_modif_player, print_display_player_list, \
     print_display_player_nb, print_new_player_register
 from view import print_exicting_player, print_modif_ok
 

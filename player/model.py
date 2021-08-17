@@ -4,10 +4,13 @@ from tinydb import TinyDB
 from tinydb.table import Document
 
 from view import print_error_id
-from player.view import print_elements_player, print_list_players_alphabet, print_new_player_register
+from player.view import print_elements_player, print_list_players_alphabet, \
+    print_new_player_register
 from tournament.model import control_already_selection, table_of_tournament
-from tournament.view import print_menu_ajout_players_fot_tournament, print_add_players_for_tournament, \
-    print_save_players_for_tournament, print_add_players_for_tournament_new, print_add_player_impossible
+from tournament.view import print_menu_ajout_players_fot_tournament, \
+    print_add_players_for_tournament, \
+    print_save_players_for_tournament, print_add_players_for_tournament_new, \
+    print_add_player_impossible
 
 
 # class that supports text autocomplementation
@@ -145,7 +148,7 @@ def duplicate_search(player):
                         break
                 else:
                     valided.append(p)
-        except:
+        except ValueError:
             for i in players:
                 for j in player:
                     if j == i.get("pk"):
@@ -171,18 +174,20 @@ def add_players_of_tournament(tournament):
         choix = print_menu_ajout_players_fot_tournament()
         if choix == 1:
             no_selection = False
-            while no_selection == False:
+            while not no_selection:
                 print_list_players_alphabet(player_tri_alphabet)
                 activate(players)
-                resultat = print_add_players_for_tournament()  # display the list of all players
-                boucle = False
-                while boucle == False:
-                    for i in players:
-                        if resultat == i.get("pk"):  # control if the player is not already recording
-                            no_selection = control_already_selection(participants, i)
-                            if no_selection == True:
+                resultat = print_add_players_for_tournament()
+                boucle = False  # display the list of all players
+                while not boucle:
+                    for i in players:  # control if the player is
+                        if resultat == i.get("pk"):  # not already recording
+                            no_selection = control_already_selection(
+                                participants, i)
+                            if no_selection:
                                 participants.append(i)
-                                print_save_players_for_tournament(compteur, nombre_de_tours)
+                                print_save_players_for_tournament(
+                                    compteur, nombre_de_tours)
                                 boucle = True
                                 break
                             else:
@@ -193,28 +198,31 @@ def add_players_of_tournament(tournament):
                         print_error_id()
                         resultat = print_add_players_for_tournament()
                         boucle = False
-        elif choix == 2:  # create a new player and add player them to the tournament
+        elif choix == 2:
+            # create a new player and add player them to the tournament
             player = [print_elements_player()]
             add_player = add_players(player)
             player_valided = duplicate_search(add_player)
             seria = player_valided.get("valided")
             for s in seria:
                 serialized_player = s
-                if not serialized_player.get("pk") == None:
+                if serialized_player.get("pk") is not None:
                     save_player([serialized_player])
                     print_new_player_register(serialized_player)
-                    participants. append(serialized_player)
-                    print_save_players_for_tournament(compteur, nombre_de_tours)
+                    participants.append(serialized_player)
+                    print_save_players_for_tournament(
+                        compteur, nombre_de_tours)
                     break
             ex = player_valided.get("no_valided")
             for i in ex:
                 existing = i
-                if not existing.get("pk") == None:
+                if not existing.get("pk") is None:
                     print_add_player_impossible(existing)
                     no_selection = control_already_selection(participants, i)
-                    if no_selection == True:
+                    if no_selection:
                         participants.append(existing)
-                        print_save_players_for_tournament(compteur, nombre_de_tours)
+                        print_save_players_for_tournament(compteur,
+                                                          nombre_de_tours)
                         break
                     else:
                         print_add_players_for_tournament_new()

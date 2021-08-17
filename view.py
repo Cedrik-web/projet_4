@@ -1,6 +1,4 @@
 
-
-
 def clean_input(data):
     ''' general function to protect the program from
         incorrect user input '''
@@ -31,7 +29,7 @@ def print_accueil():
     print(" 4 : jouer un tournoi créer.")
     print(" 5 : classements.")
     print(" 6 : modification du classements.")
-    print(" 7  : rapports.")
+    print(" 7 : rapports.")
     print(" 8 : sortir du logiciel.")
     print("\nQuelle est votre choix : ")
     resultat = input()
@@ -42,7 +40,8 @@ def print_modif_classement(player):
     ''' displays the rank of a player requesting
     and takes charge of the rank change then returns it '''
 
-    print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
+    print("total de points : " + str(player.get("ranking")) +
+          " , tapez oui pour modifier -> ")
     reponse = clean_input(input())
     ranking = player.get("ranking")
     if reponse == "oui":
@@ -51,7 +50,7 @@ def print_modif_classement(player):
                 nb = int(input(": "))
                 ranking = nb
                 break
-            except:
+            except ValueError:
                 print("\nERREUR , veuillez rentrer un nombre entier")
                 print("recomencer")
     print(ranking)
@@ -65,7 +64,8 @@ def print_modif_classement(player):
 def print_error_enter_int():
     ''' indicates to the user that he must enter a number '''
 
-    print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
+    print("\n ERREUR : vous devez entrer un chiffre correspondant"
+          " à votre choix .")
 
 
 def print_modif_ok():
@@ -111,18 +111,21 @@ def print_classement_alphabet(player_classement):
 
     print("\nclassement joueurs par ordre alphabetique :\n")
     for i in player_classement:
-        print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
+        print(i.get("name"), i.get("first_name"),
+              " nombre de points :", i.get("ranking"))
 
 
 def print_menu_stat():
     ''' displays in console the stats menu and returns the voice made '''
 
-    print("\n" *50)
-    print("Bienvenue dans la catégorie rapport, veuillez selectionner la stat rechercher :\n")
+    print("\n" * 50)
+    print("Bienvenue dans la catégorie rapport,"
+          " veuillez selectionner la stat rechercher :\n")
     print("1 : pour la liste de tous les joueurs par classement.")
     print("2 : pour la liste de tous les joueurs par ordre alphabétique.")
     print("\n3 : pour la liste des joueurs d'un tournoi, par classement.")
-    print("4 : pour la liste des joueurs d'un tournoi, par ordre alphabétique.")
+    print("4 : pour la liste des joueurs d'un tournoi,"
+          " par ordre alphabétique.")
     print("\n5 : pour la liste de tous les tournoi.")
     print("6 : pour la liste de tous les tours d'un tournoi.")
     print("7 : pour la liste de tous les matchs d'un tournoi.")
@@ -130,9 +133,10 @@ def print_menu_stat():
     resultat = input()
     try:
         while not 0 < int(resultat) <= 8:
-            print("ERREUR, vous devez rentrer le nombre en entete de votre selection.")
+            print("ERREUR, vous devez rentrer le nombre "
+                  "en entete de votre selection.")
             resultat = input()
-    except:
+    except ValueError:
         print("ERREUR, vous devez rentrer un nombre valide.")
         print_menu_stat()
     return resultat
@@ -173,7 +177,8 @@ def print_space():
 def print_tournament_finished(i):
     ''' display a message in console'''
 
-    print("tournoi fini :", "le", i.get("name"), "de", i.get("location"), "du", i.get("date"))
+    print("tournoi fini :", "le", i.get("name"), "de",
+          i.get("location"), "du", i.get("date"))
 
 
 def print_tournament_not_start(i):
@@ -193,7 +198,8 @@ def print_tournament_start(i):
 def print_input_selection_tournament():
     ''' display a message in console and return a variable'''
 
-    reponse = clean_input(input("entre l'ID ou appuie entrer pour sortir de la selection: "))
+    reponse = clean_input(input("entre l'ID ou appuie entrer pour "
+                                "sortir de la selection: "))
     return reponse
 
 

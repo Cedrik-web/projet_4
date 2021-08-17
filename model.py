@@ -1,9 +1,12 @@
 
 from player.model import table_of_player, modification_of_player
-from player.view import print_find_player, print_display_player_list, print_display_player_nb
+from player.view import print_find_player, print_display_player_list, \
+    print_display_player_nb
 from tournament.model import table_of_tournament
-from view import print_list_tournament, print_choice_tournament, print_find_tournament, \
-    print_tournament_finished, print_tournament_not_start, print_tournament_start, print_input_selection_tournament, \
+from view import print_list_tournament, print_choice_tournament, \
+    print_find_tournament, print_tournament_finished,  \
+    print_tournament_not_start, print_tournament_start,\
+    print_input_selection_tournament, \
     print_space, print_modif_classement, print_modif_ok, print_error_id
 
 
@@ -16,7 +19,7 @@ def selection_tournament():
         print_list_tournament(i)
         liste_tournoi.append(i.get("pk"))
     choix = print_choice_tournament()
-    while not choix in liste_tournoi:
+    while choix not in liste_tournoi:
         print_error_id()
         choix = print_choice_tournament()
     else:

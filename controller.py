@@ -3,13 +3,16 @@ import sys
 from model import modif_classement, selection_tournament
 from player.controller import menu_add_player, menu_modif_player
 from player.model import stat_classement
-
 from tournament.controller import play_tournament, menu_tournament
-from view import print_accueil, print_error_enter_int, print_classement, print_menu_stat, print_pass_validation, \
-    print_classement_alphabet, print_list_of_tournaments, print_space, print_choice_input_menu, \
-    print_classement_of_tournament, print_tri_player_of_tournament_rank, print_classement_player_of_tournament, \
-    print_tri_player_of_tournament_alphabet, print_list_tournaments, print_tournament_time, print_tournament_resultat, \
-    print_list_match_by_tournament, print_resultat_match, print_list_resultat_match, print_menu_existing
+from view import print_accueil, print_menu_stat, print_pass_validation, \
+    print_classement_alphabet, print_space, print_choice_input_menu, \
+    print_classement_of_tournament, print_list_tournaments, \
+    print_tournament_time, print_tournament_resultat, \
+    print_list_match_by_tournament,  print_list_resultat_match, \
+    print_tri_player_of_tournament_rank, print_menu_existing, \
+    print_tri_player_of_tournament_alphabet, print_classement, \
+    print_list_of_tournaments, print_resultat_match, \
+    print_error_enter_int, print_classement_player_of_tournament
 
 
 def menu():
@@ -18,7 +21,7 @@ def menu():
     resultat = print_accueil()
     try:
         resultat = print_choice_input_menu(resultat)
-    except:
+    except ValueError:
         print_error_enter_int()
         menu()
     if resultat == 1:  # adding player
@@ -31,11 +34,11 @@ def menu():
         tour = 1
         play_tournament(tour)
         menu()
-    if resultat == 4:  # to see all tournaments create and play tournaments not finalized
-        try:
+    if resultat == 4:  # to see all tournaments
+        try:           # create and play tournaments not finalized
             menu_tournament()
             menu()
-        except:
+        except ValueError:
             menu()
     if resultat == 5:  # see the ranking
         retour_list = stat_classement()
@@ -45,7 +48,7 @@ def menu():
     if resultat == 6:  # allows the modification of rank points per players
         modif_classement()
         menu()
-    if resultat == 7: # access to the report management menu
+    if resultat == 7:  # access to the report management menu
         menu_rapports()
         menu()
     if resultat == 8:  # to exit the program
@@ -79,7 +82,8 @@ def menu_rapports():
         for i in players:
             for k, v in i.items():
                 player_list.append(v)
-        tri_player_rank = sorted(player_list, key=lambda k: k["ranking"], reverse=True)
+        tri_player_rank = sorted(player_list, key=lambda k: k["ranking"],
+                                 reverse=True)
         print_classement_of_tournament()
         p = 0
         for i in tri_player_rank:
@@ -98,7 +102,7 @@ def menu_rapports():
         for i in tri_player_alphabet:
             print_tri_player_of_tournament_alphabet(i)
         print_pass_validation()
-    elif choice == 5: # tournament list
+    elif choice == 5:  # tournament list
         print_list_of_tournaments(tournoi)
         print_pass_validation()
     elif choice == 6:  # all the round of a tournament

@@ -33,7 +33,7 @@ def print_elements_player():
             nb = int(input())
             ranking += nb
             break
-        except:
+        except ValueError:
             print("\nERREUR , veuillez rentrer un nombre entier")
             print("recomencer")
     print("nombre de point et de : ", ranking)
@@ -131,13 +131,13 @@ def print_find_player():
     return resultat
 
 
-
 def print_modif_player(player):
     ''' function displaying all the elements of a player and
         allowing to retrieve the possible change and return a dictionary
         with these elements '''
 
-    print("modifier les valeurs que vous désirez à la suite de la valeur renseigner .")
+    print("modifier les valeurs que vous désirez à la "
+          "suite de la valeur renseigner .")
     print("ou taper entrer pour passer . \n")
     a = clean_input(input("nom :" + player.get("name") + " -> "))
     if not a == "":
@@ -155,7 +155,8 @@ def print_modif_player(player):
         c = ""
     if c == player.get("birth_date"):
         player.update({"birth_date": c})
-        print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
+        print("nouvelle date de naissance : "
+              + player.get("birth_date") + "\n")
     print("sex : " + player.get("sex") + " , tapez oui pour modifier ->")
     reponse == clean_input(input())
     if reponse == "oui":
@@ -165,7 +166,8 @@ def print_modif_player(player):
     if d == player.get("sex"):
         player.update({"sex": d})
         print("sex redéfini : " + player.get("sex") + "\n")
-    print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
+    print("total de points : " + str(player.get("ranking")) +
+          " , tapez oui pour modifier -> ")
     reponse = clean_input(input())
     ranking = player.get("ranking")
     if reponse == "oui":
@@ -174,7 +176,7 @@ def print_modif_player(player):
                 nb = int(input(": "))
                 ranking = nb
                 break
-            except:
+            except ValueError:
                 print("\nERREUR , veuillez rentrer un nombre entier")
                 print("recomencer")
     print(ranking)
@@ -198,4 +200,3 @@ def print_display_player_nb(nb_player, player):
 
     print("il y a ", nb_player, " resultat pour la recherche : ", player)
     print("veuillez utiliser ID du joueur ")
-

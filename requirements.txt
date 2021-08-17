@@ -1,1 +1,5 @@
+aioredis==2.0.0
+async-timeout==3.0.1
 tinydb==4.5.0
+tournament==1.0.0
+typing-extensions==3.10.0.0

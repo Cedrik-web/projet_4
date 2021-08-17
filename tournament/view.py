@@ -1,5 +1,4 @@
 
-
 def clean_input_tournament(data):
     ''' general function to protect the program from
         incorrect user input '''
@@ -21,7 +20,8 @@ def clean_input_tournament(data):
 def print_add_genaral_remarks():
     ''' adding the description of a tournament to the tournament object '''
 
-    print("ajoutez , si vous le voulez, une description ou un commentaire au tournoi :")
+    print("ajoutez , si vous le voulez, une "
+          "description ou un commentaire au tournoi :")
     remarks = []
     resultat = input()
     remarks.append(resultat)
@@ -44,7 +44,8 @@ def print_add_timer_control():
     elif int(resultat) == 3:
         timer_control.append("coup rapide")
     else:
-        print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
+        print("\n ERREUR : vous devez entrer un chiffre "
+              "correspondant à votre choix .")
         print_add_timer_control()
     return timer_control
 
@@ -107,7 +108,8 @@ def print_date_controller_tournament():
 
 
 def print_menu_ajout_players_fot_tournament():
-    ''' displays in console a menu (addition of a player in the tournament creation)
+    ''' displays in console a menu
+        (addition of a player in the tournament creation)
         and takes care of the cases errors '''
 
     while True:
@@ -133,7 +135,8 @@ def print_add_players_for_tournament():
 def print_add_player_impossible(existing):
     ''' display a message in console '''
 
-    print("creation impossible car ce joueur est deja existant et sont ID est", existing.get("pk"))
+    print("creation impossible car ce joueur est deja existant et sont ID est",
+          existing.get("pk"))
 
 
 def print_add_players_for_tournament_new():
@@ -174,7 +177,8 @@ def print_menu_match_tournament(match, joueur1, joueur2):
 def print_player_winner(joueur):
     ''' display a message in console '''
 
-    print("                                                         ", joueur.get('pk'), " GAGNE !!\n")
+    print("                                                         ",
+          joueur.get('pk'), " GAGNE !!\n")
 
 
 def print_player_pat():
@@ -192,13 +196,15 @@ def print_error():
 def print_ending_first_round():
     ''' display a message in console '''
 
-    print("---------------------------round : 1 terminé----------------------------\n")
+    print("---------------------------round : 1 terminé"
+          "----------------------------\n")
 
 
 def print_ending_other_round(tour):
     ''' display a message in console '''
 
-    print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
+    print("---------------------------round : "
+          + str(tour) + " terminé----------------------------\n")
 
 
 def print_start_tournament():
@@ -206,5 +212,6 @@ def print_start_tournament():
 
     print("\n")
     print("Pour commencer le round et activé le chrono,")
-    reponse = input("appuyer sur ENTRER                            ou non pour sortir: ")
+    reponse = input("appuyer sur ENTRER                           "
+                    " ou non pour sortir: ")
     return reponse

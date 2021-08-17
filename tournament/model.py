@@ -1,3 +1,4 @@
+
 import datetime
 import sys
 
@@ -5,14 +6,16 @@ from tinydb import TinyDB
 from tinydb.table import Document
 
 from settings import PLAYERS_OF_TOURNAMENT
-from tournament.view import print_start_tournament, print_start_chrono, print_menu_match_tournament, \
-    print_player_winner, print_player_pat, print_error, print_ending_first_round, print_ending_chrono, \
+from tournament.view import print_start_tournament,\
+    print_start_chrono, print_menu_match_tournament, \
+    print_player_winner, print_player_pat, print_error,\
+    print_ending_first_round, print_ending_chrono, \
     print_ending_other_round
 
 
-
 def save_tournament(serialized_tournament):
-    ''' save tournament in the tournament table and save in the db.json file '''
+    ''' save tournament in the tournament table
+        and save in the db.json file '''
 
     db = TinyDB("db.json")
     tournament_table = db.table("tournament")
@@ -109,9 +112,8 @@ def control_already_selection(list_participant, player):
             valided = False
             return valided
     else:
-        valided =True
+        valided = True
         return valided
-
 
 
 # Create class Match who initiates the characteristics to ask for the match
@@ -153,7 +155,8 @@ class Match:
         ''' generate the first matches then award points and update status
             match by players '''
 
-        tri = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
+        tri = sorted(player_of_tournament, key=lambda k: k["ranking"],
+                     reverse=True)
         nb_player = int(len(tri) / 2)
         list_player_a = tri[:nb_player]
         list_player_b = tri[nb_player:]
@@ -233,8 +236,10 @@ class Match:
 
         list_player = []
         list_match = []
-        tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
-        tri_tour = sorted(tri_rank, key=lambda k: k["point_tournament"], reverse=True)
+        tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"],
+                          reverse=True)
+        tri_tour = sorted(tri_rank, key=lambda k: k["point_tournament"],
+                          reverse=True)
         position1 = -2
         position2 = -1
         t = 0
@@ -245,7 +250,12 @@ class Match:
             position2 += 2
             joueur1 = tri_tour[position1]
             joueur2 = tri_tour[position2]
-            answers = Match.find_player_already_play(self, joueur1, joueur2, tri_tour, position2, list_player)
+            answers = Match.find_player_already_play(self,
+                                                     joueur1,
+                                                     joueur2,
+                                                     tri_tour,
+                                                     position2,
+                                                     list_player)
             player = answers[0]
             if player != joueur2:
                 new_match = joueur1, player
@@ -255,7 +265,9 @@ class Match:
                 list_match.append(new_match)
         return player_of_tournament, list_match
 
-    def find_player_already_play(self, joueur1, joueur2, tri_tour, position, list_player):
+    def find_player_already_play(self, joueur1,
+                                 joueur2,
+                                 tri_tour, position, list_player):
         ''' check if the player has already been selected '''
 
         list_player.append(joueur1.get("pk"))
@@ -265,14 +277,14 @@ class Match:
             try:
                 position += 2
                 new_joueur = tri_tour[position]
-            except:
+            except ValueError:
                 t += 2
                 new_joueur = tri_tour[t]
             while new_joueur.get("pk") in list_player:
                 try:
                     position += 2
                     new_joueur = tri_tour[position]
-                except:
+                except ValueError:
                     t += 2
                     new_joueur = tri_tour[t]
         new_player = new_joueur
@@ -297,25 +309,31 @@ class Match:
             joueur2["meet"] += [joueur1.get("pk")]
             if resultat == 1:
                 print_player_winner(joueur1)
-                joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
+                joueur1["point_tournament"] = joueur1.get(
+                    "point_tournament") + self.winner
                 joueur1["match_win"] += 1
-                joueur2["point_tournament"] = joueur2.get("point_tournament") + self.loser
+                joueur2["point_tournament"] = joueur2.get(
+                    "point_tournament") + self.loser
                 joueur2["match_lose"] += 1
                 winner = joueur1.get("pk")
                 resultat_tour.update({match: winner})
             elif resultat == 2:
                 print_player_winner(joueur2)
-                joueur1["point_tournament"] = joueur1.get("point_tournament") + self.loser
+                joueur1["point_tournament"] = joueur1.get(
+                    "point_tournament") + self.loser
                 joueur1["match_lose"] += 1
-                joueur2["point_tournament"] = joueur2.get("point_tournament") + self.winner
+                joueur2["point_tournament"] = joueur2.get(
+                    "point_tournament") + self.winner
                 joueur2["match_win"] += 1
                 winner = joueur2.get("pk")
                 resultat_tour.update({match: winner})
             elif resultat == 3:
                 print_player_pat()
-                joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
+                joueur1["point_tournament"] = joueur1.get(
+                    "point_tournament") + self.draw
                 joueur1["match_pat"] += 1
-                joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
+                joueur2["point_tournament"] = joueur2.get(
+                    "point_tournament") + self.draw
                 joueur2["match_pat"] += 1
                 winner = "pat match nul"
                 resultat_tour.update({match: winner})
@@ -330,7 +348,8 @@ class Match:
         return resultat_total
 
 
-def nunber_turn(turns, players_of_tournament, resultat_total, serialized_tournament, tour):
+def nunber_turn(turns, players_of_tournament,
+                resultat_total, serialized_tournament, tour):
     ''' function that controls the course of laps from the 2nd ( by a loop) '''
 
     turn = turns - 1
@@ -341,7 +360,8 @@ def nunber_turn(turns, players_of_tournament, resultat_total, serialized_tournam
         list_matchs = retour2[1]
         list_match = Match.print_list_matchs(Match(), list_matchs)
         start_tournament()
-        resultat_tournament = Match.gestion_match(Match(), list_match, resultat_total, tour)
+        resultat_tournament = Match.gestion_match(Match(),
+                                                  list_match,
+                                                  resultat_total, tour)
         save_resultat_tournament(serialized_tournament, resultat_tournament)
     return resultat_tournament
-
