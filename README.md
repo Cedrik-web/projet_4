@@ -79,5 +79,13 @@ Bienvenue dans votre gestionnaire de tournoi d'échec:
 	5/ Cas particulier:
 		Vous pouvez à tout moment sortir du programme avec l'action :
 			Ctrl + c
-		Dans le cas de cette fermeture forcée aucune sauvegarde ne			 			sera faite.				
+		Dans le cas de cette fermeture forcée aucune sauvegarde ne			 			sera faite.
+		
+		Le nombre de joueurs est par défault à 8 et le nombre de tour à 4.
+		Pour changer ces paramètres simplement il vous suffit d'aller sur le script:
+			settings.py
+		Et de changer ces données.
+		
+	
+	Bon jeux !!	
 		 
