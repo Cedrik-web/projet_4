@@ -9,7 +9,6 @@ Le programme, en plus de ce fichier README, ce compose de:
 	- 5 scripts python. 
 	- 2 packages python.
 	- 1 fichier requirements.txt ( ressources pip nécessaires à installer dans votre 	  			environement virtuel ). 
-	- 1 fichier .gitignore ( sert a exclure les fichiers non pris en charge par git ).
 	- 1 rapport de chaque script avec le fonction flake8.
 	  si vous voulez faire un test flake8 il vous suffit de intaller flake8 :
 	  		pip install flake8
