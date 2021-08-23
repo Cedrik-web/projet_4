@@ -1,10 +1,10 @@
 
-from controller import menu
+from controller import MainMenu
 
 
 def start_programme():
     if __name__ == "__main__":
-        menu()
+        MainMenu.menu(MainMenu)
 
 
 start_programme()

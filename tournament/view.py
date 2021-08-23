@@ -1,235 +1,382 @@
 
-def clean_input_tournament(data):
-    ''' general function to protect the program from
-        incorrect user input '''
-
-    tiny = data.lower()
-    text = tiny.replace(" ", "-")
-    char = "!#$%&*()"
-    for i in char:
-        text = text.replace(i, "")
-    accent = "éèêë"
-    for a in accent:
-        text = text.replace(a, "e")
-    accent_a = text.replace("à", "a")
-    accent_u = accent_a.replace("ù", "u")
-    new_data = accent_u
-    return new_data
-
-
-def print_add_genaral_remarks():
-    ''' adding the description of a tournament to the tournament object '''
-
-    print("ajoutez , si vous le voulez, une "
-          "description ou un commentaire au tournoi :")
-    remarks = []
-    resultat = input()
-    remarks.append(resultat)
-    return remarks
-
-
-def print_add_timer_control():
-    """ adding the timer mode of a tournament """
-
-    print("quelle mode de jeu souhaitez vous ?")
-    print("1 : un bullet")
-    print("2 : un blitz")
-    print("3 : un coup rapide")
-    resultat = input()
-    timer_control = []
-    if int(resultat) == 1:
-        timer_control.append("bullet")
-    elif int(resultat) == 2:
-        timer_control.append("blitz")
-    elif int(resultat) == 3:
-        timer_control.append("coup rapide")
-    else:
-        print("\n ERREUR : vous devez entrer un chiffre "
-              "correspondant à votre choix .")
-        print_add_timer_control()
-    return timer_control
-
-
-def print_elements_tournament():
-    ''' get tournament items and return a dictionary '''
-
-    print("entrez le nom du tournoi")
-    name = clean_input_tournament(input())
-    print("entrez le lieu du tournoi")
-    location = clean_input_tournament(input())
-    print("entrez la date du tournoi")
-    date = print_date_controller_tournament()
-    elements = {
-        "name": name,
-        "location": location,
-        "date": date,
-        }
-    return elements
-
-
-def print_date_controller_tournament():
-    ''' control the input console for the birth date of the player '''
-
-    while True:
-        try:
-            print("\nentrez le jour.")
-            day = int(input("                 jour :"))
-            if 0 < day < 32:
-                pass
-            else:
-                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
-            print("entrez le mois.")
-            month = int(input("                 mois :"))
-            if 0 < month < 13:
-                pass
-            else:
-                print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
-            print("entrez l'année complete, avec 4 nombres.")
-            year = int(input("                 année :"))
-            if 1930 < year < 2100:
-                pass
-            else:
-                print("ERREUR, veuillez entrer l'année complete.")
-            day_str = str(day)
-            month_str = str(month)
-            if len(month_str) == 1:
-                str_month = "0" + month_str
-            else:
-                str_month = str(month)
-            if len(day_str) == 1:
-                str_day = "0" + day_str
-            else:
-                str_day = str(day)
-            birth_date = str_day + "/" + str_month + "/" + str(year)
-            return birth_date
-        except ValueError:
-            print("\nERREUR , veuillez entrer des chiffres")
-            print("Veuillez recommencer\n")
-
-
-def print_menu_ajout_players_fot_tournament():
-    ''' displays in console a menu
-        (addition of a player in the tournament creation)
-        and takes care of the cases errors '''
-
-    while True:
-        try:
-            print()
-            print(" 1: pour la liste des joueur existants :")
-            print((" 2: pour créer un nouveau joueur :"))
-            choix = int(clean_input_tournament(input()))
-            if 0 < choix < 4:
-                return choix
-        except ValueError:
-            print("vous devez entrer un chiffre correspondant à votre choix.")
-
-
-def print_add_players_for_tournament():
-    ''' display information and return a variable '''
-
-    print("\nentrez l'ID du joueur selectionné ")
-    participant = clean_input_tournament(input())
-    return participant
-
-
-def print_add_player_impossible(existing):
-    ''' display a message in console '''
-
-    print("creation impossible car ce joueur est deja existant et son ID est",
-          existing.get("pk"))
-
-
-def print_add_players_for_tournament_new():
-    ''' display a message in console '''
-
-    print("\nce joueur est déja selectionné .")
-
-
-def print_save_players_for_tournament(compteur, nb_player):
-    ''' display a message in console '''
-
-    print("participant n°", compteur, "/", nb_player, "bien enregistré ! \n")
-
-
-def print_start_chrono(date):
-    ''' display a message in console '''
-
-    print("\ndate et heure du debut de round:", date)
-
-
-def print_ending_chrono(date):
-    ''' display a message in console '''
-
-    print("date et heure de fin de round", date)
-
-
-def print_menu_match_tournament(match, joueur1, joueur2):
-    ''' affiche le menu de score de match '''
-
-    print("\n resultat pour le match :", match, "\n")
-    print(" - tapez 1 si", joueur1.get('pk'), "a gagné.")
-    print(" - tapez 2 si", joueur2.get('pk'), "a gagné.")
-    print(" - si PAT tapez 3")
-    resultat = int(input("                                    : "))
-    return resultat
-
-
-def print_player_winner(joueur):
-    ''' display a message in console '''
-
-    print("                                                         ",
-          joueur.get('pk'), " GAGNE !!\n")
-
-
-def print_player_pat():
-    ''' display a message in console '''
-
-    print("                                     match nul \n")
-
-
-def print_error():
-    ''' display a message in console '''
-
-    print("ERREUR")
-
-
-def print_error_id_tournament():
-    ''' display a message in console '''
-
-    print("ERREUR, l'identifiant saisi n'existe pas!")
-
-
-def print_ending_first_round():
-    ''' display a message in console '''
-
-    print("---------------------------round : 1 terminé"
-          "----------------------------\n")
-
-
-def print_view_match_possition(m):
-    ''' display a information in console '''
-
-    print("\nmatch n°", m, ":")
-
-
-def print_view_match(i):
-    ''' display a information in console '''
-
-    print(i.get("pk"))
-
-
-def print_ending_other_round(tour):
-    ''' display a message in console '''
-
-    print("---------------------------round : "
-          + str(tour) + " terminé----------------------------\n")
-
-
-def print_start_tournament():
-    ''' display information and return a variable '''
-
-    print("\n")
-    print("Pour commencer le round et activé le chrono,")
-    reponse = input("appuyez sur ENTREE                           "
-                    " ou non pour sortir: ")
-    return reponse
+from model import CleanText
+
+
+class ViewTournament(CleanText):
+
+    def print_sex_control(self):
+        ''' control the input console for the sex of the player '''
+
+        print("\nentrez 1 pour un joueur de sex masculin")
+        print("entrez 2 pour un joueur de sex féminin\n")
+        sex = CleanText.clean_input(CleanText, input())
+        if sex == "1":
+            sex = "homme"
+            return sex
+        elif sex == "2":
+            sex = "femme"
+            return sex
+        else:
+            print("ERREUR , veuillez choisir le numéro correspndant au sex.")
+            self.print_sex_control(sex)
+
+    def print_control_day(self):
+        '''control input day'''
+
+        while True:
+            try:
+                while True:
+                    print("\nentrez le jour.")
+                    day = int(input("                 jour :"))
+                    if 0 < day < 32:
+                        return day
+                    else:
+                        print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            except ValueError:
+                print("\nERREUR , veuillez entrer des chiffres")
+                print("Veuillez recommencer\n")
+
+    def print_control_month(self):
+        '''control input month'''
+
+        while True:
+            try:
+                while True:
+                    print("entrez le mois.")
+                    month = int(input("                 mois :"))
+                    if 0 < month < 13:
+                        return month
+                    else:
+                        print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
+            except ValueError:
+                print("\nERREUR , veuillez entrer des chiffres")
+                print("Veuillez recommencer\n")
+
+    def print_control_years(self):
+        '''control input year'''
+
+        while True:
+            try:
+                while True:
+                    print("entrez l'année complete, avec 4 nombres.")
+                    year = int(input("                 année :"))
+                    if 1930 < year < 2100:
+                        return year
+                    else:
+                        print("ERREUR, veuillez entrer l'année complete.")
+            except ValueError:
+                print("\nERREUR , veuillez entrer des chiffres")
+                print("Veuillez recommencer\n")
+
+    def print_modif_player(self, player):
+        ''' function displaying all the elements of a player and allowing to retrieve
+            the possible change and return a dictionary with these elements '''
+
+        print("modifiez les valeurs que vous désirez à la suite de la valeur renseignée .")
+        print("ou tapez ENTRER pour passer . \n")
+        a = CleanText.clean_input(CleanText, input("nom :" + player.get("name") + " -> "))
+        if not a == "":
+            player.update({"name": a})
+            print("nouveau nom : " + player.get("name") + "\n")
+        b = CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
+        if not b == "":
+            player.update({"first_name": b})
+            print("nouveau prénom : " + player.get("first_name") + "\n")
+        print("né.e le " + player.get("birth_date") + " , tapez oui pour modifer ->")
+        reponse = CleanText.clean_input(CleanText, input())
+        if reponse == "oui":
+            c = self.print_date_controller(self)
+        else:
+            c = ""
+        if c == player.get("birth_date"):
+            player.update({"birth_date": c})
+            print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
+        print("sex : " + player.get("sex") + " , tapez oui pour modifier ->")
+        reponse == CleanText.clean_input(CleanText, input())
+        if reponse == "oui":
+            d = self.print_sex_control(self)
+        else:
+            d = ""
+        if d == player.get("sex"):
+            player.update({"sex": d})
+            print("sex redéfini : " + player.get("sex") + "\n")
+        print("total des points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
+        reponse = CleanText.clean_input(CleanText, input())
+        ranking = player.get("ranking")
+        if reponse == "oui":
+            while ranking != int:
+                try:
+                    nb = int(input(": "))
+                    ranking = nb
+                    break
+                except ValueError:
+                    print("\nERREUR , veuillez entrer un nombre entier")
+                    print("recomencer")
+        print(ranking)
+        if not ranking == int(player.get("ranking")):
+            player.update({"ranking": ranking})
+            print("nouveau total de points : " + str(player.get("ranking")) + "\n")
+        print()
+        return player
+
+    def print_add_player(self):
+        ''' function requesting the creation of a new player following a player creation
+            and this as long as the users wants by answering yes '''
+
+        serialized_player = []
+        serialized_player.append(self.print_elements_player(self))
+        print("voulez vous ajouter un autre joueur ?")
+        reponse = CleanText.clean_input(CleanText, input())
+        while reponse == "oui":
+            serialized_player.append(self.print_elements_player(self))
+            print("voulez vous ajouter un autre joueur ?")
+            reponse = CleanText.clean_input(CleanText, input())
+        return serialized_player
+
+    def print_elements_player(self):
+        ''' retrieving player items and putting all items in dictionary '''
+
+        print("entrez le nom de famille du joueur")
+        name = CleanText.clean_input(CleanText, input())
+        print("entrez le prénom du joueur")
+        first_name = CleanText.clean_input(CleanText, input())
+        print("entrez la date de naissance")
+        from tournament.model import Tournament
+        birth_date = Tournament.print_date_controller(Tournament)
+        print(name, first_name, "et né le", birth_date)
+        sex = self.print_sex_control(self)
+        print("entrez les points du joueur")
+        ranking = 0
+        while ranking != int:
+            try:
+                nb = int(input())
+                ranking += nb
+                break
+            except ValueError:
+                print("\nERREUR , veuillez rentrer un nombre entier")
+                print("recomencer")
+        print("nombre de point et de : ", ranking)
+        elements = {
+            "name": name,
+            "first_name": first_name,
+            "birth_date": birth_date,
+            "sex": sex,
+            "ranking": ranking,
+            }
+        return elements
+
+    def print_add_genaral_remarks(self):
+        ''' adding the description of a tournament to the tournament object '''
+
+        print("ajoutez , si vous le voulez, une description ou un commentaire au tournoi :")
+        remarks = []
+        resultat = input()
+        remarks.append(resultat)
+        return remarks
+
+    def print_add_timer_control(self):
+        """ adding the timer mode of a tournament """
+
+        print("quelle mode de jeu souhaitez vous ?")
+        print("1 : un bullet")
+        print("2 : un blitz")
+        print("3 : un coup rapide")
+        resultat = input()
+        timer_control = []
+        if int(resultat) == 1:
+            timer_control.append("bullet")
+        elif int(resultat) == 2:
+            timer_control.append("blitz")
+        elif int(resultat) == 3:
+            timer_control.append("coup rapide")
+        else:
+            print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
+            self.print_add_timer_control(self)
+        return timer_control
+
+    def print_elements_tournament(self):
+        ''' get tournament items and return a dictionary '''
+
+        print("entrez le nom du tournoi")
+        name = CleanText.clean_input(CleanText, input())
+        print("entrez le lieu du tournoi")
+        location = CleanText.clean_input(CleanText, input())
+        print("entrez la date du tournoi")
+        from tournament.model import Tournament
+        date = Tournament.print_date_controller(Tournament)
+        elements = {
+            "name": name,
+            "location": location,
+            "date": date,
+            }
+        return elements
+
+    def print_not_list_player_existing(self):
+        '''display a information in the console'''
+
+        print("il ne semble pas avoir de joueur enregistrer, veuillez créer le joueur.")
+
+    def print_menu_ajout_players_for_tournament(self):
+        ''' displays in console a menu (addition of a player in the tournament creation)
+            and takes care of the cases errors '''
+
+        while True:
+            try:
+                print()
+                print(" 1: pour la liste des joueur existants :")
+                print((" 2: pour créer un nouveau joueur :"))
+                choix = int(CleanText.clean_input(CleanText, input()))
+                if 0 < choix < 3:
+                    return choix
+            except ValueError:
+                print("vous devez entrer un chiffre correspondant à votre choix.")
+
+    def print_add_players_for_tournament(self):
+        ''' display information and return a variable '''
+
+        print("\nentrez l'ID du joueur selectionné ")
+        participant = CleanText.clean_input(CleanText, input())
+        return participant
+
+    def print_add_player_impossible(self, existing):
+        ''' display a message in console '''
+
+        print("creation impossible car ce joueur est deja existant et son ID est",
+              existing.get("pk"))
+
+    def print_add_players_for_tournament_inpossible(self):
+        ''' display a message in console '''
+
+        print("\nce joueur est déja selectionné .")
+
+    def print_save_players_for_tournament(self, compteur, nb_player):
+        ''' display a message in console '''
+
+        print("participant n°", compteur, "/", nb_player, "bien enregistré ! \n")
+
+    def print_start_chrono(self, date):
+        ''' display a message in console '''
+
+        print("\ndate et heure du debut de round:", date)
+
+    def print_ending_chrono(self, date):
+        ''' display a message in console '''
+
+        print("date et heure de fin de round", date)
+
+    def print_menu_match_tournament(self, match, joueur1, joueur2):
+        ''' affiche le menu de score de match '''
+
+        print("\n resultat pour le match :", match, "\n")
+        print(" - tapez 1 si", joueur1.get('pk'), "a gagné.")
+        print(" - tapez 2 si", joueur2.get('pk'), "a gagné.")
+        print(" - si PAT tapez 3")
+        resultat = int(input("                                    : "))
+        return resultat
+
+    def print_player_winner(self, joueur):
+        ''' display a message in console '''
+
+        print("                                                         ",
+              joueur.get('pk'), " GAGNE !!\n")
+
+    def print_player_pat(self):
+        ''' display a message in console '''
+
+        print("                                     match nul \n")
+
+    def print_error(self):
+        ''' display a message in console '''
+
+        print("ERREUR")
+
+    def print_error_id_tournament(self):
+        ''' display a message in console '''
+
+        print("ERREUR, l'identifiant saisi n'existe pas!")
+
+    def print_starting_round(self, tour):
+        '''display a message in console'''
+
+        tours = tour + 1
+        print("\n- Liste des matches à jouer pour le round", str(tours))
+        print()
+
+    def print_ending_first_round(self):
+        ''' display a message in console '''
+
+        print("---------------------------round : 1 terminé----------------------------\n")
+
+    def print_view_match_possition(self, m):
+        ''' display a information in console '''
+
+        print("\nmatch n°", m, ":")
+
+    def print_view_match(self, i):
+        ''' display a information in console '''
+
+        print(i.get("pk"))
+
+    def print_ending_other_round(self, tour):
+        ''' display a message in console '''
+
+        print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
+
+    def print_start_tournament(self):
+        ''' display information and return a variable '''
+
+        print("\n")
+        print("Pour commencer le round et activé le chrono,")
+        reponse = input("appuyez sur ENTREE                           ou non pour sortir: ")
+        return reponse
+
+    def print_find_tournament(self):
+        ''' display a message in console '''
+
+        print("\nrecherche de tournois créés et non finalisés.\n")
+
+    def print_tournament_finished(self, i):
+        ''' display a message in console'''
+
+        print("tournoi fini :", "le", i.get("name"), "de", i.get("location"), "du", i.get("date"))
+
+    def print_space(self):
+        ''' display 1 space '''
+
+        print()
+
+    def print_tournament_not_start(self, i):
+        ''' display a message in console'''
+
+        print("tournois non commencés voici leurs ID :", i.get("pk"))
+
+    def print_tournament_start(self, i):
+        ''' display a message in console'''
+
+        print("tournois non finalisés voici leurs ID :")
+        print(" - ", i.get("pk"))
+
+    def print_input_selection_tournament(self):
+        ''' display a message in console and return a variable'''
+
+        reponse = CleanText.clean_input(CleanText,
+                                        input("entrez l'ID ou appuiez ENTREE pour sortir de la selection: "))
+        return reponse
+
+    def print_list_players_alphabet(self, player_classement):
+        ''' display a message in console '''
+
+        print("\nlistes des joueurs par ordre alphabetique :\n")
+        for i in player_classement:
+            print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
+
+    def print_new_player_register(self):
+        ''' display a message in console '''
+
+        print("le joueur a été enregisté et rajouté au tounoi.")
+
+    def print_continue(self):
+        '''display a message in console'''
+
+        print("appuyer sur ENTREE pour continuer...")
+        input()

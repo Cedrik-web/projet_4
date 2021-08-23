@@ -1,132 +1,125 @@
 
-from player.model import table_of_player, modification_of_player, activate
-from player.view import print_find_player, print_display_player_list, \
-    print_display_player_nb
-from tournament.model import table_of_tournament
-from view import print_list_tournament, print_choice_tournament, \
-    print_find_tournament, print_tournament_finished,  \
-    print_tournament_not_start, print_tournament_start,\
-    print_input_selection_tournament, \
-    print_space, print_modif_classement, print_modif_ok, print_error_id
+from view import ViewMenu
 
 
-def selection_tournament():
-    ''' allows to select a tournament in the dictionary '''
+#  method used in the main menu class
+class MethodeForMenu:
 
-    tournaments = table_of_tournament()
-    liste_tournoi = []
-    for i in tournaments:
-        print_list_tournament(i)
-        liste_tournoi.append(i.get("pk"))
-    choix = print_choice_tournament()
-    while choix not in liste_tournoi:
-        print_error_id()
-        choix = print_choice_tournament()
-    else:
+    def selection_tournament(self):
+        ''' allows to select a tournament in the dictionary '''
+
+        from tournament.model import Tournament
+        tournaments = Tournament.table_of_tournament(Tournament)
+        liste_tournoi = []
         for i in tournaments:
-            if i.get("pk") == choix:
-                tournament = i
-                return tournament
-
-
-def tournament_find(TURNS):
-    ''' alows you to search among the tournaments which have ended
-        which are in progress and those which have not started '''
-
-    tournaments = table_of_tournament()
-    match = []
-    tour = []
-    end = []
-    no_start = []
-    start = []
-    print_find_tournament()
-    for i in tournaments:
-        tour.append(i.get("resultat"))
-        if tour == [[]]:
-            match.append(i.get("pk"))
-            no_start.append(i)
-            tour.clear()
+            ViewMenu.print_list_tournament(ViewMenu, i)
+            liste_tournoi.append(i.get("pk"))
+        choix = CleanText.clean_input(CleanText, ViewMenu.print_choice_tournament(ViewMenu))
+        while choix not in liste_tournoi:
+            ViewMenu.print_error_id(ViewMenu)
+            choix = ViewMenu.print_choice_tournament(ViewMenu)
         else:
-            for t in tour:
-                nb_turns = (len(t))
-                if nb_turns == TURNS:
-                    end.append(i)
-                    tour.clear()
-                else:
-                    match.append(i.get("pk"))
-                    start.append(i)
-                    tour.clear()
-    for i in end:
-        print_tournament_finished(i)
-    print_space()
-    for i in no_start:
-        print_tournament_not_start(i)
-    for i in start:
-        print_tournament_start(i)
-    print_space()
-    reponse = print_input_selection_tournament()
-    return reponse
+            for i in tournaments:
+                if i.get("pk") == choix:
+                    tournament = i
+                    return tournament
+
+    def rapport_player_list_of_tournament_by_ranking(self):
+        '''generate the list of players of a shosen tournament and display by rank in order from
+            largest to smallest'''
+
+        tournament = self.selection_tournament(self)
+        players = tournament.get("players")
+        player_list = []
+        for i in players:
+            for k, v in i.items():
+                player_list.append(v)
+        tri_player_rank = sorted(player_list, key=lambda k: k["ranking"], reverse=True)
+        ViewMenu.print_classement_of_tournament(ViewMenu)
+        p = 0
+        for i in tri_player_rank:
+            p += 1
+            ViewMenu.print_tri_player_of_tournament_rank(ViewMenu, i, p)
+        ViewMenu.print_pass_validation(ViewMenu)
+
+    def rapport_player_list_of_tournament_by_alphabetical(self):
+        '''generate the list of players of a chosen tournament and display in
+            alphabetical order'''
+
+        tournament = self.selection_tournament(self)
+        players = tournament.get("players")
+        player_list = []
+        for i in players:
+            for k, v in i.items():
+                player_list.append(v)
+        tri_player_alphabet = sorted(player_list, key=lambda k: k["pk"])
+        ViewMenu.print_classement_player_of_tournament(ViewMenu)
+        for i in tri_player_alphabet:
+            ViewMenu.print_tri_player_of_tournament_alphabet(ViewMenu, i)
+        ViewMenu.print_pass_validation(ViewMenu)
+
+    def rapport_all_rounds_of_tournament(self):
+        '''generates a list of all the rounds of a selected tournament, displays the number
+            of rounds and the playing time of each round'''
+
+        tournament = self.selection_tournament(self)
+        resultat = tournament.get("resultat")
+        ViewMenu.print_list_tournaments(ViewMenu, tournament)
+        t = 0
+        for k, v in resultat.items():
+            t += 1
+            ViewMenu.print_tournament_time(ViewMenu, t)
+            list_tour = v
+            match = []
+            resultat = []
+            for k, v in list_tour.items():
+                match.append(k)
+                resultat.append(v)
+            ViewMenu.print_tournament_resultat(ViewMenu, resultat)
+            ViewMenu.print_space1(ViewMenu)
+        ViewMenu.print_pass_validation(ViewMenu)
+
+    def rapport_all_matches_of_tournament(self):
+        '''generate the list of all matches and result of a selected tournament'''
+
+        tournament = self.selection_tournament(self)
+        resultat = tournament.get("resultat")
+        ViewMenu.print_list_match_by_tournament(ViewMenu, tournament)
+        t = 0
+
+        for k, v in resultat.items():
+            t += 1
+            ViewMenu.print_resultat_match(ViewMenu, t)
+            list_tour = v
+            match = []
+            resultat = []
+            for k, v in list_tour.items():
+                match.append(k)
+                resultat.append(v)
+            del match[0]
+            del match[-1]
+            del resultat[0]
+            del resultat[-1]
+            for i, j in zip(match, resultat):
+                ViewMenu.print_list_resultat_match(ViewMenu, i, j)
+            ViewMenu.print_space1(ViewMenu)
+        ViewMenu.print_pass_validation(ViewMenu)
 
 
-def tournaments_recovery(answer):
-    ''' manage the resumption of tournament and what turn it was '''
+class CleanText:
 
-    tournaments = table_of_tournament()
-    players = []
-    tournament = []
-    turn = 0
-    serialized_tournament = []
-    for i in tournaments:
-        if i.get("pk") == answer:
-            serialized_tournament.append(i)
-            players_brut = i.get("players")
-            tournament.append(i.get("resultat"))
-            for p in players_brut:
-                for k, v in p.items():
-                    players.append(v)
-    if tournament == [[]]:
-        return players, serialized_tournament[0], turn
-    else:
-        for r in tournament:
-            nb = len(r)
-            if nb == 1:
-                turn = 1
-            elif nb == 2:
-                turn = 2
-            elif nb == 3:
-                turn = 3
-        return players, serialized_tournament[0], turn
+    def clean_input(self, data):
+        ''' general function to protect the program from incorrect user input '''
 
-
-def modif_classement():
-    ''' allows you to search for the player to modify by name
-        which returns a list of all the players with this name
-        or by ID to directly select the player to modify '''
-
-    players = table_of_player()
-    activate(players)  # manage autocomplementation
-    resultat = print_find_player()
-    nb = len(resultat)
-    nb_players = []
-    if nb < 10:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    nb_players.append(player)
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    if len(nb_players) == 1:
-                        modif = print_modif_classement(player)
-                        modification_of_player(modif)
-                        print_modif_ok()
-                    else:
-                        print_display_player_list(player)
-        print_display_player_nb(len(nb_players), resultat)
-    else:
-        for player in players:
-            for k, v in player.items():
-                if v == resultat:
-                    modif = print_modif_classement(player)
-                    modification_of_player(modif)
-                    print_modif_ok()
+        tiny = data.lower()
+        text = tiny.replace(" ", "-")
+        char = "!#$%&*()"
+        for i in char:
+            text = text.replace(i, "")
+        accent = "éèêë"
+        for a in accent:
+            text = text.replace(a, "e")
+        accent_a = text.replace("à", "a")
+        accent_u = accent_a.replace("ù", "u")
+        new_data = accent_u
+        return new_data
