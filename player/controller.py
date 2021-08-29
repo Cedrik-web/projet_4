@@ -6,22 +6,19 @@ from player.view import ViewPlayer
 # create class for intialized the menu
 class MenuPlayer:
 
-    def __init__(self):
-        pass
-
     def menu_add_player(self):
         ''' management menu addition players '''
 
-        player = ViewPlayer.print_add_player1(ViewPlayer)
+        player = ViewPlayer.print_add_player(ViewPlayer)
         add_player = Player.add_players(Player, player)
         resultat = Player.duplicate_search(Player, add_player)
         serialized_player = resultat.get("valided")
         existing = resultat.get("no_valided")
         if not serialized_player == []:
             Player.save_player(Player, serialized_player)
-            ViewPlayer.print_new_player_register1(ViewPlayer)
+            ViewPlayer.print_new_player_register(ViewPlayer)
         if not existing == []:
-            ViewPlayer.print_exicting_player1(ViewPlayer, existing)
+            ViewPlayer.print_exicting_player(ViewPlayer, existing)
 
     def menu_modif_player(self):
         ''' allows you to search for the player to modify by name which returns a list of
@@ -40,9 +37,10 @@ class MenuPlayer:
                 for k, v in player.items():
                     if v == resultat:
                         if len(nb_players) == 1:
-                            modif = ViewPlayer.print_modif_player1(ViewPlayer, player)
+                            modif = ViewPlayer.print_modif_player(ViewPlayer, player)
                             Player.modification_of_player(Player, modif)
-                            ViewPlayer.print_modif_ok1(ViewPlayer)
+                            from controller import MainMenu
+                            MainMenu.menu(MainMenu)
                         else:
                             ViewPlayer.print_display_player_list(ViewPlayer, player)
             ViewPlayer.print_display_player_nb(ViewPlayer, len(nb_players), resultat)
@@ -51,6 +49,7 @@ class MenuPlayer:
             for player in players:
                 for k, v in player.items():
                     if v == resultat:
-                        modif = ViewPlayer.print_modif_player1(ViewPlayer, player)
+                        modif = ViewPlayer.print_modif_player(ViewPlayer, player)
                         Player.modification_of_player(Player, modif)
-                        ViewPlayer.print_modif_ok1(ViewPlayer)
+                        from controller import MainMenu
+                        MainMenu.menu(MainMenu)

@@ -54,7 +54,7 @@ class ViewPlayer:
         print()
         return player
 
-    def print_add_player1(self):
+    def print_add_player(self):
         ''' function requesting the creation of a new player following a player creation
             and this as long as the users wants by answering yes '''
 
@@ -68,12 +68,12 @@ class ViewPlayer:
             reponse = CleanText.clean_input(CleanText, input())
         return serialized_player
 
-    def print_new_player_register1(self):
+    def print_new_player_register(self):
         ''' display a message in console '''
 
         print("le joueur a été enregisté.")
 
-    def print_modif_player1(self, player):
+    def print_modif_player(self, player):
         ''' function displaying all the elements of a player and allowing to retrieve
             the possible change and return a dictionary with these elements '''
 

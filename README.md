@@ -8,14 +8,17 @@ Le programme, en plus de ce fichier README, ce compose de:
 
 	- 5 scripts python. 
 	- 2 packages python.
+	- 1 script cfg.
 	- 1 fichier requirements.txt ( ressources pip nécessaires à installer dans votre 	  			environement virtuel ). 
-	- 1 rapport de chaque script avec le fonction flake8.
-	  si vous voulez faire un test flake8 il vous suffit de intaller flake8 :
-	  		pip install flake8
-	  et apres installation appeler la fonction avec le script à verifier :
-	  		flake8 "main.py".	
+	- 1 dossier flake-report dans lequel ce trouve le rapport de recherche d'erreur PEP8.
+	  si vous voulez faire un test flake8 , il vous suffit de intaller flake8 :
+	  		pip install flake8-html 
+	  		ou après avoir fait les étapes 1 et 2.
+	  après l' installation appeler le rapport en tapant:
+	  		flake8 --format=html --htmldir=flake-report
+	  le rapport va être enregistrer dans un dossier portant le nom de flake-report vous y 			trouverez un fichier index.html ouvré ce fichier sur votre navigateur.
 	  plus d'information sur le liens ci-joins:
-	  				https://pypi.org/project/flake8/	
+	  			https://flake8.pycqa.org/en/3.1.1/user/index.html	
 	
 	
 Mise en place du programmme:
@@ -61,27 +64,25 @@ Bienvenue dans votre gestionnaire de tournoi d'échec:
 		
 	2/ Navigation dans le programme:
 		
-		La navigation s'effectue sur la console.
+		-La navigation s'effectue sur la console.
 		Il vous suffit de choisir entre les menus et sous menu la selection  		correspondante à votre besoin.
 		Pour sortir du programme sur le menu principal il vous suffit de taper 8.
 
 	3/ La sauvegarde de la base de donnée:
-		La sauvegarde de votre base de donnée se fait en local sur un fichier            			json généré automatiquement lors de la première sauvegarde	 			effectuée.
+		-La sauvegarde de votre base de donnée se fait en local sur un fichier            			json généré automatiquement lors de la première sauvegarde	 			effectuée.
 		Ce fichier se nomme db.json et sera dans les dossiers du programme.	
 		
 	4/ Création d'un tournoi:
-		Vous pouvez créer un tournoi à l'avance.
+		-Vous pouvez créer un tournoi à l'avance.
 		Dans ce cas il vous faudra répondre "non" à la question "voulez vous 			commencer le tournoi?"	
-		Vous sortirez alors du programme.
-		Pour relancer le programme:
-			suivez de nouveau l'ETAPE 3	
+		Vous sortirez alors du programme et reviendriez au menu d'accueil.
 			
 	5/ Cas particulier:
-		Vous pouvez à tout moment sortir du programme avec l'action :
+		-Vous pouvez à tout moment sortir du programme avec l'action :
 			Ctrl + c
 		Dans le cas de cette fermeture forcée aucune sauvegarde ne			 			sera faite.
 		
-		Le nombre de joueurs est par défault à 8 et le nombre de tour à 4.
+		-Le nombre de joueurs est par défault à 8 et le nombre de tour à 4.
 		Pour changer ces paramètres simplement il vous suffit d'aller sur le script:
 			settings.py
 		Et de changer ces données.

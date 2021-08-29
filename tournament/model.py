@@ -82,7 +82,7 @@ class Tournament(Player):
                 if no_selection:
                     participants.append(i)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, nombre_de_tours)
-                    break
+                    return True
                 else:
                     ViewTournament.print_add_players_for_tournament_inpossible(ViewTournament)
                     ViewTournament.print_continue(ViewTournament)
@@ -102,7 +102,8 @@ class Tournament(Player):
             serialized_player = s
             if not serialized_player.get("pk") is None:
                 save_player.append(serialized_player)
-                ViewTournament.print_new_player_register(ViewTournament)
+                from player.view import ViewPlayer
+                ViewPlayer.print_new_player_register(ViewPlayer)
                 participants.append(serialized_player)
                 ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, nombre_de_tours)
                 break
@@ -208,8 +209,6 @@ class Tournament(Player):
         ''' function that controls the course of laps from the 2nd ( by a loop) '''
 
         turn = turns - tour
-        print("209", turn)
-        print("210", players_of_tournament)
         tour = tour
         for i in range(turn):
             tour += 1
