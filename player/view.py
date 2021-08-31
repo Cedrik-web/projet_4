@@ -80,29 +80,30 @@ class ViewPlayer:
         print("modifiez les valeurs que vous désirez à la suite de la valeur renseignée .")
         print("ou tapez ENTRER pour passer . \n")
         a = CleanText.clean_input(CleanText, input("nom :" + player.get("name") + " -> "))
-        if not a == "":
+        if not a == "":  # name change
             player.update({"name": a})
             print("nouveau nom : " + player.get("name") + "\n")
         b = CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
-        if not b == "":
+        if not b == "":  # first_name change
             player.update({"first_name": b})
             print("nouveau prénom : " + player.get("first_name") + "\n")
         print("né.e le " + player.get("birth_date") + " , tapez oui pour modifer ->")
         reponse = CleanText.clean_input(CleanText, input())
         if reponse == "oui":
-            c = ViewTournament.print_date_controller(ViewTournament)
+            from tournament.model import Tournament
+            c = Tournament.print_date_controller(Tournament)
         else:
             c = ""
-        if c == player.get("birth_date"):
+        if c == player.get("birth_date"):  # birth date change
             player.update({"birth_date": c})
             print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
         print("sex : " + player.get("sex") + " , tapez oui pour modifier ->")
-        reponse == CleanText.clean_input(CleanText, input())
+        reponse = CleanText.clean_input(CleanText, input())
         if reponse == "oui":
             d = ViewTournament.print_sex_control(ViewTournament)
         else:
             d = ""
-        if d == player.get("sex"):
+        if d != player.get("sex"):  # sex change
             player.update({"sex": d})
             print("sex redéfini : " + player.get("sex") + "\n")
         print("total des points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
@@ -118,7 +119,7 @@ class ViewPlayer:
                     print("\nERREUR , veuillez entrer un nombre entier")
                     print("recomencer")
         print(ranking)
-        if not ranking == int(player.get("ranking")):
+        if not ranking == int(player.get("ranking")):  # ranking change
             player.update({"ranking": ranking})
             print("nouveau total de points : " + str(player.get("ranking")) + "\n")
         print()

@@ -101,7 +101,12 @@ class MethodeForMenu:
             del resultat[0]
             del resultat[-1]
             for i, j in zip(match, resultat):
-                ViewMenu.print_list_resultat_match(ViewMenu, i, j)
+                if j == "pat match nul":  # controls the case where both players leave the winner list, which equals a tie
+                    ViewMenu.print_list_resultat_match_for_pat(ViewMenu, i, j)
+                    ViewMenu.print_new_point_to_assign_for_pat(ViewMenu, i)
+                else:
+                    ViewMenu.print_list_resultat_match(ViewMenu, i, j)
+                    ViewMenu.print_new_point_to_assign(ViewMenu, j)
             ViewMenu.print_space1(ViewMenu)
         ViewMenu.print_pass_validation(ViewMenu)
 

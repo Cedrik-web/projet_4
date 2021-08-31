@@ -181,6 +181,7 @@ class Player:
                         else:
                             ViewPlayer.print_display_player_list(ViewPlayer, player)
             ViewPlayer.print_display_player_nb(ViewPlayer, len(nb_players), resultat)
+            self.modif_classement(self)
         else:
             for player in players:
                 for k, v in player.items():

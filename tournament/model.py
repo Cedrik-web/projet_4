@@ -453,6 +453,7 @@ class Match:
         joueur2["match_pat"] += 1
         winner = "pat match nul"
         resultat_tour1.update({match: winner})
+        return resultat_tour1
 
     def generation_next_round(self, player_of_tournament):
         ''' generates match pairs from the 2nd round '''
@@ -556,9 +557,9 @@ class Match:
             by tournament and thus to generate the peers'''
 
         ViewTournament.print_player_pat(ViewTournament)
-        joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
+        joueur1["point_tournament"] = self.draw
         joueur1["match_pat"] += 1
-        joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
+        joueur2["point_tournament"] = self.draw
         joueur2["match_pat"] += 1
         winner = "pat match nul"
         resultat_tour.update({match: winner})

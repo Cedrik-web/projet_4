@@ -53,7 +53,7 @@ class ViewMenu:
     def print_list_of_tournaments(self, tournament):
         ''' display a message in console '''
 
-        print("\nliste des tournois joués.")
+        print("\nliste des tournois enregistrés.")
         for i in tournament:
             print(i.get("pk"))
 
@@ -158,6 +158,23 @@ class ViewMenu:
 
         print("match :", i)
         print("        remporté par: ", j)
+
+    def print_list_resultat_match_for_pat(self, i, j):
+        ''' display a message in console'''
+
+        print("match :", i)
+        print("        match pat.")
+
+    def print_new_point_to_assign(self, joueur1):
+        ''' display a message in console'''
+
+        print("       ", joueur1, "marque: 1 point.")
+        print("        son adversaire ne marque pas de point.")
+
+    def print_new_point_to_assign_for_pat(self, joueur1):
+        ''' display a message in console'''
+
+        print("       ", joueur1, "marque: 1/2 point chacun.")
 
     def print_menu_existing(self):
         ''' display a message in console'''
