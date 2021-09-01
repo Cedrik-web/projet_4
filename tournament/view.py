@@ -2,6 +2,24 @@
 from model import CleanText
 
 
+class ViewMenuTournament:
+
+    def print_starting_round(self, tour):
+        '''display a message in console'''
+
+        tours = tour + 1
+        print("\n- Liste des matches à jouer pour le round", str(tours))
+        print()
+
+
+class ViewShare:
+
+    def print_error(self):
+        ''' display a message in console '''
+
+        print("ERREUR")
+
+
 class ViewTournament(CleanText):
 
     def print_sex_control(self):
@@ -76,8 +94,8 @@ class ViewTournament(CleanText):
         print("entrez le prénom du joueur")
         first_name = CleanText.clean_input(CleanText, input())
         print("entrez la date de naissance")
-        from tournament.model import Tournament
-        birth_date = Tournament.print_date_controller(Tournament)
+        from tournament.controller import MethodeTournament
+        birth_date = MethodeTournament.print_date_controller(MethodeTournament)
         print(name, first_name, "et né le", birth_date)
         sex = self.print_sex_control(self)
         print("entrez les points du joueur")
@@ -138,7 +156,8 @@ class ViewTournament(CleanText):
         location = CleanText.clean_input(CleanText, input())
         print("entrez la date du tournoi")
         from tournament.model import Tournament
-        date = Tournament.print_date_controller(Tournament)
+        from tournament.controller import MethodeTournament
+        date = MethodeTournament.print_date_controller(MethodeTournament)
         elements = {
             "name": name,
             "location": location,
@@ -189,73 +208,10 @@ class ViewTournament(CleanText):
 
         print("participant n°", compteur, "/", nb_player, "bien enregistré ! \n")
 
-    def print_start_chrono(self, date):
-        ''' display a message in console '''
-
-        print("\ndate et heure du debut de round:", date)
-
-    def print_ending_chrono(self, date):
-        ''' display a message in console '''
-
-        print("date et heure de fin de round", date)
-
-    def print_menu_match_tournament(self, match, joueur1, joueur2):
-        ''' affiche le menu de score de match '''
-
-        print("\n resultat pour le match :", match, "\n")
-        print(" - tapez 1 si", joueur1.get('pk'), "a gagné.")
-        print(" - tapez 2 si", joueur2.get('pk'), "a gagné.")
-        print(" - si PAT tapez 3")
-        resultat = int(input("                                    : "))
-        return resultat
-
-    def print_player_winner(self, joueur):
-        ''' display a message in console '''
-
-        print("                                                         ",
-              joueur.get('pk'), " GAGNE !!\n")
-
-    def print_player_pat(self):
-        ''' display a message in console '''
-
-        print("                                     match nul \n")
-
-    def print_error(self):
-        ''' display a message in console '''
-
-        print("ERREUR")
-
     def print_error_id_tournament(self):
         ''' display a message in console '''
 
         print("ERREUR, l'identifiant saisi n'existe pas!")
-
-    def print_starting_round(self, tour):
-        '''display a message in console'''
-
-        tours = tour + 1
-        print("\n- Liste des matches à jouer pour le round", str(tours))
-        print()
-
-    def print_ending_first_round(self):
-        ''' display a message in console '''
-
-        print("---------------------------round : 1 terminé----------------------------\n")
-
-    def print_view_match_possition(self, m):
-        ''' display a information in console '''
-
-        print("\nmatch n°", m, ":")
-
-    def print_view_match(self, i):
-        ''' display a information in console '''
-
-        print(i.get("pk"))
-
-    def print_ending_other_round(self, tour):
-        ''' display a message in console '''
-
-        print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
 
     def print_start_tournament(self):
         ''' display information and return a variable '''
@@ -305,7 +261,7 @@ class ViewTournament(CleanText):
         for i in player_classement:
             print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
 
-    def print_new_player_register(self):
+    def print_new_player_register(self):  #//////////////////////////////////////////////
         ''' display a message in console '''
 
         print("le joueur a été enregisté et rajouté au tounoi.")
@@ -315,3 +271,58 @@ class ViewTournament(CleanText):
 
         print("appuyer sur ENTREE pour continuer...")
         input()
+
+
+class ViewMatch:
+
+    def print_ending_other_round(self, tour):
+        ''' display a message in console '''
+
+        print("---------------------------round : " + str(tour) + " terminé----------------------------\n")
+
+    def print_view_match_possition(self, m):
+        ''' display a information in console '''
+
+        print("\nmatch n°", m, ":")
+
+    def print_view_match(self, i):
+        ''' display a information in console '''
+
+        print(i.get("pk"))
+
+    def print_start_chrono(self, date):
+        ''' display a message in console '''
+
+        print("\ndate et heure du debut de round:", date)
+
+    def print_ending_chrono(self, date):
+        ''' display a message in console '''
+
+        print("date et heure de fin de round", date)
+
+    def print_menu_match_tournament(self, match, joueur1, joueur2):
+        ''' affiche le menu de score de match '''
+
+        print("\n resultat pour le match :", match, "\n")
+        print(" - tapez 1 si", joueur1.get('pk'), "a gagné.")
+        print(" - tapez 2 si", joueur2.get('pk'), "a gagné.")
+        print(" - si PAT tapez 3")
+        resultat = int(input("                                    : "))
+        return resultat
+
+    def print_player_winner(self, joueur):
+        ''' display a message in console '''
+
+        print("                                                         ",
+              joueur.get('pk'), " GAGNE !!\n")
+
+    def print_player_pat(self):
+        ''' display a message in console '''
+
+        print("                                     match nul \n")
+
+    def print_ending_first_round(self):
+        ''' display a message in console '''
+
+        print("---------------------------round : 1 terminé----------------------------\n")
+

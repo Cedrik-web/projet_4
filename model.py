@@ -1,116 +1,8 @@
 
-from view import ViewMenu
+import readline
 
 
-#  method used in the main menu class
-class MethodeForMenu:
-
-    def selection_tournament(self):
-        ''' allows to select a tournament in the dictionary '''
-
-        from tournament.model import Tournament
-        tournaments = Tournament.table_of_tournament(Tournament)
-        liste_tournoi = []
-        for i in tournaments:
-            ViewMenu.print_list_tournament(ViewMenu, i)
-            liste_tournoi.append(i.get("pk"))
-        choix = CleanText.clean_input(CleanText, ViewMenu.print_choice_tournament(ViewMenu))
-        while choix not in liste_tournoi:
-            ViewMenu.print_error_id(ViewMenu)
-            choix = ViewMenu.print_choice_tournament(ViewMenu)
-        else:
-            for i in tournaments:
-                if i.get("pk") == choix:
-                    tournament = i
-                    return tournament
-
-    def rapport_player_list_of_tournament_by_ranking(self):
-        '''generate the list of players of a shosen tournament and display by rank in order from
-            largest to smallest'''
-
-        tournament = self.selection_tournament(self)
-        players = tournament.get("players")
-        player_list = []
-        for i in players:
-            for k, v in i.items():
-                player_list.append(v)
-        tri_player_rank = sorted(player_list, key=lambda k: k["ranking"], reverse=True)
-        ViewMenu.print_classement_of_tournament(ViewMenu)
-        p = 0
-        for i in tri_player_rank:
-            p += 1
-            ViewMenu.print_tri_player_of_tournament_rank(ViewMenu, i, p)
-        ViewMenu.print_pass_validation(ViewMenu)
-
-    def rapport_player_list_of_tournament_by_alphabetical(self):
-        '''generate the list of players of a chosen tournament and display in
-            alphabetical order'''
-
-        tournament = self.selection_tournament(self)
-        players = tournament.get("players")
-        player_list = []
-        for i in players:
-            for k, v in i.items():
-                player_list.append(v)
-        tri_player_alphabet = sorted(player_list, key=lambda k: k["pk"])
-        ViewMenu.print_classement_player_of_tournament(ViewMenu)
-        for i in tri_player_alphabet:
-            ViewMenu.print_tri_player_of_tournament_alphabet(ViewMenu, i)
-        ViewMenu.print_pass_validation(ViewMenu)
-
-    def rapport_all_rounds_of_tournament(self):
-        '''generates a list of all the rounds of a selected tournament, displays the number
-            of rounds and the playing time of each round'''
-
-        tournament = self.selection_tournament(self)
-        resultat = tournament.get("resultat")
-        ViewMenu.print_list_tournaments(ViewMenu, tournament)
-        t = 0
-        for k, v in resultat.items():
-            t += 1
-            ViewMenu.print_tournament_time(ViewMenu, t)
-            list_tour = v
-            match = []
-            resultat = []
-            for k, v in list_tour.items():
-                match.append(k)
-                resultat.append(v)
-            ViewMenu.print_tournament_resultat(ViewMenu, resultat)
-            ViewMenu.print_space1(ViewMenu)
-        ViewMenu.print_pass_validation(ViewMenu)
-
-    def rapport_all_matches_of_tournament(self):
-        '''generate the list of all matches and result of a selected tournament'''
-
-        tournament = self.selection_tournament(self)
-        resultat = tournament.get("resultat")
-        ViewMenu.print_list_match_by_tournament(ViewMenu, tournament)
-        t = 0
-
-        for k, v in resultat.items():
-            t += 1
-            ViewMenu.print_resultat_match(ViewMenu, t)
-            list_tour = v
-            match = []
-            resultat = []
-            for k, v in list_tour.items():
-                match.append(k)
-                resultat.append(v)
-            del match[0]
-            del match[-1]
-            del resultat[0]
-            del resultat[-1]
-            for i, j in zip(match, resultat):
-                if j == "pat match nul":  # controls the case where both players leave the winner list, which equals a tie
-                    ViewMenu.print_list_resultat_match_for_pat(ViewMenu, i, j)
-                    ViewMenu.print_new_point_to_assign_for_pat(ViewMenu, i)
-                else:
-                    ViewMenu.print_list_resultat_match(ViewMenu, i, j)
-                    ViewMenu.print_new_point_to_assign(ViewMenu, j)
-            ViewMenu.print_space1(ViewMenu)
-        ViewMenu.print_pass_validation(ViewMenu)
-
-
+# user input control class
 class CleanText:
 
     def clean_input(self, data):
@@ -128,3 +20,33 @@ class CleanText:
         accent_u = accent_a.replace("ù", "u")
         new_data = accent_u
         return new_data
+
+
+# class that supports text autocomplementation
+class MyCompleter(object):  # Custom completer
+
+    def __init__(self, options):
+        self.options = sorted(options)
+
+    def complete(self, text, state):
+        if state == 0:  # on first trigger, build possible matches
+            if text:  # cache matches (entries that start with entered text)
+                self.matches = [s for s in self.options
+                                if s and s.startswith(text)]
+            else:  # no text entered, all matches possible
+                self.matches = self.options[:]
+        # return match indexed by state
+        try:
+            return self.matches[state]
+        except IndexError:
+            return None
+
+    def activate(self, players):
+        ''' manage autocomplementation '''
+
+        text = []
+        for i in players:
+            text.append(i.get("pk"))
+        completer = MyCompleter(text)
+        readline.set_completer(completer.complete)
+        readline.parse_and_bind('tab: complete')

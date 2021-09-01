@@ -73,6 +73,15 @@ class ViewPlayer:
 
         print("le joueur a été enregisté.")
 
+    def print_exicting_player(self, existing) :
+        ''' display a message in console '''
+
+        for i in existing:
+            print()
+            print("le joueur:", i.get("name"), i.get("first_name"), "est déjà enregistré.")
+            input("appuyer sur entrée pour continuer ......")
+            print("\n" * 20)
+
     def print_modif_player(self, player):
         ''' function displaying all the elements of a player and allowing to retrieve
             the possible change and return a dictionary with these elements '''
@@ -90,8 +99,8 @@ class ViewPlayer:
         print("né.e le " + player.get("birth_date") + " , tapez oui pour modifer ->")
         reponse = CleanText.clean_input(CleanText, input())
         if reponse == "oui":
-            from tournament.model import Tournament
-            c = Tournament.print_date_controller(Tournament)
+            from tournament.controller import MethodeTournament
+            c = MethodeTournament.print_date_controller(MethodeTournament)
         else:
             c = ""
         if c == player.get("birth_date"):  # birth date change

@@ -24,22 +24,11 @@ class ViewMenu:
 
         print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
 
-    def print_modif_ok(self):  # TODO
-        ''' printing modification to carry out '''
+    def print_choice_input_menu(self, resultat):
+        ''' display a message in console'''
 
-        print("modification effectuée avec succès !")
-
-    def print_error_id(self):
-        ''' display a message in console '''
-
-        print("ERREUR, il y a une erreur dans l'ID, recommencez")
-
-    def print_pass_validation(self):
-        ''' display a message in console '''
-
-        print("\ncontinuez......")
-        input("appuyez sur entrée pour revenir au menu")
-        print("\n" * 25)
+        resultat_int = int(resultat)
+        return resultat_int
 
     def print_classement(self, player_classement):
         ''' display a message in console '''
@@ -64,6 +53,11 @@ class ViewMenu:
         for i in player_classement:
             print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
 
+    def print_menu_existing(self):
+        ''' display a message in console'''
+
+        print("ERREUR vous devez choisir un menu existant")
+
     def print_menu_stat(self):
         ''' displays in console the stats menu and returns the voice made '''
 
@@ -77,21 +71,18 @@ class ViewMenu:
         print("6 : pour la liste de tous les tours d'un tournoi.")
         print("7 : pour la liste de tous les matchs d'un tournoi.")
         print("\n8 : pour revenir au menu principal.")
-        resultat = input()
-        try:
-            while not 0 < int(resultat) <= 8:
-                print("ERREUR, vous devez entrer le nombre "
-                      "en entête de votre selection.")
-                resultat = input()
-        except ValueError:
-            print("ERREUR, vous devez entrer un nombre valide.")
-            self.print_menu_stat()
-        return resultat
+        while True:
+            resultat = input()
+            try:
+                while not 0 < int(resultat) <= 8:
+                    print("ERREUR, vous devez entrer le nombre en entête de votre selection.")
+                    resultat = input()
+                return resultat
+            except ValueError:
+                print("ERREUR, vous devez entrer un nombre valide.")
 
-    def print_exicting_player(self, p):  # TODO
-        ''' display a message in console '''
 
-        print("le joueur ", p.get("pk"), " est déja enregistré !")
+class ViewReport:
 
     def print_list_tournament(self, i):
         ''' display a message in console '''
@@ -176,18 +167,22 @@ class ViewMenu:
 
         print("       ", joueur1, "marque: 1/2 point chacun.")
 
-    def print_menu_existing(self):
-        ''' display a message in console'''
 
-        print("ERREUR vous devez choisir un menu existant")
+class ViewToShare:
 
-    def print_choice_input_menu(self, resultat):
-        ''' display a message in console'''
+    def print_pass_validation(self):
+        ''' display a message in console '''
 
-        resultat_int = int(resultat)
-        return resultat_int
+        print("\ncontinuez......")
+        input("appuyez sur entrée pour revenir au menu")
+        print("\n" * 25)
 
-    def print_space1(self):
+    def print_space(self):
         ''' display 1 space '''
 
         print()
+
+    def print_error_id(self):
+        ''' display a message in console '''
+
+        print("ERREUR, il y a une erreur dans l'ID, recommencez")
