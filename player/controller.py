@@ -61,7 +61,7 @@ class MenuPlayer:
         ''' allows you to search for the player to modify by name which returns a list of all
             the players with this name or by ID to directly select the player to modify '''
 
-        players = self.table_of_player(self)
+        players = Player.table_of_player(Player)
         MyCompleter.activate(MyCompleter, players)  # manage autocomplementation
         resultat = ViewPlayer.print_find_player(ViewPlayer)
         nb = len(resultat)
@@ -87,5 +87,5 @@ class MenuPlayer:
                 for k, v in player.items():
                     if v == resultat:
                         modif = ViewPlayer.print_modif_classement(ViewPlayer, player)
-                        self.modification_of_player(self, modif)
+                        Player.modification_of_player(Player, modif)
                         ViewPlayer.print_modif_ok(ViewPlayer)

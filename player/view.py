@@ -11,8 +11,12 @@ class ViewPlayer:
         print()
         print("recherche par ID ('non'_'premon'_'année de naissance') ou par nom:")
         resultat = CleanText.clean_input(CleanText, input())
+        while len(resultat) == 0:
+            print("vous devez entrer un ID ou un nom.")
+            resultat = CleanText.clean_input(CleanText, input())
         print()
         return resultat
+
 
     def print_display_player_list(self, player):
         ''' printing a list of players with the same name '''

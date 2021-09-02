@@ -118,14 +118,15 @@ class PlayTournament:
         ''' checks if the player is in the list and answers true or false '''
 
         player_clean = self.control_type_function(self, player)
-        list_participant_clean = self.control_type_function_list(self, list_participant)
-        for i in list_participant_clean:
-            if player_clean.get("pk") == i.get("pk"):
-                valided = False
-                return valided
-        else:
-            valided = True
-            return valided
+        for list in list_participant:
+            for i in list:
+                if player_clean.get("pk") == i.get("pk"):
+                    valided = False
+                    return valided
+                else:
+                    pass
+        valided = True
+        return valided
 
     def nunber_turn(self, turns, players_of_tournament, resultat_total, serialized_tournament, tour):
         ''' function that controls the course of laps from the 2nd ( by a loop) '''
@@ -263,9 +264,7 @@ class Match:
         tri = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
         nb_player = int(len(tri) / 2)
         list_player_a = tri[:nb_player]
-        print("267 model tournament", list_player_a)
         list_player_b = tri[nb_player:]
-        print("269 model tournament", list_player_b)
         list_match = []
         position = -1
         for i in range(TURNS):

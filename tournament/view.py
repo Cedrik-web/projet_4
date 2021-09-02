@@ -2,6 +2,7 @@
 from model import CleanText
 
 
+# view set use for tournament menu
 class ViewMenuTournament:
 
     def print_starting_round(self, tour):
@@ -12,6 +13,7 @@ class ViewMenuTournament:
         print()
 
 
+# view set used by multiple classes
 class ViewShare:
 
     def print_error(self):
@@ -20,7 +22,13 @@ class ViewShare:
         print("ERREUR")
 
 
+# view set use for tournament management
 class ViewTournament(CleanText):
+
+    def print_tournament_existing(self):
+        # informs that the tournament created has already been registered
+
+        print("\nce tournoi existe deja ...\n")
 
     def print_sex_control(self):
         ''' control the input console for the sex of the player '''
@@ -261,11 +269,6 @@ class ViewTournament(CleanText):
         for i in player_classement:
             print(i.get("name"), i.get("first_name"), " sont ID :", i.get("pk"))
 
-    def print_new_player_register(self):  #//////////////////////////////////////////////
-        ''' display a message in console '''
-
-        print("le joueur a été enregisté et rajouté au tounoi.")
-
     def print_continue(self):
         '''display a message in console'''
 
@@ -273,6 +276,7 @@ class ViewTournament(CleanText):
         input()
 
 
+# view set use for match management
 class ViewMatch:
 
     def print_ending_other_round(self, tour):
@@ -325,4 +329,3 @@ class ViewMatch:
         ''' display a message in console '''
 
         print("---------------------------round : 1 terminé----------------------------\n")
-

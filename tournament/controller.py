@@ -30,7 +30,7 @@ class MenuTournament:
         list_matchs = Match.generation_first_round(Match(), players_of_tournament)
         list_match = MethodeMatch.display_list_matchs(MethodeMatch(), list_matchs)
         MethodeTournament.start_tournament(MethodeTournament)
-        resultat_total = Match.play_first_turn(Match(), list_match)
+        resultat_total = MethodeMatch.play_first_turn(MethodeMatch(), list_match)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
         PlayTournament.nunber_turn(PlayTournament, TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
@@ -61,6 +61,7 @@ class MenuTournament:
             ViewShare.print_error(ViewShare)
 
 
+# set method used by the tournament class
 class MethodeTournament:
 
     def play_tournament(self, tour):
@@ -78,6 +79,12 @@ class MethodeTournament:
         players_of_tournament = Match.match_generation(Match, players)
         serialized_tournament = PlayTournament.gathers_tournament_dictionary(
             PlayTournament, tournament, players_of_tournament, remarks, timer_control)
+        list_tournament = Tournament.table_of_tournament(Tournament)
+        reponse = PlayTournament.control_already_selection(PlayTournament, [list_tournament], serialized_tournament)
+        if not reponse:
+            ViewTournament.print_tournament_existing(ViewTournament)
+            from controller import MainMenu
+            MainMenu.menu(MainMenu)
         MenuTournament.menu_manage_save_tournament(MenuTournament, serialized_tournament, players_of_tournament, tour)
 
     def add_players_of_tournament(self, players):
@@ -141,6 +148,11 @@ class MethodeTournament:
                     participants.append(player)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
                     return True
+                elif no_selection == None:
+                    player = Player.add_players(Player, i)  # instantiate the player to the tournament
+                    participants.append(player)
+                    ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
+                    return True
                 else:
                     ViewTournament.print_add_players_for_tournament_inpossible(ViewTournament)
                     ViewTournament.print_continue(ViewTournament)
@@ -186,7 +198,7 @@ class MethodeTournament:
         reponse = ViewTournament.print_start_tournament(ViewTournament)
         if reponse == "non":
             from controller import MainMenu
-            MainMenu()
+            MainMenu.menu(MainMenu)
         else:
             pass
 
@@ -228,6 +240,7 @@ class MethodeTournament:
         return reponse
 
 
+# set method used by the match class
 class MethodeMatch:
 
     def display_list_matchs(self, list_match):
