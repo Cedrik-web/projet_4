@@ -20,7 +20,8 @@ class MenuTournament:
         MethodeTournament.start_tournament(MethodeTournament)
         resultat_total = MethodeMatch.play_first_turn(MethodeMatch(), list_match)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
-        PlayTournament.nunber_turn(PlayTournament, TURNS, players_of_tournament, resultat_total, serialized_tournament, tour=1)
+        PlayTournament.nunber_turn(PlayTournament, TURNS, players_of_tournament, resultat_total,
+                                   serialized_tournament, tour=1)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
 
     def menu_manage_save_tournament(self, serialized_tournament, players_of_tournament, tour):
@@ -32,7 +33,8 @@ class MenuTournament:
         MethodeTournament.start_tournament(MethodeTournament)
         resultat_total = MethodeMatch.play_first_turn(MethodeMatch(), list_match)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
-        PlayTournament.nunber_turn(PlayTournament, TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
+        PlayTournament.nunber_turn(PlayTournament, TURNS, players_of_tournament, resultat_total,
+                                   serialized_tournament, tour)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
 
     def menu_tournament(self):
@@ -52,11 +54,13 @@ class MenuTournament:
             elif turn == 1:
                 tour = 1
                 ViewMenuTournament.print_starting_round(ViewMenuTournament, tour)
-                PlayTournament.menu_manage_other_round(PlayTournament, serialized_tournament, players_of_tournament, tour)
+                PlayTournament.menu_manage_other_round(PlayTournament, serialized_tournament,
+                                                       players_of_tournament, tour)
             else:
                 tour = turn
                 ViewMenuTournament.print_starting_round(ViewMenuTournament, tour)
-                PlayTournament.menu_manage_other_round(PlayTournament, serialized_tournament, players_of_tournament, tour)
+                PlayTournament.menu_manage_other_round(PlayTournament, serialized_tournament,
+                                                       players_of_tournament, tour)
         else:
             ViewShare.print_error(ViewShare)
 
@@ -148,7 +152,7 @@ class MethodeTournament:
                     participants.append(player)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
                     return True
-                elif no_selection == None:
+                elif no_selection is None:
                     player = Player.add_players(Player, i)  # instantiate the player to the tournament
                     participants.append(player)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
@@ -272,13 +276,16 @@ class MethodeMatch:
             joueur2["meet"] = [joueur1.get("pk")]
             if resultat == 1:
                 ViewMatch.print_player_winner(ViewMatch, joueur1)
-                resultat_tour1 = Match.distribution_of_points_and_resultat(Match(), joueur1, joueur2, match, resultat_tour1)
+                resultat_tour1 = Match.distribution_of_points_and_resultat(
+                    Match(), joueur1, joueur2, match, resultat_tour1)
             elif resultat == 2:
                 ViewMatch.print_player_winner(ViewMatch, joueur2)
-                resultat_tour1 = Match.distribution_of_points_and_resultat(Match(), joueur2, joueur1, match, resultat_tour1)
+                resultat_tour1 = Match.distribution_of_points_and_resultat(
+                    Match(), joueur2, joueur1, match, resultat_tour1)
             elif resultat == 3:
                 ViewMatch.print_player_pat(ViewMatch)
-                resultat_tour1 = Match.distribution_of_points_and_resultat_pat(Match(), joueur1, joueur2, match, resultat_tour1)
+                resultat_tour1 = Match.distribution_of_points_and_resultat_pat(
+                    Match(), joueur1, joueur2, match, resultat_tour1)
             else:
                 ViewShare.print_error(ViewShare)
         ViewMatch.print_ending_first_round(ViewMatch)
@@ -306,16 +313,16 @@ class MethodeMatch:
             joueur2["meet"] += [joueur1.get("pk")]
             if resultat == 1:
                 ViewMatch.print_player_winner(ViewMatch, joueur1)
-                resultat_tour = Match.distribution_of_points_and_resultat_other_round(Match(),joueur1, joueur2, match,
-                                                                                     resultat_tour)
+                resultat_tour = Match.distribution_of_points_and_resultat_other_round(
+                    Match(), joueur1, joueur2, match, resultat_tour)
             elif resultat == 2:
                 ViewMatch.print_player_winner(ViewMatch, joueur2)
-                resultat_tour = Match.distribution_of_points_and_resultat_other_round(Match(), joueur2, joueur1, match,
-                                                                                     resultat_tour)
+                resultat_tour = Match.distribution_of_points_and_resultat_other_round(
+                    Match(), joueur2, joueur1, match, resultat_tour)
             elif resultat == 3:
                 ViewMatch.print_player_pat(ViewMatch)
-                resultat_tour = Match.distribution_of_points_and_resultat_pat_other_round(Match(), joueur1, joueur2, match,
-                                                                                         resultat_tour)
+                resultat_tour = Match.distribution_of_points_and_resultat_pat_other_round(
+                    Match(), joueur1, joueur2, match, resultat_tour)
             else:
                 ViewShare.print_error(ViewShare)
         ViewMatch.print_ending_other_round(ViewMatch, tour)

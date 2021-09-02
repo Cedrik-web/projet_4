@@ -203,7 +203,8 @@ class TournamentReport:
             del resultat[0]
             del resultat[-1]
             for i, j in zip(match, resultat):
-                if j == "pat match nul":  # controls the case where both players leave the winner list, which equals a tie
+                if j == "pat match nul":
+                    # controls the case where both players leave the winner list,which equals a tie
                     ViewReport.print_list_resultat_match_for_pat(ViewReport, i, j)
                     ViewReport.print_new_point_to_assign_for_pat(ViewReport, i)
                     ViewToShare.print_space(ViewToShare)

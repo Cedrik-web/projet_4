@@ -17,7 +17,6 @@ class ViewPlayer:
         print()
         return resultat
 
-
     def print_display_player_list(self, player):
         ''' printing a list of players with the same name '''
 
@@ -77,7 +76,7 @@ class ViewPlayer:
 
         print("le joueur a été enregisté.")
 
-    def print_exicting_player(self, existing) :
+    def print_exicting_player(self, existing):
         ''' display a message in console '''
 
         for i in existing:

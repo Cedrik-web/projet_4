@@ -72,8 +72,8 @@ class PlayTournament:
         '''manage all the others rounds'''
 
         resultat_total = serialized_tournament.get("resultat")
-        resultat_total = self.nunber_turn(self, TURNS, players_of_tournament, resultat_total,
-                                                serialized_tournament, tour)
+        resultat_total = self.nunber_turn(self, TURNS, players_of_tournament, resultat_total, serialized_tournament,
+                                          tour)
         Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
 
     def gathers_tournament_dictionary(self, tournoi, players, remarks, timer_control):
@@ -96,7 +96,7 @@ class PlayTournament:
         '''control and transform a data list and dictionary'''
 
         new_data = {}
-        for i,j in data.items():
+        for i, j in data.items():
             new_data[i] = j
         return new_data
 

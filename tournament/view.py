@@ -163,7 +163,6 @@ class ViewTournament(CleanText):
         print("entrez le lieu du tournoi")
         location = CleanText.clean_input(CleanText, input())
         print("entrez la date du tournoi")
-        from tournament.model import Tournament
         from tournament.controller import MethodeTournament
         date = MethodeTournament.print_date_controller(MethodeTournament)
         elements = {
