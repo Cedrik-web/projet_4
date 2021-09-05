@@ -85,54 +85,76 @@ class ViewPlayer:
             input("appuyer sur entrée pour continuer ......")
             print("\n" * 20)
 
-    def print_modif_player(self, player):
+    def print_modif_player_name(self, player):
         ''' function displaying all the elements of a player and allowing to retrieve
             the possible change and return a dictionary with these elements '''
 
         print("modifiez les valeurs que vous désirez à la suite de la valeur renseignée .")
         print("ou tapez ENTRER pour passer . \n")
         a = CleanText.clean_input(CleanText, input("nom :" + player.get("name") + " -> "))
-        if not a == "":  # name change
-            player.update({"name": a})
-            print("nouveau nom : " + player.get("name") + "\n")
-        b = CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
-        if not b == "":  # first_name change
-            player.update({"first_name": b})
-            print("nouveau prénom : " + player.get("first_name") + "\n")
+        return a
+
+    def print_modif_player_name_anwser(self, player):
+        # information for the modif player function
+
+        print("nouveau nom : " + player.get("name") + "\n")
+
+    def print_modif_player_first_name(self, player):
+        # information for the modif player function
+
+        b= CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
+        return b
+
+    def print_modif_player_first_name_anwser(self, player):
+        # information for the modif player function
+
+        print("nouveau prénom : " + player.get("first_name") + "\n")
+
+    def print_modif_player_birth_date(self, player):
+        # information for the modif player function
+
         print("né.e le " + player.get("birth_date") + " , tapez oui pour modifer ->")
         reponse = CleanText.clean_input(CleanText, input())
-        if reponse == "oui":
-            from tournament.controller import MethodeTournament
-            c = MethodeTournament.print_date_controller(MethodeTournament)
-        else:
-            c = ""
-        if c == player.get("birth_date"):  # birth date change
-            player.update({"birth_date": c})
-            print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
+        return reponse
+
+    def print_modif_player_birth_date_answer(self, player):
+        # information for the modif player function
+
+        print("nouvelle date de naissance : " + player.get("birth_date") + "\n")
+
+    def print_modif_player_sex(self, player):
+        # information for the modif player function
+
         print("sex : " + player.get("sex") + " , tapez oui pour modifier ->")
         reponse = CleanText.clean_input(CleanText, input())
-        if reponse == "oui":
-            d = ViewTournament.print_sex_control(ViewTournament)
-        else:
-            d = ""
-        if d != player.get("sex"):  # sex change
-            player.update({"sex": d})
-            print("sex redéfini : " + player.get("sex") + "\n")
+        return reponse
+
+    def print_modif_player_sex_answer(self, player):
+        # information for the modif player function
+
+        print("sex redéfini : " + player.get("sex") + "\n")
+
+    def print_modif_player_ranking(self, player):
+        # information for the modif player function
+
         print("total des points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
         reponse = CleanText.clean_input(CleanText, input())
-        ranking = player.get("ranking")
-        if reponse == "oui":
-            while ranking != int:
-                try:
-                    nb = int(input(": "))
-                    ranking = nb
-                    break
-                except ValueError:
-                    print("\nERREUR , veuillez entrer un nombre entier")
-                    print("recomencer")
-        print(ranking)
-        if not ranking == int(player.get("ranking")):  # ranking change
-            player.update({"ranking": ranking})
-            print("nouveau total de points : " + str(player.get("ranking")) + "\n")
+        return reponse
+
+    def print_modif_player_ranking_new_input(self):
+        # information for the modif player function
+
+        nb = int(input(": "))
+        return nb
+
+    def print_modif_player_ranking_new_input_error(self):
+        # information for the modif player function
+
+        print("\nERREUR , veuillez entrer un nombre entier")
+        print("recomencer")
+
+    def print_modif_player_ranking_answer(self, player):
+        # information for the modif player function
+
+        print("nouveau total de points : " + str(player.get("ranking")) + "\n")
         print()
-        return player

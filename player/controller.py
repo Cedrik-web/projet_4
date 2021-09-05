@@ -2,6 +2,7 @@
 from model import MyCompleter
 from player.model import Player, MethodePlayer
 from player.view import ViewPlayer
+from tournament.view import ViewTournament
 
 
 # create class for intialized the menu
@@ -40,7 +41,7 @@ class MenuPlayer:
                 for k, v in player.items():
                     if v == resultat:
                         if len(nb_players) == 1:
-                            modif = ViewPlayer.print_modif_player(ViewPlayer, player)
+                            modif = MenuPlayer.modif_element_player(MenuPlayer, player)
                             Player.modification_of_player(Player, modif)
                             from controller import MainMenu
                             MainMenu.menu(MainMenu)
@@ -52,7 +53,7 @@ class MenuPlayer:
             for player in players:
                 for k, v in player.items():
                     if v == resultat:
-                        modif = ViewPlayer.print_modif_player(ViewPlayer, player)
+                        modif = MenuPlayer.modif_element_player(MenuPlayer, player)
                         Player.modification_of_player(Player, modif)
                         from controller import MainMenu
                         MainMenu.menu(MainMenu)
@@ -89,3 +90,46 @@ class MenuPlayer:
                         modif = ViewPlayer.print_modif_classement(ViewPlayer, player)
                         Player.modification_of_player(Player, modif)
                         ViewPlayer.print_modif_ok(ViewPlayer)
+
+    def modif_element_player(self, player):
+       # manages the requests between the view and the modify player function
+
+       a = ViewPlayer.print_modif_player_name(ViewPlayer, player)
+       if not a == "":  # name change
+           player.update({"name": a})
+           ViewPlayer.print_modif_player_name_anwser(ViewPlayer, player)
+       b = ViewPlayer.print_modif_player_first_name(ViewPlayer, player)
+       if not b == "":  # first_name change
+           player.update({"first_name": b})
+           ViewPlayer.print_modif_player_first_name_anwser(ViewPlayer, player)
+       reponse = ViewPlayer.print_modif_player_birth_date(ViewPlayer, player)
+       if reponse == "oui":
+           from tournament.controller import MethodeTournament
+           c = MethodeTournament.print_date_controller(MethodeTournament)
+       else:
+           c = ""
+       if c == player.get("birth_date"):  # birth date change
+           player.update({"birth_date": c})
+           ViewPlayer.print_modif_player_birth_date_answer(ViewPlayer, player)
+       reponse = ViewPlayer.print_modif_player_sex(ViewPlayer, player)
+       if reponse == "oui":
+           d = ViewTournament.print_sex_control(ViewTournament)
+       else:
+           d = ""
+       if d != player.get("sex"):  # sex change
+           player.update({"sex": d})
+           ViewPlayer.print_modif_player_sex_answer(ViewPlayer, player)
+       reponse = ViewPlayer.print_modif_player_ranking(ViewPlayer, player)
+       ranking = player.get("ranking")
+       if reponse == "oui":
+           while ranking != int:
+               try:
+                   nb= ViewPlayer.print_modif_player_ranking_new_input(ViewPlayer)
+                   ranking = nb
+                   break
+               except ValueError:
+                   ViewPlayer.print_modif_player_ranking_new_input_error(ViewPlayer)
+       if not ranking == int(player.get("ranking")):  # ranking change
+           player.update({"ranking": ranking})
+           ViewPlayer.print_modif_player_ranking_answer(ViewPlayer, player)
+       return player

@@ -102,8 +102,17 @@ class MethodeMainMenu:
         player_tri_alphabet = retour_list[1]
         tournoi = Tournament.table_of_tournament(Tournament)
         ViewMenu.print_classement(ViewMenu, player_tri_ranking)
-        choice = int(ViewMenu.print_menu_stat(ViewMenu))
-        return player_tri_ranking, player_tri_alphabet, tournoi, choice
+        ViewMenu.print_menu_stat(ViewMenu)
+        while True:
+            choice = ViewMenu.print_choice_input(ViewMenu)
+            try:
+                while not 0 < int(choice) <= 8:
+                    ViewMenu.print_menu_existing(ViewMenu)
+                    choice = ViewMenu.print_choice_input(ViewMenu)
+                resultat = int(choice)
+                return player_tri_ranking, player_tri_alphabet, tournoi, resultat
+            except ValueError:
+                ViewMenu.print_error_enter_int(ViewMenu)
 
 
 # miscellaneous reporting functions

@@ -30,6 +30,12 @@ class ViewMenu:
         resultat_int = int(resultat)
         return resultat_int
 
+    def print_choice_input(self):
+        # ask a input str
+
+        enter = input()
+        return enter
+
     def print_classement(self, player_classement):
         ''' display a message in console '''
 
@@ -71,15 +77,6 @@ class ViewMenu:
         print("6 : pour la liste de tous les tours d'un tournoi.")
         print("7 : pour la liste de tous les matchs d'un tournoi.")
         print("\n8 : pour revenir au menu principal.")
-        while True:
-            resultat = input()
-            try:
-                while not 0 < int(resultat) <= 8:
-                    print("ERREUR, vous devez entrer le nombre en entête de votre selection.")
-                    resultat = input()
-                return resultat
-            except ValueError:
-                print("ERREUR, vous devez entrer un nombre valide.")
 
 
 class ViewReport:
