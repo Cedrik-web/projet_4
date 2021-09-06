@@ -5,11 +5,10 @@ from model import CleanText
 # view set use for tournament menu
 class ViewMenuTournament:
 
-    def print_starting_round(self, tour):
+    def print_starting_round(self, tours):
         '''display a message in console'''
 
-        tours = tour + 1
-        print("\n- Liste des matches à jouer pour le round", str(tours))
+        print("\n- Liste des matches à jouer pour le round", str(tours + 1))
         print()
 
 
@@ -36,65 +35,43 @@ class ViewTournament(CleanText):
         print("\nentrez 1 pour un joueur de sex masculin")
         print("entrez 2 pour un joueur de sex féminin\n")
         sex = CleanText.clean_input(CleanText, input())
-        if sex == "1":
-            sex = "homme"
-            return sex
-        elif sex == "2":
-            sex = "femme"
-            return sex
-        else:
-            print("ERREUR , veuillez choisir le numéro correspndant au sex.")
-            self.print_sex_control(sex)
+        return sex
 
-    def print_control_day(self):
+    def print_error_number_sex(self):
+        # displays information
+
+        print("ERREUR , veuillez choisir le numéro correspndant au sex.")
+
+    def print_control_input(self, data):
         '''control input day'''
 
-        while True:
-            try:
-                while True:
-                    print("\nentrez le jour.")
-                    day = int(input("                 jour :"))
-                    if 0 < day < 32:
-                        return day
-                    else:
-                        print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
-            except ValueError:
-                print("\nERREUR , veuillez entrer des chiffres")
-                print("Veuillez recommencer\n")
+        print("\nentrez le", data, ".")
+        answer = int(input("                      :"))
+        return answer
 
-    def print_control_month(self):
-        '''control input month'''
+    def print_control_input_none_view(self):
+        # take an enter
 
-        while True:
-            try:
-                while True:
-                    print("entrez le mois.")
-                    month = int(input("                 mois :"))
-                    if 0 < month < 13:
-                        return month
-                    else:
-                        print("ERREUR, veuillez entrer un chiffre entre 1 et 31.")
-            except ValueError:
-                print("\nERREUR , veuillez entrer des chiffres")
-                print("Veuillez recommencer\n")
+        answer = int(input("                      :"))
+        return answer
 
-    def print_control_years(self):
-        '''control input year'''
+    def print_control_wrong_number(self, data):
+        # displays information
 
-        while True:
-            try:
-                while True:
-                    print("entrez l'année complete, avec 4 nombres.")
-                    year = int(input("                 année :"))
-                    if 1930 < year < 2100:
-                        return year
-                    else:
-                        print("ERREUR, veuillez entrer l'année complete.")
-            except ValueError:
-                print("\nERREUR , veuillez entrer des chiffres")
-                print("Veuillez recommencer\n")
+        print("ERREUR, veuillez entrer un chiffre entre 1 et", data, ".")
 
-    def print_elements_player(self):
+    def print_control_wrong_enter(self):
+        # displays information
+
+        print("\nERREUR , veuillez entrer des chiffres")
+        print("Veuillez recommencer\n")
+
+    def print_error_enter_years(self):
+        # displays information
+
+        print("ERREUR, veuillez entrer l'année complete.")
+
+    def print_first_elements_player(self):
         ''' retrieving player items and putting all items in dictionary '''
 
         print("entrez le nom de famille du joueur")
@@ -102,38 +79,41 @@ class ViewTournament(CleanText):
         print("entrez le prénom du joueur")
         first_name = CleanText.clean_input(CleanText, input())
         print("entrez la date de naissance")
-        from tournament.controller import MethodeTournament
-        birth_date = MethodeTournament.print_date_controller(MethodeTournament)
-        print(name, first_name, "et né le", birth_date)
-        sex = self.print_sex_control(self)
+        return name, first_name
+
+    def print_first_recap_elements_player(self, list):
+        # displays information
+
+        print(list[0], list[1], "et né le", list[2])
+
+    def print_ranking_player(self):
+        # displays information
+
         print("entrez les points du joueur")
-        ranking = 0
-        while ranking != int:
-            try:
-                nb = int(input())
-                ranking += nb
-                break
-            except ValueError:
-                print("\nERREUR , veuillez rentrer un nombre entier")
-                print("recomencer")
+
+    def print_ranking_player_input(self):
+        # take an enter
+
+        nb = int(input())
+        return nb
+
+    def print_ranking_player_error_enter(self):
+        # displays information
+
+        print("\nERREUR , veuillez rentrer un nombre entier")
+        print("recomencer")
+
+    def print_ranking_player_view(self, ranking):
+        # displays information
+
         print("nombre de point et de : ", ranking)
-        elements = {
-            "name": name,
-            "first_name": first_name,
-            "birth_date": birth_date,
-            "sex": sex,
-            "ranking": ranking,
-            }
-        return elements
 
     def print_add_genaral_remarks(self):
         ''' adding the description of a tournament to the tournament object '''
 
         print("ajoutez , si vous le voulez, une description ou un commentaire au tournoi :")
-        remarks = []
         resultat = input()
-        remarks.append(resultat)
-        return remarks
+        return [resultat]
 
     def print_add_timer_control(self):
         """ adding the timer mode of a tournament """
@@ -143,17 +123,12 @@ class ViewTournament(CleanText):
         print("2 : un blitz")
         print("3 : un coup rapide")
         resultat = input()
-        timer_control = []
-        if int(resultat) == 1:
-            timer_control.append("bullet")
-        elif int(resultat) == 2:
-            timer_control.append("blitz")
-        elif int(resultat) == 3:
-            timer_control.append("coup rapide")
-        else:
-            print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
-            self.print_add_timer_control(self)
-        return timer_control
+        return resultat
+
+    def print_error_enter_selection(self):
+        # display information
+
+        print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
 
     def print_elements_tournament(self):
         ''' get tournament items and return a dictionary '''
@@ -162,15 +137,12 @@ class ViewTournament(CleanText):
         name = CleanText.clean_input(CleanText, input())
         print("entrez le lieu du tournoi")
         location = CleanText.clean_input(CleanText, input())
+        return name, location
+
+    def print_date_of_tournament(self):
+        # displays information
+
         print("entrez la date du tournoi")
-        from tournament.controller import MethodeTournament
-        date = MethodeTournament.print_date_controller(MethodeTournament)
-        elements = {
-            "name": name,
-            "location": location,
-            "date": date,
-            }
-        return elements
 
     def print_not_list_player_existing(self):
         '''display a information in the console'''
@@ -181,16 +153,9 @@ class ViewTournament(CleanText):
         ''' displays in console a menu (addition of a player in the tournament creation)
             and takes care of the cases errors '''
 
-        while True:
-            try:
-                print()
-                print(" 1: pour la liste des joueur existants :")
-                print((" 2: pour créer un nouveau joueur :"))
-                choix = int(CleanText.clean_input(CleanText, input()))
-                if 0 < choix < 3:
-                    return choix
-            except ValueError:
-                print("vous devez entrer un chiffre correspondant à votre choix.")
+        print()
+        print(" 1: pour la liste des joueur existants :")
+        print((" 2: pour créer un nouveau joueur :"))
 
     def print_add_players_for_tournament(self):
         ''' display information and return a variable '''

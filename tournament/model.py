@@ -68,6 +68,35 @@ class Tournament:
 # method used for tournament operation
 class PlayTournament:
 
+    def __init__(self, pk, name, first_name, birth_date, sex, ranking):
+        # initiates players into the tournament
+        self.pk = pk
+        self.name = name
+        self.first_name = first_name
+        self.birth_date = birth_date
+        self.sex = sex
+        self.ranking = ranking
+
+    def add_players_tournament(self, **player):
+        # named parameters and serialization of players items
+        new_player = PlayTournament(
+            pk=player.get("pk"),
+            name=player.get("name"),
+            first_name=player.get("first_name"),
+            birth_date=player.get("birth_date"),
+            sex=player.get("sex"),
+            ranking=player.get("ranking"),
+            )
+        serialized_player = {
+            "pk": new_player.pk,
+            "name": new_player.name,
+            "first_name": new_player.first_name,
+            "birth_date": new_player.birth_date,
+            "sex": new_player.sex,
+            "ranking": new_player.ranking,
+        }
+        return serialized_player
+
     def menu_manage_other_round(self, serialized_tournament, players_of_tournament, tour):
         '''manage all the others rounds'''
 
@@ -117,14 +146,12 @@ class PlayTournament:
     def control_already_selection(self, list_participant, player):
         ''' checks if the player is in the list and answers true or false '''
 
-        player_clean = self.control_type_function(self, player)
-        for list in list_participant:
-            for i in list:
-                if player_clean.get("pk") == i.get("pk"):
-                    valided = False
-                    return valided
-                else:
-                    pass
+        for i in list_participant:
+            if player.get("pk") == i.get("pk"):
+                valided = False
+                return valided
+            else:
+                pass
         valided = True
         return valided
 
@@ -237,24 +264,23 @@ class Match:
 
         player_of_tournament = []
         tour = 0
-        for p in players:
-            for i in p:
-                tour += 1
-                player = i
-                point_tournament = 0
-                match_win = 0
-                match_lose = 0
-                match_pat = 0
-                serialized_players = {
-                    "pk": player.get("pk"),
-                    "ranking": player.get("ranking"),
-                    "point_tournament": point_tournament,
-                    "meet": [],
-                    "match_win": match_win,
-                    "match_lose": match_lose,
-                    "match_pat": match_pat,
-                }
-                player_of_tournament.append(serialized_players)
+        for i in players:
+            tour += 1
+            player = i
+            point_tournament = 0
+            match_win = 0
+            match_lose = 0
+            match_pat = 0
+            serialized_players = {
+                "pk": player.get("pk"),
+                "ranking": player.get("ranking"),
+                "point_tournament": point_tournament,
+                "meet": [],
+                "match_win": match_win,
+                "match_lose": match_lose,
+                "match_pat": match_pat,
+            }
+            player_of_tournament.append(serialized_players)
         return player_of_tournament
 
     def generation_first_round(self, player_of_tournament):

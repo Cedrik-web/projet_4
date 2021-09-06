@@ -49,7 +49,8 @@ class MenuTournament:
             serialized_tournament = retour[1]
             turn = retour[2]
             if turn == 0:  # turn has for value an integer which corresponds to the
-                ViewMenuTournament.print_starting_round(ViewMenuTournament, tour=0)
+                tour = 0
+                ViewMenuTournament.print_starting_round(ViewMenuTournament, tour)
                 self.menu_manage_first_round(self, players_of_tournament, serialized_tournament)
             elif turn == 1:
                 tour = 1
@@ -72,19 +73,19 @@ class MethodeTournament:
         ''' management menu for create a tournament and saving it '''
 
         player = Player.table_of_player(Player)
-        elements = ViewTournament.print_elements_tournament(ViewTournament)
+        elements = self.element_of_tournament(self)
         tournament = Tournament.add_tournament(Tournament, elements)
         retour = self.add_players_of_tournament(self, player)
         players = retour[0]
         save_player = retour[1]
         Player.save_player(Player, save_player)
         remarks = ViewTournament.print_add_genaral_remarks(ViewTournament)
-        timer_control = ViewTournament.print_add_timer_control(ViewTournament)
+        timer_control = self.add_timer_control(self)
         players_of_tournament = Match.match_generation(Match, players)
         serialized_tournament = PlayTournament.gathers_tournament_dictionary(
             PlayTournament, tournament, players_of_tournament, remarks, timer_control)
         list_tournament = Tournament.table_of_tournament(Tournament)
-        reponse = PlayTournament.control_already_selection(PlayTournament, [list_tournament], serialized_tournament)
+        reponse = PlayTournament.control_already_selection(PlayTournament, list_tournament, serialized_tournament)
         if not reponse:
             ViewTournament.print_tournament_existing(ViewTournament)
             from controller import MainMenu
@@ -105,7 +106,7 @@ class MethodeTournament:
             compteur += 1
             boucle = False
             while not boucle:
-                choix = ViewTournament.print_menu_ajout_players_for_tournament(ViewTournament)
+                choix = self.ask_which_player_of_tournament(self)
                 if choix == 1:  # display player list by alphabetical order
                     try:
                         if len(player_tri_alphabet) != 0:
@@ -120,12 +121,41 @@ class MethodeTournament:
                     boucle = True
         return participants, save_player
 
+    def add_timer_control(self):
+        # control display and good feedback from the input
+
+        resultat = ViewTournament.print_add_timer_control(ViewTournament)
+        timer_control = []
+        if int(resultat) == 1:
+            timer_control.append("bullet")
+        elif int(resultat) == 2:
+            timer_control.append("blitz")
+        elif int(resultat) == 3:
+            timer_control.append("coup rapide")
+        else:
+            ViewTournament.print_error_enter_selection(ViewTournament)
+            self.print_add_timer_control(self)
+        return timer_control
+
+    def element_of_tournament(self):
+        # control display and good feedback from the input
+
+        retour = ViewTournament.print_elements_tournament(ViewTournament)
+        ViewTournament.print_date_of_tournament(ViewTournament)
+        date = self.print_date_controller(self)
+        elements = {
+            "name": retour[0],
+            "location": retour[1],
+            "date": date,
+            }
+        return elements
+
     def print_date_controller(self):
         ''' control the input console for the birth date of the player '''
 
-        day = ViewTournament.print_control_day(ViewTournament)
-        month = ViewTournament.print_control_month(ViewTournament)
-        year = ViewTournament.print_control_years(ViewTournament)
+        day = MethodeControl.control_enter_by_while(MethodeControl, "jour", 31)
+        month = MethodeControl.control_enter_by_while(MethodeControl, "mois", 12)
+        year = MethodeControl.control_enter_by_while(MethodeControl, "année", 1000)
         day_str = str(day)
         month_str = str(month)
         if len(month_str) == 1:
@@ -139,6 +169,13 @@ class MethodeTournament:
         birth_date = str_day + "/" + str_month + "/" + str(year)
         return birth_date
 
+    def ask_which_player_of_tournament(self):
+        # control display and good feedback from the input
+
+        ViewTournament.print_menu_ajout_players_for_tournament(ViewTournament)
+        choice = MethodeControl.control_enter_by_while(MethodeControl, 2, 102)
+        return choice
+
     def control_add_the_existing_player(self, participants, players, compteur):
         '''check if the entry corresponds to an existing player'''
 
@@ -147,13 +184,13 @@ class MethodeTournament:
         for i in players:  # control if the player is not already recording
             if resultat == i.get("pk"):
                 no_selection = PlayTournament.control_already_selection(PlayTournament, participants, i)
-                if no_selection:
-                    player = Player.add_players(Player, i)  # instantiate the player to the tournament
+                if no_selection:  # instantiate the player to the tournament
+                    player = PlayTournament.add_players_tournament(PlayTournament, **i)
                     participants.append(player)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
                     return True
-                elif no_selection is None:
-                    player = Player.add_players(Player, i)  # instantiate the player to the tournament
+                elif no_selection is None:  # instantiate the player to the tournament
+                    player = PlayTournament.add_players_tournament(PlayTournament, **i)
                     participants.append(player)
                     ViewTournament.print_save_players_for_tournament(ViewTournament, compteur, PLAYERS_OF_TOURNAMENT)
                     return True
@@ -168,7 +205,7 @@ class MethodeTournament:
     def create_and_add_new_player_of_tournament(self, participants, save_player, compteur):
         '''to create and add a new player in the tournament'''
 
-        new_player = [ViewTournament.print_elements_player(ViewTournament)]
+        new_player = self.elements_player(self)
         add_player = Player.add_players(Player, new_player)
         player_valided = PlayTournament.duplicate_search_player(PlayTournament, add_player)
         seria = player_valided.get("valided")
@@ -195,6 +232,56 @@ class MethodeTournament:
                     ViewTournament.print_add_players_for_tournament_inpossible(ViewTournament)
                     ViewTournament.print_continue(ViewTournament)
                     break
+
+    def control_sex_player(self):
+        # control display and good feedback from the input
+
+        sex = ViewTournament.print_sex_control(ViewTournament)
+        if sex == "1":
+            sex = "homme"
+            return sex
+        elif sex == "2":
+            sex = "femme"
+            return sex
+        else:
+            ViewTournament.print_error_number_sex(ViewTournament)
+            del sex
+            self.control_sex_player(self)
+
+    def control_ranking_player(self):
+        # returns a list to view
+
+        ViewTournament.print_ranking_player(ViewTournament)
+        ranking = 0
+        while ranking != int:
+            try:
+                nb = ViewTournament.print_ranking_player_input(ViewTournament)
+                ranking += nb
+                break
+            except ValueError:
+                ViewTournament.print_ranking_player_error_enter(ViewTournament)
+        ViewTournament.print_ranking_player_view(ViewTournament, ranking)
+        return ranking
+
+    def elements_player(self):
+        # control display and good feedback from the input
+
+        elements = []
+        retour = ViewTournament.print_first_elements_player(ViewTournament)
+        elements.append(retour[0])
+        elements.append(retour[1])
+        elements.append(self.print_date_controller(self))
+        elements.append(self.control_sex_player(self))
+        ViewTournament.print_first_recap_elements_player(ViewTournament, elements)
+        elements.append(self.control_ranking_player(self))
+        element = {
+            "name": elements[0],
+            "first_name": elements[1],
+            "birth_date": elements[2],
+            "sex": elements[3],
+            "ranking": elements[4],
+        }
+        return element
 
     def start_tournament(self):
         ''' control the start of tournaments '''
@@ -271,7 +358,7 @@ class MethodeMatch:
             joueur1 = i[0]
             joueur2 = i[1]
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
-            resultat = ViewMatch.print_menu_match_tournament(ViewMatch, match, joueur1, joueur2)
+            resultat = MethodeControl.control_choice_resultat_match(MethodeControl, match, joueur1, joueur2)
             joueur1["meet"] = [joueur2.get("pk")]
             joueur2["meet"] = [joueur1.get("pk")]
             if resultat == 1:
@@ -308,7 +395,7 @@ class MethodeMatch:
             joueur1 = i[0]
             joueur2 = i[1]
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
-            resultat = ViewMatch.print_menu_match_tournament(ViewMatch, match, joueur1, joueur2)
+            resultat = MethodeControl.control_choice_resultat_match(MethodeControl, match, joueur1, joueur2)
             joueur1["meet"] += [joueur2.get("pk")]
             joueur2["meet"] += [joueur1.get("pk")]
             if resultat == 1:
@@ -332,3 +419,57 @@ class MethodeMatch:
         ViewMatch.print_ending_chrono(ViewMatch, date)
         resultat_total.update({"round " + str(tour): resultat_tour})
         return resultat_total
+
+
+class MethodeControl:
+
+    def control_choice_resultat_match(self, match, joueur1, joueur2):
+        # control that return on the match result is indeed an int between 1 and 3
+
+        while True:
+            try:
+                while True:
+                    answer = ViewMatch.print_menu_match_tournament(ViewMatch, match, joueur1, joueur2)
+                    if 0 < answer < 4:
+                        return answer
+                    else:
+                        ViewTournament.print_error_enter_selection(ViewTournament)
+            except ValueError:
+                ViewTournament.print_control_wrong_enter(ViewTournament)
+
+    def control_enter_by_while(self, data, data2):
+        # check that the entry is indeed one of the expected
+
+        if 0 < data2 < 100:
+            while True:
+                try:
+                    while True:
+                        answer = ViewTournament.print_control_input(ViewTournament, data)
+                        if 0 < answer <= data2:
+                            return answer
+                        else:
+                            ViewTournament.print_control_wrong_number(ViewTournament, data2)
+                except ValueError:
+                    ViewTournament.print_control_wrong_enter(ViewTournament)
+        elif 101 < data2 < 103:
+            while True:
+                try:
+                    while True:
+                        answer = ViewTournament.print_control_input_none_view(ViewTournament)
+                        if 0 < answer <= data2:
+                            return answer
+                        else:
+                            ViewTournament.print_control_wrong_number(ViewTournament, data)
+                except ValueError:
+                    ViewTournament.print_control_wrong_enter(ViewTournament)
+        elif data2 > 105:
+            while True:
+                try:
+                    while True:
+                        answer = ViewTournament.print_control_input(ViewTournament, data)
+                        if 1930 < answer < 2150:
+                            return answer
+                        else:
+                            ViewTournament.print_error_enter_years(ViewTournament)
+                except ValueError:
+                    ViewTournament.print_control_wrong_enter(ViewTournament)

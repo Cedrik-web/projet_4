@@ -1,5 +1,4 @@
 
-from tournament.view import ViewTournament
 from model import CleanText
 
 
@@ -11,9 +10,13 @@ class ViewPlayer:
         print()
         print("recherche par ID ('non'_'premon'_'année de naissance') ou par nom:")
         resultat = CleanText.clean_input(CleanText, input())
-        while len(resultat) == 0:
-            print("vous devez entrer un ID ou un nom.")
-            resultat = CleanText.clean_input(CleanText, input())
+        return resultat
+
+    def print_find_player_wrong(self):
+        # displays information and retrieves an entry
+
+        print("vous devez entrer un ID ou un nom.")
+        resultat = CleanText.clean_input(CleanText, input())
         print()
         return resultat
 
@@ -40,36 +43,22 @@ class ViewPlayer:
 
         print("total de points : " + str(player.get("ranking")) + " , tapez oui pour modifier -> ")
         reponse = CleanText.clean_input(CleanText, input())
-        ranking = player.get("ranking")
-        if reponse == "oui":
-            while ranking != int:
-                try:
-                    nb = int(input(": "))
-                    ranking = nb
-                    break
-                except ValueError:
-                    print("\nERREUR , veuillez entrer un nombre entier")
-                    print("recomencez")
-        print(ranking)
-        if not ranking == int(player.get("ranking")):
-            player.update({"ranking": ranking})
-            print("nouveau total de points : " + str(player.get("ranking")) + "\n")
-        print()
-        return player
+        return reponse
+
+    def print_modif_classement_input_error(self):
+        # displays information
+
+        print("\nERREUR , veuillez entrer un nombre entier")
+        print("recomencez")
 
     def print_add_player(self):
         ''' function requesting the creation of a new player following a player creation
             and this as long as the users wants by answering yes '''
 
-        serialized_player = []
-        serialized_player.append(ViewTournament.print_elements_player(ViewTournament))
-        print("voulez vous ajouter un autre joueur ?")
+        print("\nvoulez vous ajouter un autre joueur ?")
         reponse = CleanText.clean_input(CleanText, input())
-        while reponse == "oui":
-            serialized_player.append(ViewTournament.print_elements_player(ViewTournament))
-            print("voulez vous ajouter un autre joueur ?")
-            reponse = CleanText.clean_input(CleanText, input())
-        return serialized_player
+        print()
+        return reponse
 
     def print_new_player_register(self):
         ''' display a message in console '''
@@ -102,7 +91,7 @@ class ViewPlayer:
     def print_modif_player_first_name(self, player):
         # information for the modif player function
 
-        b= CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
+        b = CleanText.clean_input(CleanText, input("prénom :" + player.get("first_name") + " -> "))
         return b
 
     def print_modif_player_first_name_anwser(self, player):
@@ -156,5 +145,4 @@ class ViewPlayer:
     def print_modif_player_ranking_answer(self, player):
         # information for the modif player function
 
-        print("nouveau total de points : " + str(player.get("ranking")) + "\n")
-        print()
+        print("\nnouveau total de points : " + str(player.get("ranking")))
