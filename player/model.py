@@ -6,7 +6,7 @@ from tinydb.table import Document
 # player model creation
 class Player:
 
-    def __init__(self, name, first_name, birth_date, sex, ranking=0):
+    def __init__(self, name, first_name, birth_date, sex, ranking=0, pk=None):
         self.pk = name + "_" + first_name + "_" + birth_date[-4:]
         self.name = name
         self.first_name = first_name
@@ -14,18 +14,17 @@ class Player:
         self.sex = sex
         self.ranking = ranking
 
-    def add_players(self, players):
-        ''' named parameters and serialization of players items '''
+    def add_players(self, elements):
+        """named parameters and serialization of players items"""
 
-        from tournament.model import PlayTournament
-        new_player = PlayTournament.control_type_function_list(PlayTournament, players)
         serialized_player = []
         player = Player(
-            name=new_player.get("name"),
-            first_name=new_player.get("first_name"),
-            birth_date=new_player.get("birth_date"),
-            sex=new_player.get("sex"),
-            ranking=new_player.get("ranking"),
+            pk=elements.get("pk"),
+            name=elements.get("name"),
+            first_name=elements.get("first_name"),
+            birth_date=elements.get("birth_date"),
+            sex=elements.get("sex"),
+            ranking=elements.get("ranking"),
             )
         serialized = {
             "pk": player.pk,
@@ -38,24 +37,26 @@ class Player:
         serialized_player.append(serialized)
         return serialized_player
 
+    @classmethod
     def save_player(self, serialized_player):
-        ''' save players in the players table and save in the db.json file '''
+        """save players in the players table and save in the db.json file"""
 
         db = TinyDB("db.json")
         players_table = db.table("players")
         players_table.insert_multiple(serialized_player)
 
-    def table_of_player(self):
-        ''' allows you to retrieve the players table from the db.json file '''
+    @classmethod
+    def table_of_player(cls):
+        """allows you to retrieve the players table from the db.json file"""
 
         db = TinyDB("db.json")
         players_table = db.table("players").all()
         return players_table
 
     def modification_of_player(self, modif):
-        ''' allows you to save changes to a player on db.json file '''
+        """allows you to save changes to a player on db.json file"""
 
-        players = self.table_of_player(self)
+        players = self.table_of_player()
         db = TinyDB("db.json").table("players")
         for player in players:
             if player.get("pk") == modif.get("pk"):
@@ -67,9 +68,9 @@ class Player:
 class MethodePlayer:
 
     def duplicate_search(self, player):
-        '''check ij the ID is not already referenced in the database '''
+        """check ij the ID is not already referenced in the database"""
 
-        players = Player.table_of_player(Player)
+        players = Player.table_of_player()
         nb_players = []
         valided = []
         no_valided = []
@@ -110,14 +111,14 @@ class MethodePlayer:
                         if j == i.get("pk"):
                             no_valided.append(j)
                             break
-                else:
-                    valided.append(j)
+                        else:  # TODO
+                            valided.append(j)
         return dict
 
     def stat_classement(self):
-        ''' returns a classification by rank or alphabetical '''
+        """returns a classification by rank or alphabetical"""
 
-        players = Player.table_of_player(Player)
+        players = Player.table_of_player()
         tri_rank = sorted(players, key=lambda k: k["ranking"], reverse=True)
         tri_alphabet = sorted(players, key=lambda k: k["pk"])
         player_tri_ranking = []

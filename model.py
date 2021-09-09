@@ -5,8 +5,9 @@ import readline
 # user input control class
 class CleanText:
 
-    def clean_input(self, data):
-        ''' general function to protect the program from incorrect user input '''
+    @staticmethod
+    def clean_input(data):
+        """general function to protect the program from incorrect user input"""
 
         tiny = data.lower()
         text = tiny.replace(" ", "-")
@@ -41,8 +42,9 @@ class MyCompleter(object):  # Custom completer
         except IndexError:
             return None
 
-    def activate(self, players):
-        ''' manage autocomplementation '''
+    @classmethod
+    def activate(cls, players):
+        """manage autocomplementation"""
 
         text = []
         for i in players:

@@ -9,47 +9,46 @@ from settings import PLAYERS_OF_TOURNAMENT, TURNS
 #  creation of the tournament class and manage tournaments
 class Tournament:
 
-    def __init__(self, name, location, date):
-        self.pk = name + "_" + location + "_" + date
-        self.name = name
-        self.location = location
-        self.date = date
+    def __init__(self):
+        self.pk = None
+        self.name = None
+        self.location = None
+        self.date = None
         self.turns = TURNS
         self.nb_players = PLAYERS_OF_TOURNAMENT
         self.resultat = []
+        self.players = []
+        self.remarks = []
+        self.timer_control = []
 
-    def add_tournament(self, tour):
-        ''' named parameter and serialization of tournament items '''
+    def add_tournament(self, tournament):
+        # named parameter and serialization of tournament items
 
-        serialized_tournament = []
-        tournament = Tournament(
-            name=tour.get("name"),
-            location=tour.get("location"),
-            date=tour.get("date"),
-        )
         serialized = {
-            "pk": tournament.pk,
-            "name": tournament.name,
-            "location": tournament.location,
-            "date": tournament.date,
-            "turns": tournament.turns,
-            "nb_players": tournament.nb_players,
-            "resultat": tournament.resultat,
+            "pk": tournament.get("name") + "_" + tournament.get("location") + "_" + tournament.get("date"),
+            "name": tournament.get("name"),
+            "location": tournament.get("location"),
+            "date": tournament.get("date"),
+            "turns": self.turns,
+            "nb_players": self.nb_players,
+            "resultat": self.resultat,
+            "players": tournament.get("players"),
+            "remarks": tournament.get("remarks"),
+            "timer_control": tournament.get("timer_control"),
         }
-        serialized_tournament.append(serialized)
-        return serialized_tournament
+        return serialized
 
     def save_tournament(self, serialized_tournament):
-        ''' save tournament in the tournament table and save in the db.json file '''
+        # save tournament in the tournament table and save in the db.json file
 
         db = TinyDB("db.json")
         tournament_table = db.table("tournament")
         tournament_table.insert(serialized_tournament)
 
     def save_resultat_tournament(self, serialized_resultat, tournament):
-        ''' saves the modification of a tournament, etc result ... '''
+        # saves the modification of a tournament, etc result ...
 
-        tournaments = self.table_of_tournament(self)
+        tournaments = self.table_of_tournament()
         db = TinyDB("db.json").table("tournament")
         serialized_resultat.update({"resultat": tournament})
         for t in tournaments:
@@ -58,7 +57,7 @@ class Tournament:
                 db.upsert(Document(serialized_resultat, doc_id=tournoi_doc_id))
 
     def table_of_tournament(self):
-        ''' allows you to retrieve the tournament table from the db.json file '''
+        # allows you to retrieve the tournament table from the db.json file
 
         db = TinyDB("db.json")
         tournament_table = db.table("tournament").all()
@@ -68,61 +67,38 @@ class Tournament:
 # method used for tournament operation
 class PlayTournament:
 
-    def __init__(self, pk, name, first_name, birth_date, sex, ranking):
+    def __init__(self):
         # initiates players into the tournament
-        self.pk = pk
-        self.name = name
-        self.first_name = first_name
-        self.birth_date = birth_date
-        self.sex = sex
-        self.ranking = ranking
+        self.pk = None
+        self.name = None
+        self.first_name = None
+        self.birth_date = None
+        self.sex = None
+        self.ranking = 0
 
-    def add_players_tournament(self, **player):
+    def add_players_tournament(self, player):
         # named parameters and serialization of players items
-        new_player = PlayTournament(
-            pk=player.get("pk"),
-            name=player.get("name"),
-            first_name=player.get("first_name"),
-            birth_date=player.get("birth_date"),
-            sex=player.get("sex"),
-            ranking=player.get("ranking"),
-            )
+
         serialized_player = {
-            "pk": new_player.pk,
-            "name": new_player.name,
-            "first_name": new_player.first_name,
-            "birth_date": new_player.birth_date,
-            "sex": new_player.sex,
-            "ranking": new_player.ranking,
+            "pk": player.get("pk"),
+            "name": player.get("name"),
+            "first_name": player.get("first_name"),
+            "birth_date": player.get("birth_date"),
+            "sex": player.get("sex"),
+            "ranking": player.get("ranking"),
         }
         return serialized_player
 
     def menu_manage_other_round(self, serialized_tournament, players_of_tournament, tour):
-        '''manage all the others rounds'''
+        # manage all the others rounds
 
+        tournament = Tournament()
         resultat_total = serialized_tournament.get("resultat")
-        resultat_total = self.nunber_turn(self, TURNS, players_of_tournament, resultat_total, serialized_tournament,
-                                          tour)
-        Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_total)
-
-    def gathers_tournament_dictionary(self, tournoi, players, remarks, timer_control):
-        ''' add players to tournament elements '''
-
-        for i in tournoi:
-            tournament = i
-        list_players = []
-        nb = []
-        for p in players:
-            nb.append(p)
-            player = {len(nb): p}
-            list_players.append(player)
-        tournament["players"] = list(list_players)
-        tournament["remarks"] = list(remarks)
-        tournament["timer_control"] = list(timer_control)
-        return tournament
+        resultat_total = self.nunber_turn(TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
+        tournament.save_resultat_tournament(serialized_tournament, resultat_total)
 
     def control_type_function(self, data):
-        '''control and transform a data list and dictionary'''
+        # control and transform a data list and dictionary
 
         new_data = {}
         for i, j in data.items():
@@ -130,7 +106,7 @@ class PlayTournament:
         return new_data
 
     def control_type_function_list(self, data):
-        """control and transform data into a simple list"""
+        # control and transform data into a simple list
 
         if data != []:
             if type(data) == list:
@@ -143,11 +119,12 @@ class PlayTournament:
         else:
             return data
 
-    def control_already_selection(self, list_participant, player):
-        ''' checks if the player is in the list and answers true or false '''
+    @classmethod
+    def control_already_selection(cls, list_participant, data):
+        # checks if the "pk" data ( player or tournament ) is in the list and answers true or false
 
         for i in list_participant:
-            if player.get("pk") == i.get("pk"):
+            if data.get("pk") == i.get("pk"):
                 valided = False
                 return valided
             else:
@@ -156,54 +133,61 @@ class PlayTournament:
         return valided
 
     def nunber_turn(self, turns, players_of_tournament, resultat_total, serialized_tournament, tour):
-        ''' function that controls the course of laps from the 2nd ( by a loop) '''
+        # function that controls the course of laps from the 2nd ( by a loop)
 
+        global resultat_tournament
         turn = turns - tour
-        tour = tour
+        """get the tour and turns attribute in order to determine how many turns remains to be done 
+            compared to what the manager has to determine in settings.py"""
         for i in range(turn):
             tour += 1
             retour = Match.generation_next_round(Match(), players_of_tournament)
+            #   generate the list of matches to be played
             list_matchs = retour[1]
             from tournament.controller import MethodeMatch
-            list_match = MethodeMatch.display_list_matchs(MethodeMatch, list_matchs)
+            list_match = MethodeMatch().display_list_matchs(list_matchs, tour)
             from tournament.controller import MethodeTournament
-            MethodeTournament.start_tournament(MethodeTournament)
-            resultat_tournament = MethodeMatch.gestion_match(MethodeMatch(), list_match, resultat_total, tour)
-            Tournament.save_resultat_tournament(Tournament, serialized_tournament, resultat_tournament)
+            MethodeTournament().start_tournament()
+            resultat_tournament = MethodeMatch().play_turn(list_match, resultat_total, tour)
+            Tournament().save_resultat_tournament(serialized_tournament, resultat_tournament)
         return resultat_tournament
 
     def tournaments_recovery(self, answer, tournaments):
-        ''' manage the resumption of tournament and what turn it was '''
+        # manage the resumption of tournament and what turn it was return the tournament
 
-        players = []
-        tournament = []
         serialized_tournament = []
-        turn = 0
         for i in tournaments:
             if i.get("pk") == answer:
                 serialized_tournament.append(i)
-                players_brut = i.get("players")
-                tournament.append(i.get("resultat"))
-                for p in players_brut:
-                    for k, v in p.items():
-                        players.append(v)
-        if tournament == [[]]:
-            return players, serialized_tournament[0], turn
+        return serialized_tournament
+
+    def tournaments_recovery2(self, tournament):
+        """return the number of the turn"""
+
+        tournoi = []
+        for i in tournament:
+            tour = i.get("resultat")
+            tournoi.append(tour)
+        if tournoi == []:
+            turn = 0
+            return turn
         else:
-            for r in tournament:
+            for r in tournoi:
                 nb = len(r)
                 if nb == 1:
                     turn = 1
+                    return turn
                 elif nb == 2:
                     turn = 2
+                    return turn
                 elif nb == 3:
                     turn = 3
-            return players, serialized_tournament[0], turn
+                    return turn
 
-    def duplicate_search_player(self, new_player):  # TODO
-        '''check ij the ID is not already referenced in the database '''
+    def duplicate_search_player(self, new_player):
+        # check ij the ID is not already referenced in the database
 
-        players = Player.table_of_player(Player)
+        players = Player.table_of_player()
         nb_players = []
         valided = []
         no_valided = []
@@ -244,8 +228,8 @@ class PlayTournament:
                         if j == i.get("pk"):
                             no_valided.append(j)
                             break
-                else:
-                    valided.append(j)
+                        else:  # TODO
+                            valided.append(j)
         return dict
 
 
@@ -260,7 +244,7 @@ class Match:
         self.point = self.winner + self.loser + self.draw
 
     def match_generation(self, players):
-        ''' add players to the match and serialized them return the list of players '''
+        # add players to the match and serialized them return the list of players
 
         player_of_tournament = []
         tour = 0
@@ -271,26 +255,35 @@ class Match:
             match_win = 0
             match_lose = 0
             match_pat = 0
-            serialized_players = {
-                "pk": player.get("pk"),
-                "ranking": player.get("ranking"),
-                "point_tournament": point_tournament,
-                "meet": [],
-                "match_win": match_win,
-                "match_lose": match_lose,
-                "match_pat": match_pat,
-            }
-            player_of_tournament.append(serialized_players)
+            player["point_tournament"] = point_tournament
+            player["meet"] =  []
+            player["match_win"] = match_win
+            player["match_lose"] = match_lose
+            player["match_pat"] = match_pat
+            player_of_tournament.append(player)
+        return player_of_tournament
+
+    def transform_list(self, list_joueur):
+        """transforms the list of players numbered by position generated by
+        the object and list to be supported for peer generation"""
+
+        player_of_tournament = []
+        for i in list_joueur:
+            for k, v in i.items():
+                player_of_tournament.append(v)
         return player_of_tournament
 
     def generation_first_round(self, player_of_tournament):
-        ''' generate the first matches then award points and update status
-            match by players '''
+        """generate the first matches then award points and update status
+            match by players"""
 
         tri = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
+        #   sort the list in order from highest to lowest rank
         nb_player = int(len(tri) / 2)
+        #   divide the list sort into two
         list_player_a = tri[:nb_player]
         list_player_b = tri[nb_player:]
+        #   build two lists with the first one that was split
         list_match = []
         position = -1
         for i in range(TURNS):
@@ -299,37 +292,48 @@ class Match:
             p2 = list_player_b[position]
             match = [p1, p2]
             list_match.append(match)
+            """ generate the first matches by taking the first ones from each list to then compete 
+                against each other the second etc ... until all the desired matches are generated and return
+                a match list with these elements"""
         return list_match
 
     def generation_next_round(self, player_of_tournament):
-        ''' generates match pairs from the 2nd round '''
+        # generates match pairs from the 2nd round
 
         list_player = []
         list_match = []
         tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
         tri_tour = sorted(tri_rank, key=lambda k: k["point_tournament"], reverse=True)
+        #   sort first in order of highest to lowest rank, and sort by tournament point from highest to lowest
         position1 = -2
         position2 = -1
+        #   initial position defined in order to generate a dynamic position after the for loop
         t = 0
         for i in range(4):  # manage the matches
             t += 1
             position1 += 2
             position2 += 2
+            #   dynamic position of the players select from the list sort the first meet the second and so on
             joueur1 = tri_tour[position1]
             joueur2 = tri_tour[position2]
-            answers = PlayMatch.find_player_already_play(PlayMatch, joueur1, joueur2, tri_tour, position2, list_player)
+            answers = PlayMatch().find_player_already_play(joueur1, joueur2, tri_tour, position2, list_player)
+            #   checks that the match has not already been played and returns another player if necessary
             player = answers[0]
+            #   remove a [] in order to correctly read this list
             if player != joueur2:
                 new_match = joueur1, player
                 list_match.append(new_match)
+                """addition of the match to the match list with player1 against a player 
+                    other than the one previously selected by sorting"""
             else:
                 new_match = joueur1, joueur2
                 list_match.append(new_match)
+                #   addition of the match to the match list identical to the one selected by sorting
         return player_of_tournament, list_match
 
-    def distribution_of_points_and_resultat_other_round(self, joueur1, joueur2, match, resultat_tour):
-        '''distributed the points according to the player's result, is used to define the classification
-            by tournament and thus to generate the peers'''
+    def distribution_of_points_and_resultat(self, joueur1, joueur2, match, resultat_tour):
+        """distributed the points according to the player's result, is used to define the classification
+            by tournament and thus to generate the peers"""
 
         joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
         joueur1["match_win"] += 1
@@ -339,48 +343,24 @@ class Match:
         resultat_tour.update({match: winner})
         return resultat_tour
 
-    def distribution_of_points_and_resultat_pat_other_round(self, joueur1, joueur2, match, resultat_tour):
-        '''distributed the points according to the player's result, is used to define the classification
-            by tournament and thus to generate the peers'''
+    def distribution_of_points_and_resultat_pat(self, joueur1, joueur2, match, resultat_tour):
+        """distributed the points according to the player's result, is used to define the classification
+            by tournament and thus to generate the peers"""
 
-        joueur1["point_tournament"] = self.draw
+        joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
         joueur1["match_pat"] += 1
-        joueur2["point_tournament"] = self.draw
+        joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
         joueur2["match_pat"] += 1
         winner = "pat match nul"
         resultat_tour.update({match: winner})
         return resultat_tour
-
-    def distribution_of_points_and_resultat(self, joueur1, joueur2, match, resultat_tour1):
-        '''distributed the points according to the player's result, is used to define the classification
-            by tournament and thus to generate the peers'''
-
-        joueur1["point_tournament"] = self.winner
-        joueur1["match_win"] += 1
-        joueur2["point_tournamant"] = self.loser
-        joueur2["match_lose"] += 1
-        winner = joueur1.get("pk")
-        resultat_tour1.update({match: winner})
-        return resultat_tour1
-
-    def distribution_of_points_and_resultat_pat(self, joueur1, joueur2, match, resultat_tour1):
-        '''distributed the points according to the player's result, is used to define the classification
-            by tournament and thus to generate the peers'''
-
-        joueur1["point_tournament"] = self.draw
-        joueur1["match_pat"] += 1
-        joueur2["point_tournament"] = self.draw
-        joueur2["match_pat"] += 1
-        winner = "pat match nul"
-        resultat_tour1.update({match: winner})
-        return resultat_tour1
 
 
 # method used for the functioning of the matches
 class PlayMatch:
 
     def find_player_already_play(self, joueur1, joueur2, tri_tour, position, list_player):
-        ''' check if the player has already been selected '''
+        # check if the player has already been selected
 
         list_player.append(joueur1.get("pk"))
         t = -1

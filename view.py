@@ -2,7 +2,7 @@
 class ViewMenu:
 
     def print_accueil(self):
-        ''' menu printing and retrieval of menu choice '''
+        # menu printing and retrieval of menu choice
 
         print()
         print("Bienvenue sur le gestionnaire de jeu d'échec.\n")
@@ -20,12 +20,12 @@ class ViewMenu:
         return resultat
 
     def print_error_enter_int(self):
-        ''' indicates to the user that he must enter a number '''
+        # indicates to the user that he must enter a number
 
         print("\n ERREUR : vous devez entrer un chiffre correspondant à votre choix .")
 
     def print_choice_input_menu(self, resultat):
-        ''' display a message in console'''
+        # display a message in console
 
         resultat_int = int(resultat)
         return resultat_int
@@ -37,7 +37,7 @@ class ViewMenu:
         return enter
 
     def print_classement(self, player_classement):
-        ''' display a message in console '''
+        # display a message in console
 
         print("\nclassement à ce jour :\n")
         rang = 0
@@ -46,26 +46,26 @@ class ViewMenu:
             print("n°", rang, i.get("pk"), "avec", i.get("ranking"), "point(s).")
 
     def print_list_of_tournaments(self, tournament):
-        ''' display a message in console '''
+        # display a message in console
 
         print("\nliste des tournois enregistrés.")
         for i in tournament:
             print(i.get("pk"))
 
     def print_classement_alphabet(self, player_classement):
-        ''' display a message in console '''
+        # display a message in console
 
         print("\nclassement joueurs par ordre alphabetique :\n")
         for i in player_classement:
             print(i.get("name"), i.get("first_name"), " nombre de points :", i.get("ranking"))
 
     def print_menu_existing(self):
-        ''' display a message in console'''
+        # display a message in console
 
         print("ERREUR vous devez choisir un menu existant")
 
     def print_menu_stat(self):
-        ''' displays in console the stats menu and returns the voice made '''
+        # displays in console the stats menu and returns the voice made
 
         print("\n" * 50)
         print("Bienvenue dans la catégorie rapport, veuillez selectionner la stat recherchée :\n")
@@ -81,86 +81,81 @@ class ViewMenu:
 
 class ViewReport:
 
-    def print_list_tournament(self, i):
-        ''' display a message in console '''
-
-        print("ID du tournoi :", i.get("pk"))
-
     def print_choice_tournament(self, ):
-        ''' display a information and retrun a variable '''
+        # display a information and retrun a variable
 
         print("\nchoisissez votre tournoi par l'ID")
         choix = input()
         return choix
 
     def print_classement_of_tournament(self):
-        ''' display a message in console'''
+        # display a message in console
 
         print("\nclassement du tournoi :\n")
 
     def print_tri_player_of_tournament_rank(self, i, p):
-        ''' display a message in console'''
+        # display a message in console
 
         print("n°", p, i.get("pk"), "avec", i.get("ranking"), "point(s).")
 
     def print_tri_player_of_tournament_alphabet(self, i):
-        ''' display a message in console'''
+        # display a message in console
 
         print(i.get("pk"), "avec", i.get("ranking"), "point(s).")
 
     def print_classement_player_of_tournament(self):
-        ''' display a message in console'''
+        # display a message in console
 
         print("\njoueur du tournoi :\n")
 
     def print_list_tournaments(self, tournament):
-        ''' display a message in console'''
+        # display a message in console
 
         print("\nlistes des tours pour le tournoi ", tournament.get("pk"))
         print()
 
     def print_tournament_time(self, t):
-        ''' display a message in console'''
+        # display a message in console
 
         print("temps de jeu du round " + str(t))
 
     def print_tournament_resultat(self, resultat):
-        ''' display a message in console'''
+        # display a message in console
 
         print("début : ", resultat[0])
         print("fin : ", resultat[-1])
 
     def print_list_match_by_tournament(self, tournament):
-        ''' display a message in console'''
+        # display a message in console
 
         print("\nlistes des matchs pour le tournoi", tournament.get("pk"))
         print()
 
     def print_resultat_match(self, t):
-        ''' display a message in console'''
+        # display a message in console
 
         print("resultat du round " + str(t))
 
     def print_list_resultat_match(self, i, j):
-        ''' display a message in console'''
+        # display a message in console
 
         print("match :", i)
         print("        remporté par: ", j)
 
     def print_list_resultat_match_for_pat(self, i, j):
-        ''' display a message in console'''
+        # display a message in console
 
         print("match :", i)
         print("        match pat.")
 
     def print_new_point_to_assign(self, joueur1):
-        ''' display a message in console'''
+        # display a message in console
 
         print("       ", joueur1, "marque: 1 point.")
         print("        son adversaire ne marque pas de point.")
 
     def print_new_point_to_assign_for_pat(self, joueur1):
-        ''' display a message in console'''
+        # display a message in console
 
         print("       ", joueur1, "marque: 1/2 point chacun.")
 
@@ -168,18 +163,18 @@ class ViewReport:
 class ViewToShare:
 
     def print_pass_validation(self):
-        ''' display a message in console '''
+        # display a message in console
 
         print("\ncontinuez......")
         input("appuyez sur entrée pour revenir au menu")
         print("\n" * 25)
 
     def print_space(self):
-        ''' display 1 space '''
+        # display 1 space
 
         print()
 
     def print_error_id(self):
-        ''' display a message in console '''
+        # display a message in console
 
         print("ERREUR, il y a une erreur dans l'ID, recommencez")
