@@ -33,28 +33,23 @@ class MenuTournament:
                     #   returns a dictionary list of participating players
             serialized_tournament = tournament[0]
             #   transform the list into a dictionary by removing them []
-            print("36", turn)
-            if turn == None:
+            if turn is None:
                 tour = 1
-                print("39", tour)
                 viewmenutournament.print_starting_round(tour)
                 #   ask if we want to start the round
                 self.menu_manage_first_round(players_of_tournament, serialized_tournament)
             elif turn == 0:  # turn has for value an integer which corresponds to the state of the tournament saved
                 tour = 1
-                print("45", tour)
                 viewmenutournament.print_starting_round(tour)
                 #   ask if we want to start the round
                 self.menu_manage_first_round(players_of_tournament, serialized_tournament)
             elif turn == 1:
                 tour = 1
-                print("51", tour)
                 tours = tour + 1
                 viewmenutournament.print_starting_round(tours)
                 playtournament.menu_manage_other_round(serialized_tournament, players_of_tournament, tour)
             else:
                 tour = turn
-                print("57", tour)
                 tours = tour + 1
                 viewmenutournament.print_starting_round(tours)
                 playtournament.menu_manage_other_round(serialized_tournament, players_of_tournament, tour)
@@ -423,17 +418,17 @@ class MethodeMatch:
             #   add to the player dictionary in the key meet his opponent
             if resultat == 1:  # for player1 win
                 viewmatch.print_player_winner(joueur1)
-                resultat_tour1 = matchs.distribution_of_points_and_resultat(
+                resultat_tour = matchs.distribution_of_points_and_resultat(
                     joueur1, joueur2, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
             elif resultat == 2:  # for player 2 win
                 viewmatch.print_player_winner(joueur2)
-                resultat_tour1 = matchs.distribution_of_points_and_resultat(
+                resultat_tour = matchs.distribution_of_points_and_resultat(
                     joueur2, joueur1, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
             elif resultat == 3:  # for pat
                 viewmatch.print_player_pat()
-                resultat_tour1 = matchs.distribution_of_points_and_resultat_pat(
+                resultat_tour = matchs.distribution_of_points_and_resultat_pat(
                     joueur1, joueur2, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
         viewmatch.print_ending_round(tour)

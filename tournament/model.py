@@ -137,8 +137,9 @@ class PlayTournament:
 
         global resultat_tournament
         turn = turns - tour
-        """get the tour and turns attribute in order to determine how many turns remains to be done 
-            compared to what the manager has to determine in settings.py"""
+        # get the tour and turns attribute in order to determine how many turns remains to be done
+        # compared to what the manager has to determine in settings.py
+
         for i in range(turn):
             tour += 1
             retour = Match.generation_next_round(Match(), players_of_tournament)
@@ -256,7 +257,7 @@ class Match:
             match_lose = 0
             match_pat = 0
             player["point_tournament"] = point_tournament
-            player["meet"] =  []
+            player["meet"] = []
             player["match_win"] = match_win
             player["match_lose"] = match_lose
             player["match_pat"] = match_pat
@@ -292,9 +293,9 @@ class Match:
             p2 = list_player_b[position]
             match = [p1, p2]
             list_match.append(match)
-            """ generate the first matches by taking the first ones from each list to then compete 
-                against each other the second etc ... until all the desired matches are generated and return
-                a match list with these elements"""
+            # generate the first matches by taking the first ones from each list to then compete
+            # against each other the second etc ... until all the desired matches are generated and return
+            # a match list with these elements
         return list_match
 
     def generation_next_round(self, player_of_tournament):
@@ -323,8 +324,8 @@ class Match:
             if player != joueur2:
                 new_match = joueur1, player
                 list_match.append(new_match)
-                """addition of the match to the match list with player1 against a player 
-                    other than the one previously selected by sorting"""
+                # addition of the match to the match list with player1 against a player
+                # other than the one previously selected by sorting
             else:
                 new_match = joueur1, joueur2
                 list_match.append(new_match)
@@ -332,8 +333,8 @@ class Match:
         return player_of_tournament, list_match
 
     def distribution_of_points_and_resultat(self, joueur1, joueur2, match, resultat_tour):
-        """distributed the points according to the player's result, is used to define the classification
-            by tournament and thus to generate the peers"""
+        """distributed the points according to the player's result, is used to define the classification"""
+        """by tournament and thus to generate the peers"""
 
         joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
         joueur1["match_win"] += 1

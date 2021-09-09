@@ -4,7 +4,7 @@ import sys
 from model import CleanText
 from player.controller import MenuPlayer
 from player.model import MethodePlayer
-from tournament.controller import MenuTournament, MethodeTournament
+from tournament.controller import MenuTournament
 from tournament.model import Tournament
 from view import ViewMenu, ViewToShare, ViewReport
 
