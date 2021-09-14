@@ -252,6 +252,11 @@ class ViewMatch:
 
         print("\nmatch n°", m, ":")
 
+    def print_view_round(self):
+        """ dislay information in console"""
+
+        print("\nliste de matchs à jouer:")
+
     def print_view_match(self, i):
         # display a information in console
 
@@ -266,6 +271,7 @@ class ViewMatch:
         # display a message in console
 
         print("date et heure de fin de round", tour, ":", date)
+        print()
 
     def print_menu_match_tournament(self, match, joueur1, joueur2):
         # affiche le menu de score de match
@@ -287,3 +293,8 @@ class ViewMatch:
         # display a message in console
 
         print("                                     match nul \n")
+
+    def print_error_exception(self):
+        """ display a message in console """
+
+        print("Erreur , l'apllication est sortie d'une liste de facon inprevue, appeler la hotline.")

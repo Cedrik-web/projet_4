@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from model import MyCompleter
@@ -108,7 +107,7 @@ class MenuTournament:
         list_matchs = match.generation_first_round(players_of_tournament)
         list_match = methodematch.display_list_matchs(list_matchs, tour)
         MethodeTournament().start_tournament()
-        resultat_total = methodematch.play_turn(list_match, tour, resultat_total)
+        resultat_total = methodematch.play_turn(list_match, resultat_total, tour)
         tournament.save_resultat_tournament(serialized_tournament, resultat_total)
         playtournament.nunber_turn(TURNS, players_of_tournament, resultat_total, serialized_tournament, tour)
         tournament.save_resultat_tournament(serialized_tournament, resultat_total)
@@ -169,7 +168,7 @@ class MethodeTournament:
         viewtournament = ViewTournament()
         retour = viewtournament.print_elements_tournament()
         viewtournament.print_date_of_tournament()
-        date = self.print_date_controller()
+        date = self.element_date_controller()
         # add players of tournament
         player_recovery = self.add_players_of_tournament(player)
         players = player_recovery[0]  # list player of tournament
@@ -184,10 +183,10 @@ class MethodeTournament:
             "players": players,
             "remarks": remarks,
             "timer_control": timer_control,
-            }
+        }
         return elements
 
-    def print_date_controller(self):
+    def element_date_controller(self):
         ''' control the input console for the birth date of the player '''
 
         methodecontrol = MethodeControl()
@@ -318,7 +317,7 @@ class MethodeTournament:
         retour = viewtournament.print_first_elements_player()
         elements.append(retour[0])
         elements.append(retour[1])
-        elements.append(self.print_date_controller())
+        elements.append(self.element_date_controller())
         elements.append(self.control_sex_player())
         viewtournament.print_first_recap_elements_player(elements)
         elements.append(self.control_ranking_player())
@@ -387,7 +386,7 @@ class MethodeMatch:
         # show match list request
 
         viewmatch = ViewMatch()
-        ViewMenuTournament().print_starting_round(tour)
+        viewmatch.print_view_round()
         m = 0
         for list in list_match:
             m += 1
@@ -413,23 +412,18 @@ class MethodeMatch:
             match = joueur1.get("pk") + " / " + joueur2.get("pk")
             resultat = MethodeControl().control_choice_resultat_match(match, joueur1, joueur2)
             #   control the manager input of an int between 1 and 3
-            joueur1["meet"] = [joueur2.get("pk")]
-            joueur2["meet"] = [joueur1.get("pk")]
             #   add to the player dictionary in the key meet his opponent
             if resultat == 1:  # for player1 win
                 viewmatch.print_player_winner(joueur1)
-                resultat_tour = matchs.distribution_of_points_and_resultat(
-                    joueur1, joueur2, match, resultat_tour)
+                resultat_tour = matchs.distribution_of_points_and_resultat(joueur1, joueur2, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
             elif resultat == 2:  # for player 2 win
                 viewmatch.print_player_winner(joueur2)
-                resultat_tour = matchs.distribution_of_points_and_resultat(
-                    joueur2, joueur1, match, resultat_tour)
+                resultat_tour = matchs.distribution_of_points_and_resultat(joueur2, joueur1, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
             elif resultat == 3:  # for pat
                 viewmatch.print_player_pat()
-                resultat_tour = matchs.distribution_of_points_and_resultat_pat(
-                    joueur1, joueur2, match, resultat_tour)
+                resultat_tour = matchs.distribution_of_points_and_resultat_pat(joueur1, joueur2, match, resultat_tour)
                 #   retrieves the result and distributes the points according to the results of the turn
         viewmatch.print_ending_round(tour)
         date_end = datetime.now()
@@ -495,3 +489,8 @@ class MethodeControl:
                             viewtournament.print_error_enter_years()
                 except ValueError:
                     viewtournament.print_control_wrong_enter()
+
+    def unexpected_error(self):
+        """catch an exception and throw it back to view"""
+
+        ViewMatch().print_error_exception()

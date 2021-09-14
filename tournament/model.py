@@ -257,7 +257,7 @@ class Match:
             match_lose = 0
             match_pat = 0
             player["point_tournament"] = point_tournament
-            player["meet"] = []
+            player["meet"] = player.get("pk")
             player["match_win"] = match_win
             player["match_lose"] = match_lose
             player["match_pat"] = match_pat
@@ -291,7 +291,10 @@ class Match:
             position += 1
             p1 = list_player_a[position]
             p2 = list_player_b[position]
-            match = [p1, p2]
+            update = PlayMatch().update_meet_list(p1, p2)
+            joueur1 = update[0]
+            joueur2 = update[1]
+            match = [joueur1, joueur2]
             list_match.append(match)
             # generate the first matches by taking the first ones from each list to then compete
             # against each other the second etc ... until all the desired matches are generated and return
@@ -301,6 +304,7 @@ class Match:
     def generation_next_round(self, player_of_tournament):
         # generates match pairs from the 2nd round
 
+        playmatch = PlayMatch()
         list_player = []
         list_match = []
         tri_rank = sorted(player_of_tournament, key=lambda k: k["ranking"], reverse=True)
@@ -314,32 +318,28 @@ class Match:
             t += 1
             position1 += 2
             position2 += 2
-            #   dynamic position of the players select from the list sort the first meet the second and so on
             joueur1 = tri_tour[position1]
             joueur2 = tri_tour[position2]
-            answers = PlayMatch().find_player_already_play(joueur1, joueur2, tri_tour, position2, list_player)
-            #   checks that the match has not already been played and returns another player if necessary
-            player = answers[0]
-            #   remove a [] in order to correctly read this list
-            if player != joueur2:
-                new_match = joueur1, player
-                list_match.append(new_match)
-                # addition of the match to the match list with player1 against a player
-                # other than the one previously selected by sorting
-            else:
-                new_match = joueur1, joueur2
-                list_match.append(new_match)
-                #   addition of the match to the match list identical to the one selected by sorting
+            #  dynamic position of the players select from the list sort the first meet the second and so on
+            #  checks that the match has not already been played and returns another player if necessary
+            player1 = playmatch.control_first_player1_in_list(joueur1, tri_tour, list_player)
+            player2 = playmatch.control_valided_player2(player1, joueur2, tri_tour, list_player, tour=0)
+            #  checks that the match has not already been played and returns another player if necessary
+            update = playmatch.update_meet_list(player1, player2)
+            player1 = update[0]
+            player2 = update[1]
+            new_match = player1, player2
+            list_match.append(new_match)
         return player_of_tournament, list_match
 
     def distribution_of_points_and_resultat(self, joueur1, joueur2, match, resultat_tour):
         """distributed the points according to the player's result, is used to define the classification"""
         """by tournament and thus to generate the peers"""
 
-        joueur1["point_tournament"] = joueur1.get("point_tournament") + self.winner
-        joueur1["match_win"] += 1
-        joueur2["point_tournament"] = joueur2.get("point_tournament") + self.loser
-        joueur2["match_lose"] += 1
+        joueur1.update(point_tournament=joueur1.get("point_tournament") + self.winner)
+        joueur1.update(match_win=+1)
+        joueur2.update(point_tournament=joueur2.get("point_tournament") + self.winner)
+        joueur2.update(match_win=+1)
         winner = joueur1.get("pk")
         resultat_tour.update({match: winner})
         return resultat_tour
@@ -348,10 +348,10 @@ class Match:
         """distributed the points according to the player's result, is used to define the classification
             by tournament and thus to generate the peers"""
 
-        joueur1["point_tournament"] = joueur1.get("point_tournament") + self.draw
-        joueur1["match_pat"] += 1
-        joueur2["point_tournament"] = joueur2.get("point_tournament") + self.draw
-        joueur2["match_pat"] += 1
+        joueur1.update(point_tournament=joueur1.get("point_tournament") + self.draw)
+        joueur1.update(match_win=+1)
+        joueur2.update(point_tournament=joueur2.get("point_tournament") + self.draw)
+        joueur2.update(match_win=+1)
         winner = "pat match nul"
         resultat_tour.update({match: winner})
         return resultat_tour
@@ -360,26 +360,58 @@ class Match:
 # method used for the functioning of the matches
 class PlayMatch:
 
-    def find_player_already_play(self, joueur1, joueur2, tri_tour, position, list_player):
-        # check if the player has already been selected
+    def update_meet_list(self, joueur1, joueur2):
+        """updates the player's encounter key in the other round"""
 
-        list_player.append(joueur1.get("pk"))
-        t = -1
-        new_joueur = joueur2
-        while new_joueur.get("pk") in joueur1.get("meet"):
-            try:
-                position += 2
-                new_joueur = tri_tour[position]
-            except IndexError:
-                t += 2
-                new_joueur = tri_tour[t]
-            while new_joueur.get("pk") in list_player:
-                try:
-                    position += 2
-                    new_joueur = tri_tour[position]
-                except IndexError:
-                    t += 2
-                    new_joueur = tri_tour[t]
-        new_player = new_joueur
-        list_player.append(new_player.get("pk"))
-        return new_player, list_player
+        update1 = []
+        update2 = []
+        for i in joueur1.get("meet"):
+            update1.append(i)
+        for j in joueur2.get("meet"):
+            update2.append(j)
+        update1.append(joueur2.get("pk"))
+        update2.append(joueur1.get("pk"))
+        joueur1.update(meet=update1)
+        joueur2.update(meet=update2)
+        return joueur1, joueur2
+
+    def control_first_player1_in_list(self, joueur1, tri_tour, list_player):
+        """test if the player has not already played on the turn"""
+
+        t = 0
+        try:
+            joueur_valided = joueur1
+            while joueur_valided.get("pk") in list_player:
+                # test if the player has already played during this round
+                t += 1
+                new_position = t
+                joueur_valided = tri_tour[new_position]
+            list_player.append(joueur_valided.get("pk"))
+            return joueur_valided
+        except ValueError:
+            from tournament.controller import MethodeControl
+            MethodeControl().unexpected_error()
+
+    def control_valided_player2(self, joueur1, joueur2, tri_tour, list_player, tour):
+        """test if the player has not already played on the turn and has not already met his opponent"""
+
+        try:
+            player_meet = joueur1.get("meet")
+            while True:
+                # test if the player has already met his opponent
+                if joueur2.get("pk") in player_meet:
+                    tour += 1
+                    joueur2 = tri_tour[tour]
+                    while True:  # test if the player has already played during this round
+                        if joueur2.get("pk") in list_player:
+                            tour += 1
+                            joueur2 = tri_tour[tour]
+                        else:
+                            break
+                else:
+                    break
+            list_player.append(joueur2.get("pk"))
+            return joueur2
+        except ValueError:
+            from tournament.controller import MethodeControl
+            MethodeControl().unexpected_error()

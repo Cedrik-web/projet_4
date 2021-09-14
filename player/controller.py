@@ -171,7 +171,7 @@ class MenuPlayer:
         try:
             if reponse == "oui":
                 from tournament.controller import MethodeTournament
-                c = MethodeTournament().print_date_controller()
+                c = MethodeTournament().element_date_controller()
                 if not c == player.get("birth_date"):  # birth date change
                     player.update({"birth_date": c})
                     viewplayer.print_modif_player_birth_date_answer(player)
