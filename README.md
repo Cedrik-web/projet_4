@@ -92,7 +92,7 @@ Bienvenue dans votre gestionnaire de tournoi d'échec:
 		-Vous trouverez au dossier un diagramme expliquant le déroulement de la 
 		création d'un tournoi.
 			fichier deroulement_tournoi.png
-			![Texte alternatif](/chemin/access/deroulement_tournoi.png "deroulement_tournoi")
+			![Texte alternatif](/chemin/projet4/deroulement_tournoi.png "deroulement_tournoi")
 
 	
 		 
