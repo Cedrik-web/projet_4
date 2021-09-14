@@ -9,6 +9,7 @@ Le programme, en plus de ce fichier README, ce compose de:
 	- 5 scripts python. 
 	- 2 packages python.
 	- 1 script cfg.
+	- 1 fichier deroulement_tournoi.png.
 	- 1 fichier requirements.txt ( ressources pip nécessaires à installer dans votre 	  			environement virtuel ). 
 	- 1 dossier flake-report dans lequel ce trouve le rapport de recherche d'erreur PEP8.
 	  si vous voulez faire un test flake8 , il vous suffit de intaller flake8 :
@@ -87,6 +88,10 @@ Bienvenue dans votre gestionnaire de tournoi d'échec:
 			settings.py
 		Et de changer ces données.
 		
+	6/ Diagramme:
+		-Vous trouverez au dossier un diagramme expliquant le déroulement de la 
+		création d'un tournoi.
+			fichier deroulement_tournoi.png
+
 	
-	Bon jeux !!	
 		 
